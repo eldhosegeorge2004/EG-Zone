@@ -240,17 +240,17 @@ export default function PongGame() {
           />
 
           {!isPlaying && (
-            <div className="absolute inset-0 z-50 bg-white/95 backdrop-blur-sm flex flex-col items-center justify-center p-8 text-center rounded-3xl cursor-auto">
-               <div className="w-20 h-20 bg-gradient-to-br from-cyan-50 to-pink-50 rounded-full flex items-center justify-center mb-6 shadow-inner border border-gray-100">
-                <MonitorSmartphone className="w-10 h-10 text-cyan-500" />
+            <div className="absolute inset-0 z-50 bg-white/95 backdrop-blur-sm flex flex-col items-center justify-center p-4 sm:p-8 text-center rounded-3xl cursor-auto overflow-y-auto">
+               <div className="w-12 h-12 sm:w-20 sm:h-20 bg-gradient-to-br from-cyan-50 to-pink-50 rounded-full flex items-center justify-center mb-2 sm:mb-6 shadow-inner border border-gray-100 shrink-0">
+                <MonitorSmartphone className="w-6 h-6 sm:w-10 sm:h-10 text-cyan-500" />
               </div>
-              <h2 className="text-3xl font-black text-gray-900 mb-3 tracking-tight">Pong</h2>
-              <p className="text-gray-500 text-base mb-8 max-w-[280px] font-medium leading-relaxed">
+              <h2 className="text-xl sm:text-3xl font-black text-gray-900 mb-1 sm:mb-3 tracking-tight">Pong</h2>
+              <p className="text-gray-500 text-xs sm:text-base mb-3 sm:mb-8 max-w-[280px] font-medium leading-relaxed">
                 Move your mouse or slide your finger to control the cyan paddle. First to miss loses a point!
               </p>
               <button
                 onClick={startGame}
-                className="bg-gray-900 text-white px-10 py-4 rounded-full font-bold shadow-lg shadow-gray-900/20 hover:shadow-gray-900/40 hover:-translate-y-0.5 active:translate-y-0 transition-all text-lg w-full max-w-[250px]"
+                className="bg-gray-900 text-white px-6 py-2.5 sm:px-10 sm:py-4 rounded-full font-bold shadow-lg shadow-gray-900/20 hover:shadow-gray-900/40 hover:-translate-y-0.5 active:translate-y-0 transition-all text-sm sm:text-lg w-full max-w-[180px] sm:max-w-[250px] shrink-0"
               >
                 Play Now
               </button>
