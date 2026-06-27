@@ -1,6 +1,7 @@
 /* eslint-disable */
 "use client";
 
+import { useState, useEffect } from "react";
 import { Play, RotateCcw, Trophy, HelpCircle, CheckCircle2, XCircle } from "lucide-react";
 import SubmitScoreModal from "@/components/SubmitScoreModal";
 

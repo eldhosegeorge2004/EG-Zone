@@ -32,7 +32,7 @@ export default function WordScramble() {
     if (saved) setBestScore(parseInt(saved));
   }, []);
 
-  const scramble = (word: string) => {
+  const scramble = (word: string): string => {
     let arr = word.split("");
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
