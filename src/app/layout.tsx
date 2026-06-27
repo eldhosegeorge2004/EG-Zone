@@ -39,14 +39,6 @@ export default function RootLayout({
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
-      </head>
-      <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-indigo-500/20">
-        <Navbar />
-        <main className="flex-1">
-          {children}
-        </main>
-        <Footer />
-
         {/* Google Analytics */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-R80ZDHJGGZ"
@@ -60,6 +52,13 @@ export default function RootLayout({
             gtag('config', 'G-R80ZDHJGGZ');
           `}
         </Script>
+      </head>
+      <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-indigo-500/20">
+        <Navbar />
+        <main className="flex-1">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );
