@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Play, RotateCcw, Trophy, Grid3X3 } from "lucide-react";
+import { Play, RotateCcw, Trophy, Grid3X3, ArrowUp, ArrowDown, ArrowLeft, ArrowRight } from "lucide-react";
 import SubmitScoreModal from "@/components/SubmitScoreModal";
 
 const GRID_SIZE = 4;
@@ -350,8 +350,42 @@ export default function Game2048() {
           </div>
           
           <p className="mt-6 text-gray-400 text-sm font-medium">
-            Use <span className="font-bold text-gray-600">Arrow Keys / WASD</span> or <span className="font-bold text-gray-600">Swipe</span> to move tiles.
+            Use <span className="font-bold text-gray-600">Arrow Keys / WASD</span>, <span className="font-bold text-gray-600">Swipe</span>, or buttons below.
           </p>
+
+          {/* Mobile Directional Buttons */}
+          <div className="mt-6 w-full max-w-[200px] mx-auto grid grid-cols-3 gap-2 sm:hidden">
+            <div></div>
+            <button
+              onClick={() => move("UP")}
+              className="bg-gray-100 hover:bg-gray-200 active:bg-gray-300 rounded-xl h-12 flex items-center justify-center transition-colors"
+              style={{ touchAction: 'manipulation' }}
+            >
+              <ArrowUp className="w-6 h-6 text-gray-600" />
+            </button>
+            <div></div>
+            <button
+              onClick={() => move("LEFT")}
+              className="bg-gray-100 hover:bg-gray-200 active:bg-gray-300 rounded-xl h-12 flex items-center justify-center transition-colors"
+              style={{ touchAction: 'manipulation' }}
+            >
+              <ArrowLeft className="w-6 h-6 text-gray-600" />
+            </button>
+            <button
+              onClick={() => move("DOWN")}
+              className="bg-gray-100 hover:bg-gray-200 active:bg-gray-300 rounded-xl h-12 flex items-center justify-center transition-colors"
+              style={{ touchAction: 'manipulation' }}
+            >
+              <ArrowDown className="w-6 h-6 text-gray-600" />
+            </button>
+            <button
+              onClick={() => move("RIGHT")}
+              className="bg-gray-100 hover:bg-gray-200 active:bg-gray-300 rounded-xl h-12 flex items-center justify-center transition-colors"
+              style={{ touchAction: 'manipulation' }}
+            >
+              <ArrowRight className="w-6 h-6 text-gray-600" />
+            </button>
+          </div>
 
         </div>
       </div>

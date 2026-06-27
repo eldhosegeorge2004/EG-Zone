@@ -100,6 +100,19 @@ export default function ZipGame() {
     tryMove(r, c);
   };
 
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || !isPlaying || isWon) return;
+    const touch = e.touches[0];
+    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+    if (element) {
+      const rStr = element.getAttribute("data-r");
+      const cStr = element.getAttribute("data-c");
+      if (rStr !== null && cStr !== null) {
+        tryMove(parseInt(rStr), parseInt(cStr));
+      }
+    }
+  };
+
   const tryMove = (r: number, c: number) => {
     const last = path[path.length - 1];
     const prev = path.length > 1 ? path[path.length - 2] : null;
@@ -265,6 +278,7 @@ export default function ZipGame() {
                 gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
                 gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`
               }}
+              onTouchMove={handleTouchMove}
             >
               {grid.map((row, r) => (
                 row.map((val, c) => {
@@ -277,6 +291,8 @@ export default function ZipGame() {
                   return (
                     <div
                       key={`${r}-${c}`}
+                      data-r={r}
+                      data-c={c}
                       onPointerDown={() => handlePointerDown(r, c)}
                       onPointerEnter={() => handlePointerEnter(r, c)}
                       className={`
