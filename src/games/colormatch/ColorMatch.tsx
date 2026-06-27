@@ -31,8 +31,8 @@ export default function ColorMatchGame() {
   const [maxTime, setMaxTime] = useState(INITIAL_TIME_MS);
 
   // Use refs for animation frames
-  const requestRef = useRef<number>();
-  const lastTimeRef = useRef<number>();
+  const requestRef = useRef<number>(0);
+  const lastTimeRef = useRef<number>(0);
 
   const generateRound = useCallback((currentScore: number) => {
     // 50% chance to match

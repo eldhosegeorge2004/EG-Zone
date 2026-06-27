@@ -6,7 +6,7 @@ import { Play, RotateCcw, MonitorSmartphone } from "lucide-react";
 
 export default function PongGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const requestRef = useRef<number>();
+  const requestRef = useRef<number>(0);
   
   const [isPlaying, setIsPlaying] = useState(false);
   const [score, setScore] = useState({ player: 0, ai: 0 });

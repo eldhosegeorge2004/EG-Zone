@@ -7,7 +7,7 @@ import SubmitScoreModal from "@/components/SubmitScoreModal";
 
 export default function FlappyGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const requestRef = useRef<number>();
+  const requestRef = useRef<number>(0);
   
   const [isPlaying, setIsPlaying] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
