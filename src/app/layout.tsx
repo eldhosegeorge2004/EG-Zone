@@ -35,7 +35,7 @@ export default function RootLayout({
         {/* Google AdSense */}
         <Script
           async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID}`}
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9798402853167356"
           crossOrigin="anonymous"
           strategy="lazyOnload"
         />
