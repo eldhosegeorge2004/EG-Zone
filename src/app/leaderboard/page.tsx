@@ -27,7 +27,7 @@ export default function LeaderboardPage() {
           .select('*')
           .eq('game_id', selectedGame)
           .order('score', { ascending: false }) // highest first
-          .limit(100);
+          .limit(10);
 
         if (error) {
           console.error("Error fetching scores:", error);
@@ -107,7 +107,7 @@ export default function LeaderboardPage() {
           <div className={`p-8 bg-gradient-to-r ${activeGame.color} text-white flex justify-between items-center`}>
             <div>
               <h2 className="text-2xl font-black">{activeGame.title} Rankings</h2>
-              <p className="opacity-80 text-sm font-medium mt-1">Top 100 Players globally</p>
+              <p className="opacity-80 text-sm font-medium mt-1">Top 10 Players globally</p>
             </div>
             <Link 
               href={`/games/${activeGame.slug}`}
