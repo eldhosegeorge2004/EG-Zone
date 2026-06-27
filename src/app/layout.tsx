@@ -37,7 +37,7 @@ export default function RootLayout({
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9798402853167356"
           crossOrigin="anonymous"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
         />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-indigo-500/20">
