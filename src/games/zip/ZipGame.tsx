@@ -81,14 +81,8 @@ export default function ZipGame() {
 
   const handlePointerDown = (r: number, c: number) => {
     if (!isPlaying || isWon) return;
-    
-    const last = path[path.length - 1];
-    if (last.r === r && last.c === c) {
-      setIsDragging(true);
-    } else {
-      // Allow tap-to-move for robust mobile support
-      tryMove(r, c);
-    }
+    setIsDragging(true);
+    tryMove(r, c);
   };
 
   const handlePointerUp = () => {
@@ -276,7 +270,8 @@ export default function ZipGame() {
               className="grid gap-1 sm:gap-2 w-full h-full relative z-20"
               style={{
                 gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
-                gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`
+                gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`,
+                touchAction: 'none'
               }}
               onTouchMove={handleTouchMove}
             >
@@ -306,7 +301,6 @@ export default function ZipGame() {
                         }
                         ${isLast ? 'ring-4 ring-cyan-400/30 ring-offset-1 scale-95' : ''}
                       `}
-                      style={{ touchAction: 'none' }} // Prevent scrolling when dragging on mobile
                     >
                       {val !== 0 ? val : ""}
                     </div>
