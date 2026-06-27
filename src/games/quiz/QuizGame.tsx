@@ -125,11 +125,11 @@ export default function QuizGame() {
 
           {isPlaying && questions.length > 0 && (
             <div className="w-full h-full flex flex-col">
-              <div className="mb-6 flex justify-between items-center">
+              <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
                 <span className="text-sm font-bold text-gray-400">Question {currentIdx + 1} of {questions.length}</span>
-                <div className="flex gap-1">
+                <div className="flex gap-1 sm:gap-1 flex-wrap">
                   {questions.map((_, i) => (
-                    <div key={i} className={`w-8 h-2 rounded-full ${i === currentIdx ? 'bg-pink-500' : i < currentIdx ? 'bg-green-400' : 'bg-gray-200'}`} />
+                    <div key={i} className={`w-5 sm:w-8 h-2 rounded-full ${i === currentIdx ? 'bg-pink-500' : i < currentIdx ? 'bg-green-400' : 'bg-gray-200'}`} />
                   ))}
                 </div>
               </div>
