@@ -253,10 +253,10 @@ export default function GuessWordGame() {
                       onClick={() => onKeyPress(key)}
                       className={`
                         flex items-center justify-center font-bold rounded-md sm:rounded-lg transition-colors
-                        ${isAction ? 'px-2 sm:px-4 text-xs sm:text-sm' : 'flex-1 text-sm sm:text-base aspect-[2/3] max-w-[40px]'}
+                        ${isAction ? 'px-1 sm:px-4 text-[10px] sm:text-sm flex-[1.5]' : 'flex-1 text-xs sm:text-base max-w-[40px]'}
                         ${bg}
                       `}
-                      style={{ height: '50px' }}
+                      style={{ height: 'clamp(40px, 12vw, 55px)' }}
                     >
                       {key === "BACK" ? "⌫" : key}
                     </button>
