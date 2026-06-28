@@ -162,4 +162,12 @@ export const GAMES = [
     image: "/images/math.png",
     color: "from-blue-400 to-indigo-500",
   },
+  {
+    title: "Stickman Fight",
+    slug: "stickman",
+    description: "Battle endless waves of enemy stickmen in this fast-paced physics brawler.",
+    category: "Action",
+    image: "/images/stickman.png",
+    color: "from-red-500 to-orange-600",
+  }
 ];
