@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { BLOG_POSTS } from '@/lib/blog';
+import { BLOG_POSTS } from '../lib/blog';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://egzone.com';
