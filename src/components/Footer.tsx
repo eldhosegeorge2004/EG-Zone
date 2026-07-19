@@ -13,6 +13,7 @@ export default function Footer() {
             <p className="mt-2 text-sm text-gray-500">Play, compete, and improve your skills.</p>
           </div>
           <div className="flex gap-6">
+            <Link href="/blog" className="text-gray-500 hover:text-gray-900 transition-colors text-sm">Blog</Link>
             <Link href="/about" className="text-gray-500 hover:text-gray-900 transition-colors text-sm">About</Link>
             <Link href="/contact" className="text-gray-500 hover:text-gray-900 transition-colors text-sm">Contact</Link>
             <Link href="/terms" className="text-gray-500 hover:text-gray-900 transition-colors text-sm">Terms</Link>

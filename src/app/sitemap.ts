@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { BLOG_POSTS } from './lib/blog';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://egzone.com';
@@ -6,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const mainPages = [
     '',
     '/about',
+    '/blog',
     '/contact',
     '/privacy',
     '/terms',
@@ -32,5 +34,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   }));
 
-  return [...mainPages, ...gameRoutes];
+  const blogRoutes = BLOG_POSTS.map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: new Date(post.date),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
+
+  return [...mainPages, ...gameRoutes, ...blogRoutes];
 }

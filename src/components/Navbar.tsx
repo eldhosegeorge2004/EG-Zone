@@ -16,6 +16,7 @@ export default function Navbar() {
               <Link href="/games" className="hover:text-gray-900 text-gray-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Games</Link>
               <Link href="/categories" className="hover:text-gray-900 text-gray-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Categories</Link>
               <Link href="/leaderboard" className="hover:text-gray-900 text-gray-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Leaderboard</Link>
+              <Link href="/blog" className="hover:text-gray-900 text-gray-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Blog</Link>
               <Link href="/about" className="hover:text-gray-900 text-gray-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">About</Link>
             </div>
           </div>
