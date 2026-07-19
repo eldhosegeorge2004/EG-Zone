@@ -6,7 +6,7 @@ export default function AboutPage() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="text-center mb-16">
         <h1 className="text-4xl sm:text-5xl font-black text-gray-900 tracking-tight mb-6">
-          About <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600">EG ZONE</span>
+          About <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-400">EG ZONE</span>
         </h1>
         <p className="text-lg text-gray-600 leading-relaxed font-medium max-w-2xl mx-auto">
           EG ZONE is a premier online gaming platform dedicated to providing free, high-quality, and instantly accessible mini-games for players around the world.

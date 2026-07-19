@@ -22,7 +22,7 @@ export default function Home() {
           
           <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-gray-900 mb-6">
             Play, Compete, and <br className="hidden sm:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-400">
               Sharpen Your Skills
             </span>
           </h1>

@@ -1,5 +1,6 @@
 /* eslint-disable */
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Navbar() {
   return (
@@ -7,7 +8,8 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600">
+            <Link href="/" className="flex items-center gap-2 text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">
+              <Image src="/logo.png" alt="EG ZONE Logo" width={32} height={32} className="rounded-full shadow-sm" />
               EG ZONE
             </Link>
           </div>
