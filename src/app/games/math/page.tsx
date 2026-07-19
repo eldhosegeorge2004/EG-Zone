@@ -1,5 +1,6 @@
 /* eslint-disable */
 import MathChallenge from "@/games/math/MathChallenge";
+import GameSEO from "@/components/GameSEO";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -21,6 +22,33 @@ export default function MathPage() {
       </div>
 
       <MathChallenge />
+
+      <GameSEO 
+        gameName="Math Challenge"
+        description="Math Challenge is an educational and fast-paced game that tests your mental arithmetic. Solve a rapid-fire series of math problems before the timer expires."
+        howToPlay={[
+          "Look at the Equation: An arithmetic problem will appear on the screen.",
+          "Calculate: Solve the problem in your head as quickly as possible.",
+          "Select Answer: Click or tap the correct answer from the multiple choices provided.",
+          "Beat the Clock: Answer as many questions as you can before the time runs out."
+        ]}
+        features={[
+          "Covers addition, subtraction, multiplication, and division",
+          "Great for students and adults wanting to keep their brain sharp",
+          "Dynamic difficulty that adapts to your performance",
+          "Fun and competitive educational tool"
+        ]}
+        faqs={[
+          {
+            question: "Is Math Challenge suitable for children?",
+            answer: "Yes, it is an excellent tool for children to practice basic arithmetic in a fun, gamified environment that encourages quick thinking."
+          },
+          {
+            question: "How can I improve my score?",
+            answer: "Practice daily! Mental math is a skill that improves significantly with consistent repetition and familiarity with number patterns."
+          }
+        ]}
+      />
     </div>
   );
 }

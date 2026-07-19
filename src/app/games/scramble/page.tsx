@@ -1,5 +1,6 @@
 /* eslint-disable */
 import WordScramble from "@/games/scramble/WordScramble";
+import GameSEO from "@/components/GameSEO";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -21,6 +22,33 @@ export default function ScramblePage() {
       </div>
 
       <WordScramble />
+
+      <GameSEO 
+        gameName="Word Scramble"
+        description="Word Scramble is a classic anagram word puzzle game. You are given a jumbled set of letters and must rearrange them to form a valid word before the timer runs out."
+        howToPlay={[
+          "Observe the Letters: A set of mixed-up letters will appear.",
+          "Rearrange: Click or type the letters in the correct order to spell a word.",
+          "Submit: If your word is valid and uses all the letters, you win the round.",
+          "Use Hints: If you are stuck, you can sometimes use a hint to reveal the first letter or get a clue."
+        ]}
+        features={[
+          "Expands vocabulary and spelling skills",
+          "Multiple difficulty levels based on word length",
+          "Time-based challenges to test your speed",
+          "Fun for all ages"
+        ]}
+        faqs={[
+          {
+            question: "What happens if I run out of time?",
+            answer: "If the timer runs out before you find the word, the round is over and the correct word will be revealed."
+          },
+          {
+            question: "Are there multiple valid answers?",
+            answer: "Usually, the game is looking for one specific word, but in some versions, finding any valid word that uses all the letters is accepted."
+          }
+        ]}
+      />
     </div>
   );
 }

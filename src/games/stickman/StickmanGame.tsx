@@ -330,7 +330,7 @@ export default function StickmanGame() {
           const absDist = Math.abs(dist);
           enemy.facing = dist > 0 ? "right" : "left";
 
-          if (absDist > 50) {
+          if (absDist > 70) {
             // Walk towards player
             enemy.vx += enemy.facing === "right" ? 0.5 : -0.5;
             if (enemy.vx > enemy.speed) enemy.vx = enemy.speed;
@@ -338,10 +338,11 @@ export default function StickmanGame() {
             enemy.state = "walk";
           } else {
             // Attack player
-            if (enemy.stateTimer <= 0 && Math.random() < 0.05) {
+            const shouldAttack = absDist < 55 || Math.random() < 0.3; // 30% chance or instantly if close
+            if (enemy.stateTimer <= 0 && shouldAttack) {
               enemy.state = "punch";
               enemy.stateTimer = 300;
-              const range = 30;
+              const range = 50;
               enemy.hitbox = {
                 x: enemy.facing === "right" ? enemy.x + enemy.w : enemy.x - range,
                 y: enemy.y + 10,

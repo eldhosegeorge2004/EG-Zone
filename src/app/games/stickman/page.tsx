@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowLeft, Swords } from "lucide-react";
 import StickmanGame from "@/games/stickman/StickmanGame";
+import GameSEO from "@/components/GameSEO";
 
 export default function StickmanGamePage() {
   return (
@@ -35,10 +36,38 @@ export default function StickmanGamePage() {
         </div>
 
         {/* Game Container */}
-        <div className="flex-1 flex flex-col w-full h-full">
+        <div className="flex-1 flex flex-col w-full h-full mb-10">
           <StickmanGame />
         </div>
 
+        <div className="w-full pb-10">
+          <GameSEO 
+            gameName="Stickman Fight"
+            description="Stickman Fight is a fast-paced action brawler where you control a stick figure martial artist. Your objective is to defeat endless waves of incoming enemies coming from both sides of the screen."
+            howToPlay={[
+              "Attack Left: Press the left arrow key or click the left side of the screen to attack an enemy on your left.",
+              "Attack Right: Press the right arrow key or click the right side of the screen to attack an enemy on your right.",
+              "Timing is Key: Only attack when the enemy is within your reach. If you attack too early, you will miss and be left vulnerable.",
+              "Survive: Keep defeating enemies to increase your score and survive as long as possible."
+            ]}
+            features={[
+              "Intense, fast-paced combat",
+              "Simple two-button control scheme",
+              "Satisfying hit animations and effects",
+              "Endless survival mode for infinite replayability"
+            ]}
+            faqs={[
+              {
+                question: "Why do I keep missing my attacks?",
+                answer: "You are likely attacking before the enemy is within your attack range. Wait until the indicator shows they are close enough before striking."
+              },
+              {
+                question: "Is there an end to the game?",
+                answer: "No, this is an endless survival game. The goal is simply to achieve the highest score possible before being defeated."
+              }
+            ]}
+          />
+        </div>
       </div>
     </div>
   );

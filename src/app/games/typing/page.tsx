@@ -1,5 +1,6 @@
 /* eslint-disable */
 import TypingGame from "@/games/typing/TypingGame";
+import GameSEO from "@/components/GameSEO";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -21,6 +22,33 @@ export default function TypingPage() {
       </div>
 
       <TypingGame />
+
+      <GameSEO 
+        gameName="Typing Speed Test"
+        description="The Typing Speed Test helps you measure and improve your typing speed (Words Per Minute) and accuracy. It's a great tool for students, professionals, or anyone looking to become a faster typist."
+        howToPlay={[
+          "Start Typing: Begin typing the highlighted words you see on the screen.",
+          "Keep Rhythm: Try to maintain a steady rhythm without looking at your keyboard.",
+          "Fix Mistakes: If you make a mistake, the word will usually highlight red. Use backspace to correct it if required.",
+          "Check Results: When the time is up, your WPM (Words Per Minute) and accuracy percentage will be displayed."
+        ]}
+        features={[
+          "Accurate WPM calculation algorithm",
+          "Real-time visual feedback on errors",
+          "Various text modes (random words, sentences, punctuation)",
+          "Great for improving productivity and coding speed"
+        ]}
+        faqs={[
+          {
+            question: "What is a good typing speed?",
+            answer: "The average typing speed is around 40 WPM. Professional typists usually range from 65 to 90 WPM, and advanced typists can exceed 120 WPM."
+          },
+          {
+            question: "How can I improve my typing speed?",
+            answer: "The best way to improve is through touch-typing (typing without looking at the keys) and consistent daily practice focusing on accuracy first, then speed."
+          }
+        ]}
+      />
     </div>
   );
 }

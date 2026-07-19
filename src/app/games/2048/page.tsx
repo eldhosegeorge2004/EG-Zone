@@ -4,8 +4,8 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Play 2048 | EG ZONE",
-  description: "Slide and merge matching tiles to reach the legendary 2048 tile.",
+  title: "Play 2048 Game Online Free - EG Zone",
+  description: "Play the classic 2048 puzzle game online for free. Slide and merge matching tiles to reach the legendary 2048 tile. Can you beat the high score?",
 };
 
 export default function Page2048() {
@@ -17,10 +17,54 @@ export default function Page2048() {
       
       <div className="text-center mb-10">
         <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-3">2048</h1>
-        <p className="text-gray-600 font-medium">Slide and merge tiles to reach 2048.</p>
+        <p className="text-gray-600 font-medium">Slide and merge tiles to reach the legendary 2048 tile.</p>
       </div>
 
       <Game2048 />
+
+      {/* SEO Content Section */}
+      <div className="mt-20 max-w-4xl mx-auto bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+        <section className="mb-10">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">How to Play 2048</h2>
+          <div className="prose text-gray-600">
+            <p><strong>2048</strong> is a classic single-player sliding block puzzle game. The objective of the game is to slide numbered tiles on a grid to combine them to create a tile with the number 2048.</p>
+            <ul className="list-disc pl-5 mt-4 space-y-2">
+              <li><strong>Move Tiles:</strong> Use your keyboard arrow keys (or swipe on mobile) to move the tiles up, down, left, or right.</li>
+              <li><strong>Merge Tiles:</strong> When two tiles with the same number touch, they merge into one tile with double the value (e.g., two 2s become a 4).</li>
+              <li><strong>Win the Game:</strong> Keep merging tiles until you create a tile with the number <strong>2048</strong>!</li>
+              <li><strong>Game Over:</strong> The game ends when the board fills up and there are no valid moves left.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section className="mb-10">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Game Features</h2>
+          <ul className="list-disc pl-5 text-gray-600 space-y-2">
+            <li>Clean, responsive design that works perfectly on both desktop and mobile devices.</li>
+            <li>Smooth sliding animations for a satisfying gameplay experience.</li>
+            <li>Score tracking to help you monitor your progress and beat your personal best.</li>
+            <li>Completely free to play with no downloads required.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Frequently Asked Questions (FAQ)</h2>
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-bold text-gray-900">What is the highest tile you can get in 2048?</h3>
+              <p className="text-gray-600 mt-1">While the game's goal is to reach the 2048 tile, you can theoretically continue playing after reaching it. With a standard 4x4 board, the maximum possible tile is 131,072.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-gray-900">Is there a strategy to win 2048?</h3>
+              <p className="text-gray-600 mt-1">Yes! A common and effective strategy is to keep your highest value tile in one of the corners of the board (e.g., the bottom right). Focus on building a "chain" of descending numbers leading into that corner.</p>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-gray-900">Do I need to download an app to play?</h3>
+              <p className="text-gray-600 mt-1">No, our 2048 game is completely web-based and runs directly in your browser on both PC and mobile devices.</p>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

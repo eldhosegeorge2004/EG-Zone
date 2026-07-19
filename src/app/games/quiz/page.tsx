@@ -1,5 +1,6 @@
 /* eslint-disable */
 import QuizGame from "@/games/quiz/QuizGame";
+import GameSEO from "@/components/GameSEO";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -21,6 +22,33 @@ export default function QuizPage() {
       </div>
 
       <QuizGame />
+
+      <GameSEO 
+        gameName="Daily Quiz"
+        description="The Daily Quiz is a trivia game that tests your knowledge across various subjects including history, science, pop culture, and geography. See how many you can get right!"
+        howToPlay={[
+          "Read the Question: A trivia question will be presented to you.",
+          "Choose Wisely: Select the correct answer from the four available options.",
+          "Check Accuracy: The game will immediately tell you if you were correct or incorrect.",
+          "Complete the Quiz: Answer all the questions in the set to receive your final score."
+        ]}
+        features={[
+          "Hundreds of unique trivia questions",
+          "Covers a wide variety of topics and difficulty levels",
+          "Great way to learn new facts every day",
+          "Share your score with friends"
+        ]}
+        faqs={[
+          {
+            question: "Are the questions different every day?",
+            answer: "Yes! The quiz pulls from a large database of questions so you can play frequently without seeing the same questions too often."
+          },
+          {
+            question: "Is there a time limit per question?",
+            answer: "Some quiz modes have a timer to add an extra layer of challenge, while others let you think as long as you want."
+          }
+        ]}
+      />
     </div>
   );
 }

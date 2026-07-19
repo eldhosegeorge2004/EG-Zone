@@ -1,5 +1,6 @@
 /* eslint-disable */
 import MemoryGame from "@/games/memory/MemoryGame";
+import GameSEO from "@/components/GameSEO";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -21,6 +22,34 @@ export default function MemoryPage() {
       </div>
 
       <MemoryGame />
+
+      <GameSEO 
+        gameName="Memory Match"
+        description="Memory Match is a classic card game that trains your short-term memory and concentration. Flip cards to reveal images and remember their locations to find matching pairs."
+        howToPlay={[
+          "Flip Cards: Click on any two face-down cards to reveal them.",
+          "Find Pairs: Try to find two cards with the exact same image.",
+          "Match: If they match, they will remain face up.",
+          "Mismatch: If they don't match, they will flip back over after a short delay.",
+          "Win: The game ends when all pairs have been successfully matched."
+        ]}
+        features={[
+          "Helps improve short-term memory and focus",
+          "Clean, visually appealing interface",
+          "Tracks your moves and time to measure improvement",
+          "Relaxing yet mentally stimulating gameplay"
+        ]}
+        faqs={[
+          {
+            question: "Why is memory matching good for the brain?",
+            answer: "Memory games require active recall and spatial awareness, which can help strengthen neural pathways and improve overall cognitive function and focus."
+          },
+          {
+            question: "How is the score calculated?",
+            answer: "Your final score is usually based on how few moves (flips) it took you to complete the board, as well as how quickly you finished."
+          }
+        ]}
+      />
     </div>
   );
 }
