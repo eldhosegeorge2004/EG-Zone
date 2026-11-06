@@ -5,35 +5,39 @@ const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-async function testInsert() {
-  console.log("Testing Supabase Insert...");
-  const { data, error } = await supabase
-    .from('scores')
-    .insert([
-      { 
-        game_id: 'test_game', 
-        player_name: 'test_player', 
-        score: 100 
-      }
-    ]);
-
-  if (error) {
-    console.error("Insert Error:", error);
-  } else {
-    console.log("Insert Success:", data);
-  }
-
-  console.log("Testing Supabase Fetch...");
-  const { data: fetch_data, error: fetch_error } = await supabase
+async function test() {
+  console.log("1. Testing connection - reading scores table...");
+  const { data: readData, error: readError } = await supabase
     .from('scores')
     .select('*')
-    .limit(1);
-    
-  if (fetch_error) {
-    console.error("Fetch Error:", fetch_error);
+    .limit(3);
+
+  if (readError) {
+    console.error("READ ERROR:", JSON.stringify(readError, null, 2));
   } else {
-    console.log("Fetch Success:", fetch_data);
+    console.log("READ SUCCESS. Sample rows:", JSON.stringify(readData, null, 2));
+  }
+
+  console.log("\n2. Testing INSERT into scores table...");
+  const { data: insertData, error: insertError } = await supabase
+    .from('scores')
+    .insert([{ game_id: 'snake', player_name: 'TestPlayer', score: 999 }])
+    .select();
+
+  if (insertError) {
+    console.error("INSERT ERROR:", JSON.stringify(insertError, null, 2));
+    console.error("\nError code:", insertError.code);
+    console.error("Error message:", insertError.message);
+    console.error("Error details:", insertError.details);
+    console.error("Error hint:", insertError.hint);
+  } else {
+    console.log("INSERT SUCCESS:", JSON.stringify(insertData, null, 2));
+    // Clean up test row
+    if (insertData && insertData[0]) {
+      await supabase.from('scores').delete().eq('id', insertData[0].id);
+      console.log("Test row cleaned up.");
+    }
   }
 }
 
-testInsert();
+test().catch(console.error);
