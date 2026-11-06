@@ -2,14 +2,32 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Play, RotateCcw, Trophy, Type, Timer } from "lucide-react";
+import { RotateCcw, Trophy, Type, Timer } from "lucide-react";
 import SubmitScoreModal from "@/components/SubmitScoreModal";
 
-const WORDS = [
-  "REACT", "NEXTJS", "JAVASCRIPT", "TYPESCRIPT", "TAILWIND", 
-  "FRONTEND", "BACKEND", "DATABASE", "SERVER", "BROWSER",
-  "PYTHON", "CODING", "PROGRAM", "DEVELOPER", "WEBSITE",
-  "DESIGN", "MOBILE", "DESKTOP", "KEYBOARD", "MONITOR"
+const TIER_EASY = [
+  "CAT", "DOG", "SUN", "MOON", "STAR", "FISH", "BIRD", "BOOK", "TREE", "BALL", 
+  "FIRE", "SNOW", "RAIN", "WIND", "GOLD", "BLUE", "PINK", "MILK", "DOOR", "SHIP", 
+  "FOOD", "LION", "DUCK", "FROG", "BEAR", "CAKE", "ROSE", "PARK", "HOME", "LAKE"
+];
+
+const TIER_MEDIUM = [
+  "APPLE", "WATER", "SMILE", "BEACH", "CLOUD", "HEART", "MUSIC", "PLANT", "LIGHT", 
+  "HOUSE", "GREEN", "BREAD", "TIGER", "PIZZA", "TRAIN", "HORSE", "CANDY", "CLOCK", 
+  "DREAM", "SPACE", "PLANET", "SILVER", "MONKEY", "ORANGE", "CASTLE", "BRIDGE", 
+  "SUMMER", "WINTER", "FOREST", "GUITAR"
+];
+
+const TIER_HARD = [
+  "DIAMOND", "DOLPHIN", "DRAGON", "PYRAMID", "BLANKET", "BICYCLE", "JOURNEY", "RAINBOW", 
+  "OCTOPUS", "CRYSTAL", "FREEDOM", "PACKAGE", "MONSTER", "MYSTERY", "WEATHER", "MORNING", 
+  "EVENING", "FESTIVAL", "KINGDOM", "VOLCANO"
+];
+
+const TIER_MASTER = [
+  "ELEPHANT", "COMPUTER", "MOUNTAIN", "BUTTERFLY", "SANDWICH", "UNIVERSE", "ADVENTURE", 
+  "CHOCOLATE", "DINOSAUR", "FIREWORKS", "ASTRONAUT", "CHAMPION", "SUNFLOWER", "KANGAROO", 
+  "CROCODILE", "HOSPITAL", "BEAUTIFUL", "WONDERFUL", "LIGHTNING"
 ];
 
 export default function WordScramble() {
@@ -26,25 +44,43 @@ export default function WordScramble() {
   const [isWrong, setIsWrong] = useState(false);
   
   const inputRef = useRef<HTMLInputElement>(null);
+  const scoreRef = useRef(0);
+  const recentWordsRef = useRef<string[]>([]);
 
   useEffect(() => {
     const saved = localStorage.getItem("scrambleBestScore");
-    if (saved) setBestScore(parseInt(saved));
+    if (saved) setBestScore(parseInt(saved, 10));
   }, []);
 
   const scramble = (word: string): string => {
-    let arr = word.split("");
+    const arr = word.split("");
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
-    // Prevent it from being the exact same word
     const res = arr.join("");
+    // Ensure the scrambled output is not identical to original word
     return res === word && word.length > 1 ? scramble(word) : res;
   };
 
-  const generateWord = useCallback(() => {
-    const word = WORDS[Math.floor(Math.random() * WORDS.length)];
+  const getTierForScore = (currentScore: number) => {
+    if (currentScore < 4) return { pool: TIER_EASY, label: "Easy", color: "bg-emerald-100 text-emerald-700" };
+    if (currentScore < 8) return { pool: TIER_MEDIUM, label: "Medium", color: "bg-amber-100 text-amber-700" };
+    if (currentScore < 12) return { pool: TIER_HARD, label: "Hard", color: "bg-orange-100 text-orange-700" };
+    return { pool: TIER_MASTER, label: "Master", color: "bg-rose-100 text-rose-700" };
+  };
+
+  const generateWord = useCallback((newScore?: number) => {
+    const s = typeof newScore === "number" ? newScore : scoreRef.current;
+    const { pool } = getTierForScore(s);
+
+    // Pick a word not used very recently
+    const available = pool.filter(w => !recentWordsRef.current.includes(w));
+    const candidateList = available.length > 0 ? available : pool;
+    const word = candidateList[Math.floor(Math.random() * candidateList.length)];
+
+    recentWordsRef.current = [...recentWordsRef.current.slice(-5), word];
+
     setCurrentWord(word);
     setScrambledWord(scramble(word));
     setUserInput("");
@@ -52,13 +88,15 @@ export default function WordScramble() {
   }, []);
 
   const startGame = () => {
+    scoreRef.current = 0;
+    recentWordsRef.current = [];
     setScore(0);
     setTimeLeft(60);
     setIsPlaying(true);
     setIsGameOver(false);
     setShowSubmitModal(false);
-    generateWord();
-    setTimeout(() => inputRef.current?.focus(), 100);
+    generateWord(0);
+    setTimeout(() => inputRef.current?.focus(), 150);
   };
 
   useEffect(() => {
@@ -69,26 +107,30 @@ export default function WordScramble() {
       setIsPlaying(false);
       setIsGameOver(true);
       setShowSubmitModal(true);
-      if (score > bestScore) {
-        setBestScore(score);
-        localStorage.setItem("scrambleBestScore", score.toString());
+      if (scoreRef.current > bestScore) {
+        setBestScore(scoreRef.current);
+        localStorage.setItem("scrambleBestScore", scoreRef.current.toString());
       }
     }
     return () => clearTimeout(timer);
-  }, [isPlaying, timeLeft, score, bestScore]);
+  }, [isPlaying, timeLeft, bestScore]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isPlaying) return;
     
-    if (userInput.toUpperCase() === currentWord) {
-      setScore(s => s + 1);
-      generateWord();
+    if (userInput.trim().toUpperCase() === currentWord) {
+      const nextScore = scoreRef.current + 1;
+      scoreRef.current = nextScore;
+      setScore(nextScore);
+      generateWord(nextScore);
     } else {
       setIsWrong(true);
       setTimeout(() => setIsWrong(false), 500);
     }
   };
+
+  const currentTier = getTierForScore(score);
 
   return (
     <div className="flex flex-col items-center">
@@ -126,8 +168,8 @@ export default function WordScramble() {
                 <Type className="w-10 h-10 text-emerald-600" />
               </div>
               <h2 className="text-3xl font-black text-gray-900 mb-3 tracking-tight">Word Scramble</h2>
-              <p className="text-gray-500 text-base mb-8 max-w-[280px] font-medium leading-relaxed">
-                Unscramble as many words as you can in 60 seconds.
+              <p className="text-gray-500 text-base mb-8 max-w-[320px] font-medium leading-relaxed">
+                Unscramble words in 60 seconds! Starts with <span className="font-bold text-emerald-600">Easy 3-4 letter</span> words and increases in length as you score.
               </p>
               <button
                 onClick={startGame}
@@ -143,7 +185,7 @@ export default function WordScramble() {
               <div className="w-24 h-24 bg-teal-50 rounded-full flex items-center justify-center mb-6 shadow-inner border border-teal-100">
                 <Trophy className="w-12 h-12 text-teal-500" />
               </div>
-              <h2 className="text-4xl font-black text-gray-900 mb-3 tracking-tight">Time's Up!</h2>
+              <h2 className="text-4xl font-black text-gray-900 mb-3 tracking-tight">Time&apos;s Up!</h2>
               <p className="text-gray-500 text-lg mb-8 font-medium">
                 You unscrambled <span className="font-black text-emerald-600 text-xl">{score}</span> words.
               </p>
@@ -158,6 +200,13 @@ export default function WordScramble() {
 
           {isPlaying && (
             <div className="w-full flex flex-col items-center">
+              {/* Difficulty indicator badge */}
+              <div className="mb-4">
+                <span className={`text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full ${currentTier.color}`}>
+                  Level: {currentTier.label} ({currentWord.length} letters)
+                </span>
+              </div>
+
               <div className="flex flex-wrap justify-center gap-2 mb-8">
                 {scrambledWord.split("").map((letter, i) => (
                   <div key={i} className="w-12 h-14 sm:w-14 sm:h-16 bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-200 rounded-xl flex items-center justify-center text-2xl sm:text-3xl font-black text-gray-800 shadow-sm">

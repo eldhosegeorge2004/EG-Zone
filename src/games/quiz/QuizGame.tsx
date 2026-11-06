@@ -4,17 +4,10 @@
 import { useState, useEffect } from "react";
 import { Play, RotateCcw, Trophy, HelpCircle, CheckCircle2, XCircle } from "lucide-react";
 import SubmitScoreModal from "@/components/SubmitScoreModal";
-
-export type Question = {
-  q: string;
-  options: string[];
-  answer: number;
-};
-
-import { QUIZ_QUESTIONS } from "./questions";
+import { QuestionItem, getProgressiveQuizQuestions } from "./questions";
 
 export default function QuizGame() {
-  const [questions, setQuestions] = useState<Question[]>([]);
+  const [questions, setQuestions] = useState<QuestionItem[]>([]);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
@@ -25,13 +18,13 @@ export default function QuizGame() {
 
   useEffect(() => {
     const saved = localStorage.getItem("quizBestScore");
-    if (saved) setBestScore(parseInt(saved));
+    if (saved) setBestScore(parseInt(saved, 10));
   }, []);
 
   const startGame = () => {
-    // Shuffle the massive dataset and pick 10 questions
-    const shuffled = [...QUIZ_QUESTIONS].sort(() => 0.5 - Math.random()).slice(0, 10);
-    setQuestions(shuffled);
+    // Generate 10 progressive questions: 3 Easy -> 4 Medium -> 3 Hard
+    const progressive = getProgressiveQuizQuestions(10);
+    setQuestions(progressive);
     setCurrentIdx(0);
     setScore(0);
     setIsPlaying(true);
@@ -65,12 +58,14 @@ export default function QuizGame() {
     }, 1200);
   };
 
+  const currentDiff = questions[currentIdx]?.difficulty || (currentIdx < 3 ? "easy" : currentIdx < 7 ? "medium" : "hard");
+
   return (
     <div className="flex flex-col items-center">
       <div className="w-full max-w-[600px] flex justify-between items-center mb-6 bg-white px-6 py-4 rounded-2xl border border-gray-200 shadow-sm">
         <div className="flex flex-col">
           <span className="text-gray-400 text-xs font-bold uppercase tracking-wider">Score</span>
-          <span className="text-3xl font-black text-gray-900 leading-none mt-1">{score} / {questions.length || 5}</span>
+          <span className="text-3xl font-black text-gray-900 leading-none mt-1">{score} / {questions.length || 10}</span>
         </div>
         <div className="flex flex-col items-end">
           <span className="text-gray-400 text-xs font-bold uppercase tracking-wider flex items-center">
@@ -93,8 +88,8 @@ export default function QuizGame() {
                 <HelpCircle className="w-10 h-10 text-pink-500" />
               </div>
               <h2 className="text-3xl font-black text-gray-900 mb-3 tracking-tight">Daily Quiz</h2>
-              <p className="text-gray-500 text-base mb-8 max-w-[280px] font-medium leading-relaxed">
-                Test your general knowledge with 10 random trivia questions from our massive database of 1000+!
+              <p className="text-gray-500 text-base mb-8 max-w-[320px] font-medium leading-relaxed">
+                Test your general knowledge! Questions start <span className="font-bold text-emerald-600">Easy</span> and get progressively <span className="font-bold text-rose-600">Harder</span> as you advance.
               </p>
               <button
                 onClick={startGame}
@@ -112,7 +107,7 @@ export default function QuizGame() {
               </div>
               <h2 className="text-4xl font-black text-gray-900 mb-3 tracking-tight">Quiz Complete!</h2>
               <p className="text-gray-500 text-lg mb-8 font-medium">
-                You scored <span className="font-black text-pink-600 text-xl">{score}</span> out of 10.
+                You scored <span className="font-black text-pink-600 text-xl">{score}</span> out of {questions.length || 10}.
               </p>
               <button
                 onClick={startGame}
@@ -125,8 +120,17 @@ export default function QuizGame() {
 
           {isPlaying && questions.length > 0 && (
             <div className="w-full h-full flex flex-col">
-              <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
-                <span className="text-sm font-bold text-gray-400">Question {currentIdx + 1} of {questions.length}</span>
+              <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-gray-500">Question {currentIdx + 1} of {questions.length}</span>
+                  <span className={`text-xs font-black uppercase px-2.5 py-0.5 rounded-full ${
+                    currentDiff === 'easy' ? 'bg-emerald-100 text-emerald-700' :
+                    currentDiff === 'medium' ? 'bg-amber-100 text-amber-700' :
+                    'bg-rose-100 text-rose-700'
+                  }`}>
+                    {currentDiff === 'easy' ? '🟢 Easy' : currentDiff === 'medium' ? '🟡 Medium' : '🔴 Hard'}
+                  </span>
+                </div>
                 <div className="flex gap-1 sm:gap-1 flex-wrap">
                   {questions.map((_, i) => (
                     <div key={i} className={`w-5 sm:w-8 h-2 rounded-full ${i === currentIdx ? 'bg-pink-500' : i < currentIdx ? 'bg-green-400' : 'bg-gray-200'}`} />
@@ -158,9 +162,9 @@ export default function QuizGame() {
                   return (
                     <button
                       key={i}
-                      onClick={() => handleAnswer(i)}
                       disabled={selectedAnswer !== null}
-                      className={`relative flex items-center justify-between p-4 rounded-xl border-2 text-left font-semibold transition-all duration-200 ${btnClass}`}
+                      onClick={() => handleAnswer(i)}
+                      className={`w-full p-4 rounded-2xl border-2 text-left font-bold text-base sm:text-lg transition-all flex items-center justify-between ${btnClass}`}
                     >
                       <span>{opt}</span>
                       {Icon}
@@ -176,7 +180,7 @@ export default function QuizGame() {
       
       <SubmitScoreModal
         isOpen={showSubmitModal}
-        score={score + (selectedAnswer === questions[currentIdx]?.answer && currentIdx === questions.length - 1 ? 1 : 0)}
+        score={score}
         gameId="quiz"
         onClose={() => setShowSubmitModal(false)}
       />
