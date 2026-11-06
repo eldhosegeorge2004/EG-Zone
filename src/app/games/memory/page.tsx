@@ -25,28 +25,32 @@ export default function MemoryPage() {
 
       <GameSEO 
         gameName="Memory Match"
-        description="Memory Match is a classic card game that trains your short-term memory and concentration. Flip cards to reveal images and remember their locations to find matching pairs."
+        description="Memory Match is a classic card game that trains your short-term memory and concentration. Play solo or challenge friends in local 2 to 4 player multiplayer mode on the same device! Flip cards to reveal vehicles and remember their locations to find matching pairs."
         howToPlay={[
-          "Flip Cards: Click on any two face-down cards to reveal them.",
-          "Find Pairs: Try to find two cards with the exact same image.",
-          "Match: If they match, they will remain face up.",
-          "Mismatch: If they don't match, they will flip back over after a short delay.",
-          "Win: The game ends when all pairs have been successfully matched."
+          "Choose Mode: Select Solo (1 Player) or 2–4 Players using the player toggle at the top.",
+          "Flip Cards: On your turn, click on any two face-down cards to reveal them.",
+          "Find Pairs: If the two cards match, you claim the pair, score a point, and get an extra turn!",
+          "Mismatch: If they don't match, they flip back and the turn passes to the next player.",
+          "Win: The game ends when all pairs are matched. In multiplayer, the player with the most pairs wins!"
         ]}
         features={[
-          "Helps improve short-term memory and focus",
-          "Clean, visually appealing interface",
-          "Tracks your moves and time to measure improvement",
-          "Relaxing yet mentally stimulating gameplay"
+          "Local 2 to 4 player pass-and-play multiplayer mode",
+          "Color-coded player scoreboards and turn indicators",
+          "Solo mode with move tracking and global leaderboard",
+          "Smooth 3D flip card animations and clean design"
         ]}
         faqs={[
+          {
+            question: "How does 2-4 player multiplayer work?",
+            answer: "Players take turns on the same screen flipping two cards. If a player finds a matching pair, they score 1 point and earn an extra turn. If they miss, the turn passes to the next player. The player with the most pairs at the end wins!"
+          },
           {
             question: "Why is memory matching good for the brain?",
             answer: "Memory games require active recall and spatial awareness, which can help strengthen neural pathways and improve overall cognitive function and focus."
           },
           {
-            question: "How is the score calculated?",
-            answer: "Your final score is usually based on how few moves (flips) it took you to complete the board, as well as how quickly you finished."
+            question: "How is the solo score calculated?",
+            answer: "Your final score in solo mode is based on how few moves it took you to complete the board, which can then be submitted to the global leaderboard."
           }
         ]}
       />
