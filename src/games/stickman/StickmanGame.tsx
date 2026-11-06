@@ -1017,18 +1017,18 @@ export default function StickmanGame() {
       </div>
 
       {/* Game Canvas Container */}
-      <div className="relative w-full aspect-video max-h-[500px] bg-gray-900 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border-4 border-gray-900 shrink">
+      <div className="relative w-full h-[280px] xs:h-[320px] sm:h-[420px] md:h-[450px] bg-gray-900 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border-2 sm:border-4 border-gray-900 shrink">
 
         {!isPlaying && !isGameOver && (
-          <div className="absolute inset-0 z-20 bg-gray-900/80 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center text-white">
-            <div className="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center mb-6 shadow-inner border border-gray-700">
-              <Swords className="w-10 h-10 text-cyan-400" />
+          <div className="absolute inset-0 z-20 bg-gray-900/85 backdrop-blur-sm flex flex-col items-center justify-center p-4 sm:p-6 text-center text-white overflow-y-auto">
+            <div className="hidden sm:flex w-16 h-16 bg-gray-800 rounded-full items-center justify-center mb-3 shadow-inner border border-gray-700">
+              <Swords className="w-8 h-8 text-cyan-400" />
             </div>
-            <h2 className="text-3xl sm:text-4xl font-black mb-2 tracking-tight">Stickman Survival</h2>
-            <p className="text-gray-400 text-sm sm:text-base mb-8 max-w-sm">
-              Desktop: Arrows/WASD to move &amp; jump, Z to Punch (3rd hit is a finisher), X to Kick, Shift to Dash (dodges hits), P to pause.<br />
-              Watch for the <span className="text-yellow-400 font-bold">!</span> — jump or back off before the swing lands.<br />
-              Mobile: Use on-screen controls.
+            <h2 className="text-2xl sm:text-4xl font-black mb-1 sm:mb-2 tracking-tight">Stickman Survival</h2>
+            <p className="text-gray-300 text-xs sm:text-sm mb-4 sm:mb-6 max-w-sm leading-relaxed">
+              <span className="hidden sm:inline">Desktop: Arrows/WASD to move &amp; jump, Z to Punch, X to Kick, Shift to Dash, P to pause.<br /></span>
+              <span className="text-yellow-400 font-bold">Watch for the !</span> &mdash; jump or dash to dodge!<br />
+              <span className="sm:hidden text-gray-400">Use on-screen controls to fight.</span>
             </p>
             <button
               type="button"
@@ -1037,7 +1037,7 @@ export default function StickmanGame() {
                 e.stopPropagation();
                 startGame();
               }}
-              className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-10 py-4 rounded-full font-bold shadow-lg hover:shadow-cyan-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all text-lg w-full max-w-[250px] cursor-pointer"
+              className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-8 py-3.5 sm:px-10 sm:py-4 rounded-full font-black shadow-lg hover:shadow-cyan-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all text-base sm:text-lg w-full max-w-[230px] sm:max-w-[260px] cursor-pointer"
             >
               Start Fighting
             </button>
@@ -1045,8 +1045,8 @@ export default function StickmanGame() {
         )}
 
         {isPaused && isPlaying && (
-          <div className="absolute inset-0 z-20 bg-gray-900/70 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center text-white">
-            <h2 className="text-4xl font-black mb-6 tracking-tight">Paused</h2>
+          <div className="absolute inset-0 z-20 bg-gray-900/75 backdrop-blur-sm flex flex-col items-center justify-center p-4 sm:p-6 text-center text-white">
+            <h2 className="text-3xl sm:text-4xl font-black mb-4 sm:mb-6 tracking-tight">Paused</h2>
             <button
               type="button"
               onClick={togglePause}
@@ -1054,7 +1054,7 @@ export default function StickmanGame() {
                 e.stopPropagation();
                 togglePause();
               }}
-              className="flex items-center justify-center bg-white text-gray-900 px-10 py-4 rounded-full font-black hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-xl text-lg w-full max-w-[250px] cursor-pointer"
+              className="flex items-center justify-center bg-white text-gray-900 px-8 py-3 sm:px-10 sm:py-4 rounded-full font-black hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-xl text-base sm:text-lg w-full max-w-[220px] cursor-pointer"
             >
               <Play className="w-5 h-5 mr-2" /> Resume
             </button>
@@ -1062,17 +1062,17 @@ export default function StickmanGame() {
         )}
 
         {isGameOver && (
-          <div className="absolute inset-0 z-20 bg-gray-900/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center text-white">
-            <div className="w-24 h-24 bg-red-900/50 rounded-full flex items-center justify-center mb-6 shadow-inner border border-red-500/30">
-              <span className="text-5xl">💀</span>
+          <div className="absolute inset-0 z-20 bg-gray-900/90 backdrop-blur-md flex flex-col items-center justify-center p-4 sm:p-6 text-center text-white overflow-y-auto">
+            <div className="w-14 h-14 sm:w-20 sm:h-20 bg-red-900/50 rounded-full flex items-center justify-center mb-2 sm:mb-4 shadow-inner border border-red-500/30">
+              <span className="text-3xl sm:text-4xl">💀</span>
             </div>
-            <h2 className="text-4xl font-black mb-2 tracking-tight text-red-500">Wasted</h2>
-            <p className="text-gray-300 text-lg mb-2 font-medium">
-              You defeated <span className="font-black text-white text-2xl mx-1">{score}</span>{" "}
+            <h2 className="text-2xl sm:text-4xl font-black mb-1 tracking-tight text-red-500">Wasted</h2>
+            <p className="text-gray-300 text-sm sm:text-lg mb-1 sm:mb-2 font-medium">
+              You defeated <span className="font-black text-white text-xl sm:text-2xl mx-1">{score}</span>{" "}
               {score === 1 ? "stickman" : "stickmen"}.
             </p>
-            {newBest && <p className="text-orange-400 font-black mb-6">New best!</p>}
-            {!newBest && <div className="mb-6" />}
+            {newBest && <p className="text-orange-400 font-bold text-sm sm:text-base mb-3 sm:mb-5">New best!</p>}
+            {!newBest && <div className="mb-3 sm:mb-5" />}
             <button
               type="button"
               onClick={startGame}
@@ -1080,7 +1080,7 @@ export default function StickmanGame() {
                 e.stopPropagation();
                 startGame();
               }}
-              className="flex items-center justify-center bg-white text-gray-900 px-10 py-4 rounded-full font-black hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-xl text-lg w-full max-w-[250px] cursor-pointer"
+              className="flex items-center justify-center bg-white text-gray-900 px-8 py-3.5 sm:px-10 sm:py-4 rounded-full font-black hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-xl text-base sm:text-lg w-full max-w-[220px] cursor-pointer"
             >
               <RotateCcw className="w-5 h-5 mr-2" /> Try Again
             </button>
