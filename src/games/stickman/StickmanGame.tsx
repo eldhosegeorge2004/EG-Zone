@@ -215,13 +215,13 @@ const newGame = (running: boolean): Game => ({
   keys: { left: false, right: false, up: false, punch: false, kick: false, dash: false },
   lastKeys: { punch: false, kick: false, dash: false },
   player: running ? makePlayer() : null,
-  enemies: [],
+  enemies: running ? [spawnEnemy(1)] : [],
   particles: [],
   texts: [],
   pickups: [],
   score: 0,
   wave: 1,
-  spawnTimer: 1000,
+  spawnTimer: 1500,
   combo: 0,
   comboTimer: 0,
   chain: 0,
@@ -454,6 +454,30 @@ export default function StickmanGame() {
     setIsPaused(g.paused);
   }, []);
 
+  const startGame = useCallback(() => {
+    try {
+      if (!audioCtx) {
+        const Ctor =
+          window.AudioContext ||
+          (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+        if (Ctor) audioCtx = new Ctor();
+      }
+      if (audioCtx && audioCtx.state === "suspended") {
+        void audioCtx.resume();
+      }
+    } catch {
+      /* audio unavailable */
+    }
+    gameState.current = newGame(true);
+    setScore(0);
+    setPlayerHealth(100);
+    setIsPlaying(true);
+    setIsGameOver(false);
+    setIsPaused(false);
+    setNewBest(false);
+    setShowSubmitModal(false);
+  }, []);
+
   // --- Best score ---
   useEffect(() => {
     try {
@@ -475,13 +499,22 @@ export default function StickmanGame() {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isTyping(e)) return;
+      const g = gameState.current;
+
+      if (!g.isRunning || isGameOver) {
+        if (e.code === "Enter" || e.code === "Space") {
+          e.preventDefault();
+          startGame();
+          return;
+        }
+      }
+
       if (e.code === "KeyP" || e.code === "Escape") {
         if (!e.repeat) togglePause();
         return;
       }
       const action = KEY_MAP[e.code];
       if (!action) return;
-      const g = gameState.current;
       if (g.isRunning) e.preventDefault(); // stop arrows/space scrolling the page
       g.keys[action] = true;
     };
@@ -505,7 +538,7 @@ export default function StickmanGame() {
       window.removeEventListener("keyup", handleKeyUp);
       window.removeEventListener("blur", handleBlur);
     };
-  }, [togglePause]);
+  }, [togglePause, startGame, isGameOver]);
 
   // --- Touch Controls for Mobile ---
   const press = (action: keyof Keys, isDown: boolean) => (e: React.PointerEvent) => {
@@ -935,19 +968,8 @@ export default function StickmanGame() {
     return () => cancelAnimationFrame(animationFrameId);
   }, []);
 
-  const startGame = () => {
-    gameState.current = newGame(true);
-    setScore(0);
-    setPlayerHealth(100);
-    setIsPlaying(true);
-    setIsGameOver(false);
-    setIsPaused(false);
-    setNewBest(false);
-    setShowSubmitModal(false);
-  };
-
   return (
-    <div className="flex flex-col items-center w-full max-w-4xl mx-auto h-full touch-none select-none">
+    <div className="flex flex-col items-center w-full max-w-4xl mx-auto h-full select-none">
 
       {/* Top HUD */}
       <div className="w-full flex justify-between items-center mb-4 bg-white px-6 py-3 rounded-2xl border border-gray-200 shadow-sm shrink-0">
@@ -971,17 +993,19 @@ export default function StickmanGame() {
         </div>
         <div className="flex items-center gap-4">
           <button
+            type="button"
             onClick={() => setMuted((m) => !m)}
             aria-label={muted ? "Unmute" : "Mute"}
-            className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+            className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors cursor-pointer"
           >
             {muted ? <VolumeX className="w-4 h-4 text-gray-700" /> : <Volume2 className="w-4 h-4 text-gray-700" />}
           </button>
           <button
+            type="button"
             onClick={togglePause}
             disabled={!isPlaying}
             aria-label="Pause"
-            className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-30 disabled:hover:bg-gray-100 flex items-center justify-center transition-colors"
+            className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-30 disabled:hover:bg-gray-100 flex items-center justify-center transition-colors cursor-pointer"
           >
             <Pause className="w-4 h-4 text-gray-700" />
           </button>
@@ -1007,8 +1031,13 @@ export default function StickmanGame() {
               Mobile: Use on-screen controls.
             </p>
             <button
+              type="button"
               onClick={startGame}
-              className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-10 py-4 rounded-full font-bold shadow-lg hover:shadow-cyan-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all text-lg w-full max-w-[250px]"
+              onPointerDown={(e) => {
+                e.stopPropagation();
+                startGame();
+              }}
+              className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-10 py-4 rounded-full font-bold shadow-lg hover:shadow-cyan-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all text-lg w-full max-w-[250px] cursor-pointer"
             >
               Start Fighting
             </button>
@@ -1019,8 +1048,13 @@ export default function StickmanGame() {
           <div className="absolute inset-0 z-20 bg-gray-900/70 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center text-white">
             <h2 className="text-4xl font-black mb-6 tracking-tight">Paused</h2>
             <button
+              type="button"
               onClick={togglePause}
-              className="flex items-center justify-center bg-white text-gray-900 px-10 py-4 rounded-full font-black hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-xl text-lg w-full max-w-[250px]"
+              onPointerDown={(e) => {
+                e.stopPropagation();
+                togglePause();
+              }}
+              className="flex items-center justify-center bg-white text-gray-900 px-10 py-4 rounded-full font-black hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-xl text-lg w-full max-w-[250px] cursor-pointer"
             >
               <Play className="w-5 h-5 mr-2" /> Resume
             </button>
@@ -1040,8 +1074,13 @@ export default function StickmanGame() {
             {newBest && <p className="text-orange-400 font-black mb-6">New best!</p>}
             {!newBest && <div className="mb-6" />}
             <button
+              type="button"
               onClick={startGame}
-              className="flex items-center justify-center bg-white text-gray-900 px-10 py-4 rounded-full font-black hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-xl text-lg w-full max-w-[250px]"
+              onPointerDown={(e) => {
+                e.stopPropagation();
+                startGame();
+              }}
+              className="flex items-center justify-center bg-white text-gray-900 px-10 py-4 rounded-full font-black hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-xl text-lg w-full max-w-[250px] cursor-pointer"
             >
               <RotateCcw className="w-5 h-5 mr-2" /> Try Again
             </button>
