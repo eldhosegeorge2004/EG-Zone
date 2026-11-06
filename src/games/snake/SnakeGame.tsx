@@ -7,7 +7,7 @@ import SubmitScoreModal from "@/components/SubmitScoreModal";
 
 const GRID_SIZE = 20;
 const CANVAS_SIZE = 400;
-const INITIAL_SPEED = 150;
+const INITIAL_SPEED = 220;
 
 type Point = { x: number; y: number };
 
@@ -97,7 +97,7 @@ export default function SnakeGame() {
       return;
     }
 
-    const speed = Math.max(50, INITIAL_SPEED - Math.floor(score / 5) * 10);
+    const speed = Math.max(80, INITIAL_SPEED - Math.floor(score / 10) * 10);
 
     gameLoopRef.current = setTimeout(() => {
       setSnake((prevSnake) => {
