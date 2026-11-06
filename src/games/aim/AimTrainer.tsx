@@ -24,6 +24,7 @@ export default function AimTrainer() {
   // Use refs for timer — avoids re-creating interval on every score change
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const scoreRef = useRef(0);
+  const lastHitTimeRef = useRef(0);
   const targetIdCounter = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -105,16 +106,21 @@ export default function AimTrainer() {
 
   const handleTargetClick = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation();
+    if (e.cancelable) e.preventDefault();
     if (!isPlaying) return;
 
+    lastHitTimeRef.current = Date.now();
     // Update both ref (for endGame to read) and state (for display)
     scoreRef.current += 1;
     setScore(scoreRef.current);
     spawnTarget();
   }, [isPlaying, spawnTarget]);
 
-  const handleMissClick = useCallback(() => {
+  const handleMissClick = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    // Only penalise if the click came directly on the container (not bubbled from a target or ghost click)
     if (!isPlaying) return;
+    if (Date.now() - lastHitTimeRef.current < 350) return; // Prevent synthetic mouse event / ghost click right after a hit
+    if (e.target !== e.currentTarget) return; // ignore bubbled events from targets
     scoreRef.current = Math.max(0, scoreRef.current - 1);
     setScore(scoreRef.current);
   }, [isPlaying]);
