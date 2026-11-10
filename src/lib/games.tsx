@@ -23,8 +23,8 @@ export const GAMES = [
     slug: "chess",
     description: "Play classic chess against intelligent computer AI or challenge a friend in 2-player pass & play.",
     category: "Strategy",
-    image: "/images/chess.svg",
-    color: "from-indigo-600 to-purple-800",
+    image: "/images/chess.png",
+    color: "from-amber-600 to-amber-900",
   },
   {
     title: "Color Match",
