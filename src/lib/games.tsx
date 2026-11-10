@@ -24,7 +24,7 @@ export const GAMES = [
     description: "Play classic chess against intelligent computer AI or challenge a friend in 2-player pass & play.",
     category: "Strategy",
     image: "/images/chess.svg",
-    color: "from-amber-600 to-amber-900",
+    color: "from-indigo-600 to-purple-800",
   },
   {
     title: "Color Match",

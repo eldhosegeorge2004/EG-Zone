@@ -1,67 +1,223 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
   <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fef3c7" />
-      <stop offset="50%" stop-color="#fde68a" />
-      <stop offset="100%" stop-color="#d97706" />
+    <!-- Background Gradient -->
+    <radialGradient id="bgGlow" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#312e81" />
+      <stop offset="45%" stop-color="#1e1b4b" />
+      <stop offset="100%" stop-color="#090514" />
+    </radialGradient>
+
+    <!-- Ambient Core Glow -->
+    <radialGradient id="ambientCyan" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.35" />
+      <stop offset="60%" stop-color="#818cf8" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#312e81" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Board Glass Platform -->
+    <linearGradient id="boardEdge" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="50%" stop-color="#8b5cf6" />
+      <stop offset="100%" stop-color="#ec4899" />
     </linearGradient>
-    <linearGradient id="pieceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+
+    <!-- White Piece Gloss Gradient -->
+    <linearGradient id="pieceWhite" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#ffffff" />
-      <stop offset="100%" stop-color="#e2e8f0" />
+      <stop offset="35%" stop-color="#f8fafc" />
+      <stop offset="70%" stop-color="#cbd5e1" />
+      <stop offset="100%" stop-color="#94a3b8" />
     </linearGradient>
-    <filter id="shadow">
-      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#78350f" flood-opacity="0.35"/>
+
+    <!-- Gold Accent / Crown -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#b45309" />
+    </linearGradient>
+
+    <!-- Dark Piece Luxury Obsidian Gradient -->
+    <linearGradient id="pieceDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#475569" />
+      <stop offset="40%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+
+    <!-- Tile Light -->
+    <linearGradient id="tileLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#e0e7ff" stop-opacity="0.75" />
+    </linearGradient>
+
+    <!-- Tile Dark -->
+    <linearGradient id="tileDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4338ca" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#312e81" stop-opacity="0.95" />
+    </linearGradient>
+
+    <!-- Soft Drop Shadow Filters -->
+    <filter id="bigGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="35" result="blur" />
     </filter>
-    <filter id="pieceShadow">
-      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.4"/>
+    
+    <filter id="pieceShadow" x="-50%" y="-30%" width="200%" height="180%">
+      <feDropShadow dx="0" dy="24" stdDeviation="16" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+
+    <filter id="neonGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
     </filter>
   </defs>
 
-  <!-- Background -->
-  <rect width="800" height="600" fill="url(#bg)"/>
+  <!-- Deep Cosmic Background -->
+  <rect width="800" height="600" fill="url(#bgGlow)"/>
 
-  <!-- Chessboard platform -->
-  <g transform="translate(180, 80)" filter="url(#shadow)">
-    <!-- Board Base Frame -->
-    <rect width="440" height="440" rx="32" fill="#78350f" stroke="#b45309" stroke-width="4" />
-    <rect x="20" y="20" width="400" height="400" rx="16" fill="#f0d9b5" />
+  <!-- Ambient Light Center Glow -->
+  <circle cx="400" cy="280" r="320" fill="url(#ambientCyan)" filter="url(#bigGlow)"/>
 
-    <!-- 4x4 sample squares -->
+  <!-- Background Decorative Floating Blur Orbs -->
+  <circle cx="160" cy="140" r="90" fill="#a855f7" opacity="0.25" filter="url(#bigGlow)"/>
+  <circle cx="680" cy="420" r="110" fill="#38bdf8" opacity="0.2" filter="url(#bigGlow)"/>
+
+  <!-- 3D ISOMETRIC / PERSPECTIVE CHESSBOARD -->
+  <g transform="translate(400, 390) scale(1, 0.58) rotate(-45)">
+    <!-- Board Base Shadow -->
+    <rect x="-195" y="-195" width="390" height="390" rx="36" fill="#000000" opacity="0.5" filter="url(#bigGlow)"/>
+
+    <!-- Board Extrusion Thickness (3D Edge) -->
+    <rect x="-185" y="-185" width="370" height="370" rx="32" fill="#1e1b4b" stroke="url(#boardEdge)" stroke-width="6"/>
+
+    <!-- Inner Playing Surface Frame -->
+    <rect x="-165" y="-165" width="330" height="330" rx="16" fill="#18181b" opacity="0.95" />
+
+    <!-- 4x4 Grid of Stylish Isometric Tiles -->
     <!-- Row 0 -->
-    <rect x="20" y="20" width="100" height="100" fill="#f0d9b5" rx="16"/>
-    <rect x="120" y="20" width="100" height="100" fill="#b58863"/>
-    <rect x="220" y="20" width="100" height="100" fill="#f0d9b5"/>
-    <rect x="320" y="20" width="100" height="100" fill="#b58863"/>
+    <rect x="-160" y="-160" width="80" height="80" rx="4" fill="url(#tileLight)" />
+    <rect x="-80" y="-160" width="80" height="80" rx="4" fill="url(#tileDark)" />
+    <rect x="0" y="-160" width="80" height="80" rx="4" fill="url(#tileLight)" />
+    <rect x="80" y="-160" width="80" height="80" rx="4" fill="url(#tileDark)" />
 
     <!-- Row 1 -->
-    <rect x="20" y="120" width="100" height="100" fill="#b58863"/>
-    <rect x="120" y="120" width="100" height="100" fill="#f0d9b5"/>
-    <rect x="220" y="120" width="100" height="100" fill="#b58863"/>
-    <rect x="320" y="120" width="100" height="100" fill="#f0d9b5"/>
+    <rect x="-160" y="-80" width="80" height="80" rx="4" fill="url(#tileDark)" />
+    <rect x="-80" y="-80" width="80" height="80" rx="4" fill="url(#tileLight)" />
+    <rect x="0" y="-80" width="80" height="80" rx="4" fill="url(#tileDark)" />
+    <rect x="80" y="-80" width="80" height="80" rx="4" fill="url(#tileLight)" />
 
     <!-- Row 2 -->
-    <rect x="20" y="220" width="100" height="100" fill="#f0d9b5"/>
-    <rect x="120" y="220" width="100" height="100" fill="#b58863"/>
-    <rect x="220" y="220" width="100" height="100" fill="#f0d9b5"/>
-    <rect x="320" y="220" width="100" height="100" fill="#b58863"/>
+    <rect x="-160" y="0" width="80" height="80" rx="4" fill="url(#tileLight)" />
+    <rect x="-80" y="0" width="80" height="80" rx="4" fill="url(#tileDark)" />
+    <!-- Active Highlighted Square -->
+    <rect x="0" y="0" width="80" height="80" rx="4" fill="#38bdf8" opacity="0.85" filter="url(#neonGlow)"/>
+    <rect x="80" y="0" width="80" height="80" rx="4" fill="url(#tileDark)" />
 
     <!-- Row 3 -->
-    <rect x="20" y="320" width="100" height="100" fill="#b58863"/>
-    <rect x="120" y="320" width="100" height="100" fill="#f0d9b5"/>
-    <rect x="220" y="320" width="100" height="100" fill="#b58863"/>
-    <rect x="320" y="320" width="100" height="100" fill="#f0d9b5"/>
+    <rect x="-160" y="80" width="80" height="80" rx="4" fill="url(#tileDark)" />
+    <rect x="-80" y="80" width="80" height="80" rx="4" fill="url(#tileLight)" />
+    <rect x="0" y="80" width="80" height="80" rx="4" fill="url(#tileDark)" />
+    <rect x="80" y="80" width="80" height="80" rx="4" fill="url(#tileLight)" />
 
-    <!-- Chess Knight Piece in Center -->
-    <g transform="translate(220, 220) scale(3.5)" filter="url(#pieceShadow)">
-      <!-- Stylized Knight icon -->
-      <path d="M-8,14 L8,14 C8,14 7,10 5,8 C7,7 9,5 9,2 C9,-3 7,-7 5,-9 C4,-10 2,-11 0,-11 C-2,-11 -4,-10 -5,-8 C-8,-4 -7,2 -6,4 C-8,5 -9,7 -9,9 C-9,11 -8,14 -8,14 Z" fill="url(#pieceGrad)" stroke="#334155" stroke-width="1.5" stroke-linejoin="round"/>
-      <circle cx="-1" cy="-5" r="1.2" fill="#0f172a" />
-    </g>
+    <!-- Glowing Tactical Move Indicator Dot -->
+    <circle cx="40" cy="40" r="16" fill="#38bdf8" filter="url(#neonGlow)"/>
+    <circle cx="40" cy="40" r="8" fill="#ffffff"/>
+  </g>
 
-    <!-- Stylized Crown / King piece accent -->
-    <g transform="translate(140, 140) scale(2.2)" opacity="0.9" filter="url(#pieceShadow)">
-      <path d="M-12,12 L12,12 L10,6 L14,-4 L6,2 L0,-8 L-6,2 L-14,-4 L-10,6 Z" fill="#1e293b" stroke="#0f172a" stroke-width="1.2" stroke-linejoin="round"/>
-      <circle cx="0" cy="-11" r="1.5" fill="#f59e0b"/>
-    </g>
+  <!-- FOREGROUND 3D CHESS PIECES -->
+
+  <!-- Left Piece: Obsidian / Dark Knight Silhouette with Cyber Edge Highlight -->
+  <g transform="translate(260, 240)" filter="url(#pieceShadow)">
+    <!-- Base Rings -->
+    <ellipse cx="60" cy="180" rx="46" ry="14" fill="#090514" />
+    <path d="M18,180 C18,172 32,166 60,166 C88,166 102,172 102,180 L100,168 C100,160 88,154 60,154 C32,154 20,160 20,168 Z" fill="url(#pieceDark)" />
+    
+    <!-- Knight Body & Mane Silhouette -->
+    <path d="M30,168 
+             C28,145 32,120 42,100 
+             C36,88 32,68 40,46 
+             C44,38 52,32 58,34 
+             C64,36 68,44 68,52 
+             C74,48 84,46 90,52 
+             C98,60 96,74 94,86 
+             C98,90 102,96 98,104 
+             C92,112 80,118 78,124 
+             C84,138 88,154 90,168 Z" 
+          fill="url(#pieceDark)" 
+          stroke="#818cf8" 
+          stroke-width="2.5" 
+          stroke-linejoin="round"
+    />
+    
+    <!-- Knight Eye with Cyan Glow -->
+    <circle cx="56" cy="62" r="3.5" fill="#38bdf8" filter="url(#neonGlow)"/>
+    
+    <!-- Specular Highlight Curve -->
+    <path d="M44,98 C38,118 36,140 36,164" fill="none" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+  </g>
+
+  <!-- Center-Right Piece: Luminous White Majestic King / Queen with Golden Crown -->
+  <g transform="translate(390, 160)" filter="url(#pieceShadow)">
+    <!-- Piece Base Pedestal -->
+    <ellipse cx="75" cy="245" rx="55" ry="16" fill="#0f172a" opacity="0.6"/>
+    
+    <path d="M22,245 C22,235 42,228 75,228 C108,228 128,235 128,245 L124,232 C124,222 104,214 75,214 C46,214 26,222 26,232 Z" fill="#cbd5e1"/>
+    <path d="M30,224 C30,216 48,210 75,210 C102,210 120,216 120,224 L114,204 C114,196 98,190 75,190 C52,190 36,196 36,204 Z" fill="url(#pieceWhite)"/>
+
+    <!-- Slender Waist Column -->
+    <path d="M42,196 
+             C50,160 56,128 58,105 
+             L92,105 
+             C94,128 100,160 108,196 Z" 
+          fill="url(#pieceWhite)"
+    />
+
+    <!-- Specular Edge Glow on Body -->
+    <path d="M52,190 C58,155 64,128 66,108" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+
+    <!-- Capital Collar Ring -->
+    <ellipse cx="75" cy="104" rx="26" ry="8" fill="url(#pieceWhite)" stroke="#e2e8f0" stroke-width="2"/>
+
+    <!-- Majestic Crown / Head -->
+    <path d="M54,102 
+             C48,82 44,65 52,50 
+             C60,62 70,72 75,44 
+             C80,72 90,62 98,50 
+             C106,65 102,82 96,102 Z" 
+          fill="url(#pieceWhite)"
+    />
+
+    <!-- Imperial Golden Cross on Peak -->
+    <!-- Cross Vertical -->
+    <rect x="71" y="18" width="8" height="26" rx="3" fill="url(#goldGrad)" filter="url(#neonGlow)"/>
+    <!-- Cross Horizontal -->
+    <rect x="63" y="24" width="24" height="7" rx="3" fill="url(#goldGrad)" filter="url(#neonGlow)"/>
+
+    <!-- Sparkling Golden Crown Finial Sphere -->
+    <circle cx="75" cy="42" r="6" fill="url(#goldGrad)"/>
+    <circle cx="73" cy="40" r="2" fill="#ffffff" opacity="0.8"/>
+  </g>
+
+  <!-- Dynamic Strategic Light Trajectory Arc (Moving move line) -->
+  <path d="M280,390 Q340,300 440,380" fill="none" stroke="#38bdf8" stroke-width="3" stroke-dasharray="6,6" opacity="0.75" filter="url(#neonGlow)"/>
+  
+  <!-- Subtle Ambient Sparkles -->
+  <g fill="#ffffff" opacity="0.85">
+    <!-- Star 1 -->
+    <path d="M190,260 Q190,270 200,270 Q190,270 190,280 Q190,270 180,270 Q190,270 190,260 Z" fill="#38bdf8"/>
+    <!-- Star 2 -->
+    <path d="M590,190 Q590,202 602,202 Q590,202 590,214 Q590,202 578,202 Q590,202 590,190 Z" fill="#fde047"/>
+    <!-- Tiny Dots -->
+    <circle cx="230" cy="180" r="2" fill="#818cf8"/>
+    <circle cx="560" cy="330" r="2.5" fill="#c084fc"/>
+    <circle cx="340" cy="150" r="1.5" fill="#38bdf8"/>
+  </g>
+
+  <!-- Modern Floating Badge in Top Corner -->
+  <g transform="translate(48, 48)">
+    <rect width="135" height="38" rx="19" fill="rgba(255, 255, 255, 0.08)" stroke="rgba(255, 255, 255, 0.18)" stroke-width="1.5" />
+    <circle cx="22" cy="19" r="6" fill="#10b981" filter="url(#neonGlow)"/>
+    <text x="36" y="24" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="13" fill="#ffffff" letter-spacing="0.5">STRATEGY</text>
   </g>
 </svg>
