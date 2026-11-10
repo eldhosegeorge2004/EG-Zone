@@ -19,6 +19,14 @@ import {
 
 export const GAMES = [
   {
+    title: "Chess",
+    slug: "chess",
+    description: "Play classic chess against intelligent computer AI or challenge a friend in 2-player pass & play.",
+    category: "Strategy",
+    image: "/images/chess.svg",
+    color: "from-amber-600 to-amber-900",
+  },
+  {
     title: "Color Match",
     slug: "colormatch",
     description: "Does the meaning of the word match its color? Think fast before time runs out!",
