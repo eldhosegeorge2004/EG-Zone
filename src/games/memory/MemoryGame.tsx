@@ -410,7 +410,11 @@ export default function MemoryGame() {
               <div className="grid grid-cols-4 gap-2.5 sm:gap-4 w-full h-full aspect-square max-w-[400px] mx-auto">
                 {cards.map((card, index) => {
                   const matchedPlayer = typeof card.matchedBy === "number" ? PLAYERS[card.matchedBy] : null;
-                  const matchedBg = matchedPlayer ? matchedPlayer.cardMatchedBg : "bg-gradient-to-br from-emerald-400 to-teal-500 shadow-emerald-500/30";
+                  // In solo mode, correctly matched cards turn vibrant green.
+                  // In multiplayer, matched cards show the claiming player's unique color.
+                  const matchedBg = playerCount === 1
+                    ? "bg-gradient-to-br from-emerald-500 to-teal-600 shadow-emerald-500/30 border-emerald-300/40"
+                    : (matchedPlayer ? matchedPlayer.cardMatchedBg : "bg-gradient-to-br from-emerald-500 to-teal-600 shadow-emerald-500/30");
 
                   return (
                     <div
