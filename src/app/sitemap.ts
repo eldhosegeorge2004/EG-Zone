@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { BLOG_POSTS } from '../lib/blog';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://egzone.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://egzone.vercel.app';
   
   const mainPages = [
     '',
@@ -23,7 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const gameRoutes = [
-    '2048', 'aim', 'breaker', 'colormatch', 'flappy', 
+    '2048', 'aim', 'breaker', 'chess', 'colormatch', 'flappy', 
     'guessword', 'math', 'memory', 'pong', 'puzzle', 
     'quiz', 'reaction', 'scramble', 'snake', 'stickman', 
     'sudoku', 'tictactoe', 'typing', 'zip'

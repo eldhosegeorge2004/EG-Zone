@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef3c7" />
+      <stop offset="50%" stop-color="#fde68a" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+    <linearGradient id="pieceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#e2e8f0" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#78350f" flood-opacity="0.35"/>
+    </filter>
+    <filter id="pieceShadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bg)"/>
+
+  <!-- Chessboard platform -->
+  <g transform="translate(180, 80)" filter="url(#shadow)">
+    <!-- Board Base Frame -->
+    <rect width="440" height="440" rx="32" fill="#78350f" stroke="#b45309" stroke-width="4" />
+    <rect x="20" y="20" width="400" height="400" rx="16" fill="#f0d9b5" />
+
+    <!-- 4x4 sample squares -->
+    <!-- Row 0 -->
+    <rect x="20" y="20" width="100" height="100" fill="#f0d9b5" rx="16"/>
+    <rect x="120" y="20" width="100" height="100" fill="#b58863"/>
+    <rect x="220" y="20" width="100" height="100" fill="#f0d9b5"/>
+    <rect x="320" y="20" width="100" height="100" fill="#b58863"/>
+
+    <!-- Row 1 -->
+    <rect x="20" y="120" width="100" height="100" fill="#b58863"/>
+    <rect x="120" y="120" width="100" height="100" fill="#f0d9b5"/>
+    <rect x="220" y="120" width="100" height="100" fill="#b58863"/>
+    <rect x="320" y="120" width="100" height="100" fill="#f0d9b5"/>
+
+    <!-- Row 2 -->
+    <rect x="20" y="220" width="100" height="100" fill="#f0d9b5"/>
+    <rect x="120" y="220" width="100" height="100" fill="#b58863"/>
+    <rect x="220" y="220" width="100" height="100" fill="#f0d9b5"/>
+    <rect x="320" y="220" width="100" height="100" fill="#b58863"/>
+
+    <!-- Row 3 -->
+    <rect x="20" y="320" width="100" height="100" fill="#b58863"/>
+    <rect x="120" y="320" width="100" height="100" fill="#f0d9b5"/>
+    <rect x="220" y="320" width="100" height="100" fill="#b58863"/>
+    <rect x="320" y="320" width="100" height="100" fill="#f0d9b5"/>
+
+    <!-- Chess Knight Piece in Center -->
+    <g transform="translate(220, 220) scale(3.5)" filter="url(#pieceShadow)">
+      <!-- Stylized Knight icon -->
+      <path d="M-8,14 L8,14 C8,14 7,10 5,8 C7,7 9,5 9,2 C9,-3 7,-7 5,-9 C4,-10 2,-11 0,-11 C-2,-11 -4,-10 -5,-8 C-8,-4 -7,2 -6,4 C-8,5 -9,7 -9,9 C-9,11 -8,14 -8,14 Z" fill="url(#pieceGrad)" stroke="#334155" stroke-width="1.5" stroke-linejoin="round"/>
+      <circle cx="-1" cy="-5" r="1.2" fill="#0f172a" />
+    </g>
+
+    <!-- Stylized Crown / King piece accent -->
+    <g transform="translate(140, 140) scale(2.2)" opacity="0.9" filter="url(#pieceShadow)">
+      <path d="M-12,12 L12,12 L10,6 L14,-4 L6,2 L0,-8 L-6,2 L-14,-4 L-10,6 Z" fill="#1e293b" stroke="#0f172a" stroke-width="1.2" stroke-linejoin="round"/>
+      <circle cx="0" cy="-11" r="1.5" fill="#f59e0b"/>
+    </g>
+  </g>
+</svg>

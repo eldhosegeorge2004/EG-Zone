@@ -20,6 +20,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "EG ZONE | Play Free Mini-Games",
   description: "A premium platform to play simple, fun, and fast mini-games like Snake, Memory Match, Typing Test, and more.",
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "google6b028e8379626c0d",
+  },
 };
 
 export default function RootLayout({
