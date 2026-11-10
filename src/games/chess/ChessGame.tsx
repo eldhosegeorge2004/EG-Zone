@@ -85,6 +85,15 @@ export default function ChessGame() {
   const [history, setHistory] = useState<string[]>([]);
   const [, startTransition] = useTransition();
 
+  // Auto fade-out green last-move tile highlight after 1.5s
+  useEffect(() => {
+    if (!lastMove) return;
+    const timer = setTimeout(() => {
+      setLastMove(null);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [lastMove]);
+
   // Sync board representation whenever game moves occur
   const updateGameState = useCallback((newGameInstance: Chess) => {
     setBoard(newGameInstance.board());
@@ -451,7 +460,7 @@ export default function ChessGame() {
                 <div
                   key={square}
                   onClick={() => onSquareClick(square)}
-                  className={`relative flex items-center justify-center cursor-pointer transition-colors ${
+                  className={`relative flex items-center justify-center cursor-pointer transition-colors duration-700 ease-out ${
                     isLight ? "bg-[#f0d9b5]" : "bg-[#b58863]"
                   } ${isLastMoveSquare ? "!bg-[#cdd26a]" : ""} ${
                     isSelected ? "!bg-[#f7ec74]" : ""
