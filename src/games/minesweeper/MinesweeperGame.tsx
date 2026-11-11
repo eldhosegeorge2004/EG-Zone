@@ -411,19 +411,29 @@ export default function MinesweeperGame() {
           ))}
         </div>
 
-        {/* Mobile Flag Mode Toggle Button */}
-        <button
-          type="button"
-          onClick={() => setFlagMode(!flagMode)}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black transition-all ${
-            flagMode
-              ? "bg-rose-500 text-white shadow-md shadow-rose-500/20"
-              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-          }`}
-        >
-          <Flag className="w-3.5 h-3.5" />
-          {flagMode ? "Flag: ON" : "Flag Mode"}
-        </button>
+        {/* Mobile Flag Mode & Replay Buttons */}
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => setFlagMode(!flagMode)}
+            className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-black transition-all ${
+              flagMode
+                ? "bg-rose-500 text-white shadow-md shadow-rose-500/20"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            <Flag className="w-3.5 h-3.5" />
+            {flagMode ? "Flag: ON" : "Flag"}
+          </button>
+          <button
+            type="button"
+            onClick={() => initBlankGrid(difficulty)}
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold bg-gray-100 text-gray-700 hover:bg-gray-200 active:scale-95 transition-all"
+            title="Restart Game"
+          >
+            <RotateCcw className="w-3.5 h-3.5" /> Replay
+          </button>
+        </div>
       </div>
 
       {/* Retro-Modern Minesweeper Console */}
@@ -443,7 +453,7 @@ export default function MinesweeperGame() {
             type="button"
             onClick={() => initBlankGrid(difficulty)}
             className="w-10 h-10 sm:w-11 sm:h-11 bg-slate-700 hover:bg-slate-600 active:scale-95 text-2xl rounded-xl flex items-center justify-center border-2 border-slate-500 shadow-md transition-all"
-            title="Reset Game"
+            title="Click Smiley to Replay"
           >
             {getSmiley()}
           </button>
@@ -455,15 +465,29 @@ export default function MinesweeperGame() {
           </div>
         </div>
 
-        {/* Status Win / Loss Banner */}
+        {/* Status Win / Loss Banner with Replay Button */}
         {gameStatus === "won" && (
-          <div className="w-full py-2.5 px-4 mb-3 rounded-xl bg-emerald-500 text-white font-black text-center text-sm shadow-md animate-bounce">
-            🎉 All mines cleared in {timer}s! Spectacular job!
+          <div className="w-full py-2.5 px-4 mb-3 rounded-xl bg-emerald-500 text-white font-black flex items-center justify-between text-xs sm:text-sm shadow-md animate-bounce">
+            <span>🎉 All mines cleared in {timer}s!</span>
+            <button
+              type="button"
+              onClick={() => initBlankGrid(difficulty)}
+              className="flex items-center gap-1 px-3 py-1 bg-white text-emerald-800 rounded-lg text-xs font-black shadow hover:bg-emerald-50 active:scale-95 transition-all"
+            >
+              <RotateCcw className="w-3.5 h-3.5" /> Replay
+            </button>
           </div>
         )}
         {gameStatus === "lost" && (
-          <div className="w-full py-2.5 px-4 mb-3 rounded-xl bg-rose-500 text-white font-black text-center text-sm shadow-md">
-            💥 Boom! Mine triggered. Click 🙂 to retry.
+          <div className="w-full py-2.5 px-4 mb-3 rounded-xl bg-rose-500 text-white font-black flex items-center justify-between text-xs sm:text-sm shadow-md">
+            <span>💥 Mine triggered!</span>
+            <button
+              type="button"
+              onClick={() => initBlankGrid(difficulty)}
+              className="flex items-center gap-1 px-3 py-1 bg-white text-rose-800 rounded-lg text-xs font-black shadow hover:bg-rose-50 active:scale-95 transition-all"
+            >
+              <RotateCcw className="w-3.5 h-3.5" /> Replay
+            </button>
           </div>
         )}
 
@@ -536,6 +560,17 @@ export default function MinesweeperGame() {
           </div>
         )}
       </div>
+
+      {/* Play Again button when game ends */}
+      {(gameStatus === "won" || gameStatus === "lost") && (
+        <button
+          type="button"
+          onClick={() => initBlankGrid(difficulty)}
+          className="mt-4 w-full py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-98 text-white font-black text-sm shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 transition-all"
+        >
+          <RotateCcw className="w-4 h-4" /> Play Again
+        </button>
+      )}
 
       {/* Control Tips */}
       <p className="mt-4 text-xs text-gray-400 font-medium text-center leading-relaxed">
