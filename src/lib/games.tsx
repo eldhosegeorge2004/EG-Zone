@@ -21,7 +21,7 @@ export const GAMES = [
   {
     title: "Connect 4",
     slug: "connect4",
-    description: "Drop chips and connect 4 in a row. Play against smart computer AI or challenge a friend!",
+    description: "Classic two-player Four in a Row! Take turns dropping chips and connect 4 to win.",
     category: "Strategy",
     image: "/images/connect4.svg",
     color: "from-blue-600 to-indigo-800",
