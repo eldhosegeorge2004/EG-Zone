@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Flag, RotateCcw, Clock, Bomb, Trophy, Sparkles } from "lucide-react";
+import { Flag, RotateCcw, Clock, Bomb, Trophy, XCircle, Check } from "lucide-react";
 
 type Difficulty = "easy" | "medium" | "hard";
 
@@ -27,17 +27,18 @@ interface Cell {
   isFlagged: boolean;
   neighborMines: number;
   isExploded?: boolean;
+  isWrongFlag?: boolean;
 }
 
 const NUMBER_COLORS: Record<number, string> = {
-  1: "text-blue-600",
-  2: "text-emerald-600",
-  3: "text-rose-600",
-  4: "text-indigo-800",
-  5: "text-amber-800",
-  6: "text-cyan-700",
-  7: "text-purple-800",
-  8: "text-gray-900",
+  1: "text-blue-500",
+  2: "text-emerald-500",
+  3: "text-rose-500",
+  4: "text-indigo-400",
+  5: "text-amber-500",
+  6: "text-teal-400",
+  7: "text-purple-400",
+  8: "text-gray-300",
 };
 
 export default function MinesweeperGame() {
@@ -47,6 +48,7 @@ export default function MinesweeperGame() {
   const [flagMode, setFlagMode] = useState<boolean>(false);
   const [flagCount, setFlagCount] = useState<number>(0);
   const [timer, setTimer] = useState<number>(0);
+  const [isPressing, setIsPressing] = useState<boolean>(false);
   const [bestTimes, setBestTimes] = useState<Record<Difficulty, number | null>>({
     easy: null,
     medium: null,
@@ -54,6 +56,8 @@ export default function MinesweeperGame() {
   });
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const touchTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const didLongPress = useRef<boolean>(false);
 
   // Load best times from localStorage
   useEffect(() => {
@@ -89,6 +93,7 @@ export default function MinesweeperGame() {
     setGameStatus("idle");
     setFlagCount(0);
     setTimer(0);
+    setIsPressing(false);
     if (timerRef.current) clearInterval(timerRef.current);
   }, []);
 
@@ -110,17 +115,17 @@ export default function MinesweeperGame() {
     };
   }, [gameStatus]);
 
-  // Plant mines ensuring the first clicked cell (and its 8 neighbors) is always completely safe
-  const plantMines = (startR: number, startC: number): Cell[][] => {
+  // Plant mines ensuring the first clicked cell (and its 8 neighbors) is guaranteed safe
+  const plantMines = (startR: number, startC: number, currentGrid: Cell[][]): Cell[][] => {
     const { rows, cols, mines } = config;
-    const newGrid: Cell[][] = grid.map((row) => row.map((cell) => ({ ...cell })));
+    const newGrid: Cell[][] = currentGrid.map((row) => row.map((cell) => ({ ...cell })));
 
     let planted = 0;
     while (planted < mines) {
       const r = Math.floor(Math.random() * rows);
       const c = Math.floor(Math.random() * cols);
 
-      // Keep starting cell and its neighbors free of mines
+      // Keep starting cell and its 8 adjacent neighbors free of mines
       const isNeighborOrStart = Math.abs(r - startR) <= 1 && Math.abs(c - startC) <= 1;
 
       if (!newGrid[r][c].isMine && !isNeighborOrStart) {
@@ -150,39 +155,44 @@ export default function MinesweeperGame() {
     return newGrid;
   };
 
-  // Reveal a cell with cascade expansion
-  const revealCell = (r: number, c: number) => {
-    if (gameStatus === "won" || gameStatus === "lost") return;
+  // Trigger defeat: reveal all mines, highlight detonated mine, and mark wrong flags
+  const handleDefeat = (r: number, c: number, currentGrid: Cell[][]) => {
+    const revealedGrid = currentGrid.map((row) =>
+      row.map((cl) => {
+        if (cl.r === r && cl.c === c) {
+          return { ...cl, isRevealed: true, isExploded: true };
+        }
+        // Flag placed on a non-mine tile -> Wrong flag
+        if (cl.isFlagged && !cl.isMine) {
+          return { ...cl, isRevealed: true, isWrongFlag: true };
+        }
+        // Hidden mine revealed
+        if (cl.isMine && !cl.isFlagged) {
+          return { ...cl, isRevealed: true };
+        }
+        return cl;
+      })
+    );
+    setGrid(revealedGrid);
+    setGameStatus("lost");
+  };
 
-    let currentGrid = grid;
-
-    // First click: generate safe board
-    if (gameStatus === "idle") {
-      currentGrid = plantMines(r, c);
-      setGameStatus("playing");
+  // Check victory condition
+  const checkVictory = (currentGrid: Cell[][]): boolean => {
+    let unrevealedSafe = 0;
+    for (const row of currentGrid) {
+      for (const cl of row) {
+        if (!cl.isMine && !cl.isRevealed) unrevealedSafe++;
+      }
     }
+    return unrevealedSafe === 0;
+  };
 
-    const cell = currentGrid[r][c];
-    if (cell.isRevealed || cell.isFlagged) return;
-
-    // Hit a mine -> Game Over
-    if (cell.isMine) {
-      const revealedGrid = currentGrid.map((row) =>
-        row.map((cl) => {
-          if (cl.r === r && cl.c === c) return { ...cl, isRevealed: true, isExploded: true };
-          if (cl.isMine) return { ...cl, isRevealed: true };
-          return cl;
-        })
-      );
-      setGrid(revealedGrid);
-      setGameStatus("lost");
-      return;
-    }
-
-    // Cascade reveal using BFS
-    const nextGrid = currentGrid.map((row) => row.map((cl) => ({ ...cl })));
-    const queue: [number, number][] = [[r, c]];
-    nextGrid[r][c].isRevealed = true;
+  // Cascade reveal using Breadth-First Search (BFS)
+  const cascadeReveal = (startR: number, startC: number, board: Cell[][]): Cell[][] => {
+    const nextGrid = board.map((row) => row.map((cl) => ({ ...cl })));
+    const queue: [number, number][] = [[startR, startC]];
+    nextGrid[startR][startC].isRevealed = true;
 
     while (queue.length > 0) {
       const [currR, currC] = queue.shift()!;
@@ -210,25 +220,110 @@ export default function MinesweeperGame() {
       }
     }
 
-    // Check Win condition
-    let unrevealedSafe = 0;
-    for (let row of nextGrid) {
-      for (let cl of row) {
-        if (!cl.isMine && !cl.isRevealed) unrevealedSafe++;
+    return nextGrid;
+  };
+
+  // Reveal a single unopened cell
+  const revealCell = (r: number, c: number) => {
+    if (gameStatus === "won" || gameStatus === "lost") return;
+
+    let currentGrid = grid;
+
+    // First click: generate safe board
+    if (gameStatus === "idle") {
+      currentGrid = plantMines(r, c, grid);
+      setGameStatus("playing");
+    }
+
+    const cell = currentGrid[r][c];
+
+    // Chording: If clicking on already-revealed numbered cell, chord reveal adjacent cells!
+    if (cell.isRevealed) {
+      if (cell.neighborMines > 0) {
+        chordReveal(r, c, currentGrid);
+      }
+      return;
+    }
+
+    // Flagged cells are protected from clicks
+    if (cell.isFlagged) return;
+
+    // Hit a mine -> Defeat
+    if (cell.isMine) {
+      handleDefeat(r, c, currentGrid);
+      return;
+    }
+
+    // Safe cell reveal with cascade
+    const nextGrid = cascadeReveal(r, c, currentGrid);
+
+    // Check Win
+    if (checkVictory(nextGrid)) {
+      handleWin(nextGrid);
+    } else {
+      setGrid(nextGrid);
+    }
+  };
+
+  // Chording: When an already revealed numbered tile has exact matching flags, reveal remaining neighbors
+  const chordReveal = (r: number, c: number, currentGrid: Cell[][]) => {
+    const cell = currentGrid[r][c];
+    let neighborFlagCount = 0;
+    const unrevealedNeighbors: [number, number][] = [];
+
+    for (let dr = -1; dr <= 1; dr++) {
+      for (let dc = -1; dc <= 1; dc++) {
+        if (dr === 0 && dc === 0) continue;
+        const nr = r + dr;
+        const nc = c + dc;
+        if (nr >= 0 && nr < config.rows && nc >= 0 && nc < config.cols) {
+          const neighbor = currentGrid[nr][nc];
+          if (neighbor.isFlagged) neighborFlagCount++;
+          else if (!neighbor.isRevealed) unrevealedNeighbors.push([nr, nc]);
+        }
       }
     }
 
-    setGrid(nextGrid);
-
-    if (unrevealedSafe === 0) {
-      setGameStatus("won");
-      // Update best time
-      const currentBest = bestTimes[difficulty];
-      if (currentBest === null || timer < currentBest) {
-        const updated = { ...bestTimes, [difficulty]: timer };
-        setBestTimes(updated);
-        localStorage.setItem("minesweeper_best_times", JSON.stringify(updated));
+    // Only chord if flags match the exact number
+    if (neighborFlagCount === cell.neighborMines && unrevealedNeighbors.length > 0) {
+      // Check if any unrevealed neighbor is an unflagged mine (wrong flag mistake!)
+      for (const [nr, nc] of unrevealedNeighbors) {
+        if (currentGrid[nr][nc].isMine) {
+          handleDefeat(nr, nc, currentGrid);
+          return;
+        }
       }
+
+      // All unrevealed neighbors are safe, reveal them
+      let nextGrid = currentGrid.map((row) => row.map((cl) => ({ ...cl })));
+      for (const [nr, nc] of unrevealedNeighbors) {
+        if (!nextGrid[nr][nc].isRevealed) {
+          nextGrid = cascadeReveal(nr, nc, nextGrid);
+        }
+      }
+
+      if (checkVictory(nextGrid)) {
+        handleWin(nextGrid);
+      } else {
+        setGrid(nextGrid);
+      }
+    }
+  };
+
+  // Handle Win: auto-flag remaining mines and update best time
+  const handleWin = (finalGrid: Cell[][]) => {
+    const autoFlagged = finalGrid.map((row) =>
+      row.map((cl) => (cl.isMine ? { ...cl, isFlagged: true } : cl))
+    );
+    setGrid(autoFlagged);
+    setFlagCount(config.mines);
+    setGameStatus("won");
+
+    const currentBest = bestTimes[difficulty];
+    if (currentBest === null || timer < currentBest) {
+      const updated = { ...bestTimes, [difficulty]: timer };
+      setBestTimes(updated);
+      localStorage.setItem("minesweeper_best_times", JSON.stringify(updated));
     }
   };
 
@@ -249,7 +344,13 @@ export default function MinesweeperGame() {
     setGrid(newGrid);
   };
 
+  // Cell click dispatcher
   const handleCellClick = (r: number, c: number) => {
+    if (didLongPress.current) {
+      didLongPress.current = false;
+      return;
+    }
+
     if (flagMode) {
       toggleFlag(r, c);
     } else {
@@ -257,16 +358,37 @@ export default function MinesweeperGame() {
     }
   };
 
+  // Touch handlers for mobile long-press flagging
+  const handleTouchStart = (r: number, c: number) => {
+    didLongPress.current = false;
+    touchTimerRef.current = setTimeout(() => {
+      didLongPress.current = true;
+      toggleFlag(r, c);
+      if (typeof window !== "undefined" && window.navigator && "vibrate" in window.navigator) {
+        window.navigator.vibrate(30);
+      }
+    }, 380);
+  };
+
+  const handleTouchEnd = () => {
+    if (touchTimerRef.current) clearTimeout(touchTimerRef.current);
+  };
+
+  // Classic smiley faces
   const getSmiley = () => {
     if (gameStatus === "won") return "😎";
     if (gameStatus === "lost") return "😵";
+    if (isPressing) return "😮";
     return "🙂";
   };
 
-  const remainingMines = Math.max(0, config.mines - flagCount);
+  const remainingMines = config.mines - flagCount;
 
   return (
-    <div className="flex flex-col items-center select-none w-full max-w-[420px] mx-auto">
+    <div
+      onMouseUp={() => setIsPressing(false)}
+      className="flex flex-col items-center select-none w-full max-w-[420px] mx-auto"
+    >
       {/* Top Difficulty Selector */}
       <div className="w-full flex justify-between items-center gap-2 mb-4 bg-white px-4 py-3 rounded-2xl border border-gray-200 shadow-sm">
         <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-xl">
@@ -311,7 +433,9 @@ export default function MinesweeperGame() {
           {/* Mine Counter */}
           <div className="flex items-center gap-1.5 bg-black/60 px-2.5 py-1 rounded-lg border border-red-950 font-mono text-xl sm:text-2xl font-black text-rose-500 tracking-wider">
             <Bomb className="w-4 h-4 sm:w-5 sm:h-5 text-rose-500" />
-            {String(remainingMines).padStart(3, "0")}
+            {remainingMines < 0
+              ? `-${String(Math.abs(remainingMines)).padStart(2, "0")}`
+              : String(remainingMines).padStart(3, "0")}
           </div>
 
           {/* Smiley Reset Button */}
@@ -334,26 +458,29 @@ export default function MinesweeperGame() {
         {/* Status Win / Loss Banner */}
         {gameStatus === "won" && (
           <div className="w-full py-2.5 px-4 mb-3 rounded-xl bg-emerald-500 text-white font-black text-center text-sm shadow-md animate-bounce">
-            🎉 Cleared in {timer}s! Spectacular job!
+            🎉 All mines cleared in {timer}s! Spectacular job!
           </div>
         )}
         {gameStatus === "lost" && (
           <div className="w-full py-2.5 px-4 mb-3 rounded-xl bg-rose-500 text-white font-black text-center text-sm shadow-md">
-            💥 Boom! You triggered a mine. Try again!
+            💥 Boom! Mine triggered. Click 🙂 to retry.
           </div>
         )}
 
         {/* Square Minesweeper Grid */}
-        <div className="w-full aspect-square bg-slate-900 p-2 sm:p-2.5 rounded-2xl border border-slate-700 flex flex-col gap-1">
+        <div
+          onMouseDown={() => setIsPressing(true)}
+          className="w-full aspect-square bg-slate-900 p-2 sm:p-2.5 rounded-2xl border border-slate-700 flex flex-col gap-1"
+        >
           {grid.map((row, r) => (
             <div key={r} className="flex gap-1 w-full flex-1">
               {row.map((cell, c) => {
                 const textSize =
                   difficulty === "easy"
-                    ? "text-sm sm:text-base"
+                    ? "text-sm sm:text-base font-black"
                     : difficulty === "medium"
-                    ? "text-xs"
-                    : "text-[9px]";
+                    ? "text-xs font-black"
+                    : "text-[9px] font-black";
 
                 return (
                   <button
@@ -361,10 +488,14 @@ export default function MinesweeperGame() {
                     type="button"
                     onClick={() => handleCellClick(r, c)}
                     onContextMenu={(e) => toggleFlag(r, c, e)}
-                    className={`flex-1 h-full rounded font-black flex items-center justify-center transition-all ${textSize} ${
+                    onTouchStart={() => handleTouchStart(r, c)}
+                    onTouchEnd={handleTouchEnd}
+                    className={`flex-1 h-full rounded flex items-center justify-center transition-all ${textSize} ${
                       cell.isRevealed
                         ? cell.isExploded
                           ? "bg-rose-600 text-white shadow-inner animate-pulse"
+                          : cell.isWrongFlag
+                          ? "bg-rose-950 border border-rose-500"
                           : cell.isMine
                           ? "bg-slate-700 text-white"
                           : "bg-slate-700/80 shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
@@ -372,7 +503,14 @@ export default function MinesweeperGame() {
                     }`}
                   >
                     {cell.isRevealed ? (
-                      cell.isMine ? (
+                      cell.isExploded ? (
+                        <Bomb className="w-4 h-4 text-white animate-bounce" />
+                      ) : cell.isWrongFlag ? (
+                        <div className="relative flex items-center justify-center">
+                          <Flag className="w-3.5 h-3.5 text-rose-400 opacity-60" />
+                          <XCircle className="w-3 h-3 text-rose-500 absolute" />
+                        </div>
+                      ) : cell.isMine ? (
                         <Bomb className="w-3.5 h-3.5 text-rose-400" />
                       ) : cell.neighborMines > 0 ? (
                         <span className={NUMBER_COLORS[cell.neighborMines]}>
@@ -380,7 +518,7 @@ export default function MinesweeperGame() {
                         </span>
                       ) : null
                     ) : cell.isFlagged ? (
-                      <Flag className="w-3 h-3 text-rose-400 fill-rose-500 drop-shadow" />
+                      <Flag className="w-3.5 h-3.5 text-rose-400 fill-rose-500 drop-shadow" />
                     ) : null}
                   </button>
                 );
@@ -400,8 +538,8 @@ export default function MinesweeperGame() {
       </div>
 
       {/* Control Tips */}
-      <p className="mt-4 text-xs text-gray-400 font-medium text-center">
-        Left-click to reveal. Right-click or toggle Flag Mode to place flags on mines. First click is always safe!
+      <p className="mt-4 text-xs text-gray-400 font-medium text-center leading-relaxed">
+        <strong>Click</strong> to reveal • <strong>Right-click</strong> or <strong>Hold</strong> to flag • <strong>Click numbers</strong> to chord-reveal neighbors.
       </p>
     </div>
   );

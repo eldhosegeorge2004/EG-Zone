@@ -32,21 +32,27 @@ export default function MinesweeperPage() {
           "Read Numerical Clues: Numbers on revealed tiles represent the exact count of mines directly adjacent horizontally, vertically, or diagonally.",
           "Flag Potential Mines: Right-click on desktop, or toggle 'Flag Mode' on mobile phones, to plant a red flag on suspected mine locations.",
           "Cascade Expansion: Opening a tile with zero adjacent mines automatically triggers a safe cascading chain reaction, revealing surrounding safe territory.",
+          "Fast Chording: Once you have flagged all adjacent mines around a revealed number, click that number to instantly uncover all remaining hidden neighbors.",
           "Clear the Board to Win: Safely uncover every single non-mine tile to win the game and set a new personal best time."
         ]}
         features={[
           "Guaranteed first-click safety mechanism prevents unfair instant losses",
-          "Three balanced difficulty presets: Easy (9x9), Medium (12x12), and Hard (14x14)",
-          "Mobile-friendly 'Flag Mode' toggle button allowing seamless one-tap flagging on touchscreens",
+          "Advanced Chording feature lets you clear neighboring tiles in a single click",
+          "Touch Long-Press & Flag Mode toggle button allowing seamless flagging on mobile screens",
           "Dynamic retro-modern digital counters tracking remaining mines and elapsed game time",
-          "Classic interactive smiley face reset button reflecting suspense, victory, and game-over states",
+          "Classic interactive smiley face reset button reflecting suspense (😮), victory (😎), and game-over (😵) states",
+          "Wrong-flag visual feedback highlights mistakes when a mine is detonated",
           "Personal best time leaderboard tracker saved locally in your web browser",
           "Zero installations, intrusive popups, or downloads required—play directly in your browser"
         ]}
         faqs={[
           {
+            question: "What is Chording and how do I use it?",
+            answer: "Chording is an essential technique for clearing boards fast. When you have correctly flagged all neighboring mines around a revealed number (e.g., placing 2 flags around a '2'), simply click that number tile to automatically open all remaining unflagged neighbor tiles simultaneously."
+          },
+          {
             question: "How do I place flags on mobile phones or tablets?",
-            answer: "Simply tap the 'Flag Mode' toggle button above the board. When Flag Mode is active, tapping any unrevealed tile will place or remove a flag rather than uncovering it."
+            answer: "You can either press and hold (long-press) any unrevealed tile for a split second with haptic vibration, or tap the 'Flag Mode' toggle button above the board."
           },
           {
             question: "Can I hit a mine on my very first move?",
