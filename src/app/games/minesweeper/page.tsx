@@ -27,7 +27,7 @@ export default function MinesweeperPage() {
         gameName="Minesweeper"
         description="Minesweeper is one of the most iconic logic and deduction puzzle games of all time, originally popularized in the 1960s and made famous worldwide as a staple of personal computing. The objective is deceptively simple: uncover all non-mine tiles on a checkered grid without triggering any hidden explosives. Each revealed square discloses a number indicating how many mines neighbor that cell, providing the exact numerical clues needed to deduce safe pathways and strategically flag danger zones. EG ZONE brings this retro masterpiece to modern web browsers with mobile touch-friendly controls, responsive grid rendering, and guaranteed first-click safety."
         howToPlay={[
-          "Select Difficulty: Choose from Easy (9x9 with 10 mines), Medium (12x12 with 24 mines), or Hard (16x16 with 40 mines) depending on your skill and screen size.",
+          "Select Difficulty: Choose from Easy (9x9 with 10 mines), Medium (12x12 with 22 mines), or Hard (14x14 with 35 mines) depending on your skill and screen size.",
           "First Click is Always Safe: Click or tap any tile to start. The initial click and all eight surrounding neighbors are guaranteed to never contain a mine.",
           "Read Numerical Clues: Numbers on revealed tiles represent the exact count of mines directly adjacent horizontally, vertically, or diagonally.",
           "Flag Potential Mines: Right-click on desktop, or toggle 'Flag Mode' on mobile phones, to plant a red flag on suspected mine locations.",
@@ -36,7 +36,7 @@ export default function MinesweeperPage() {
         ]}
         features={[
           "Guaranteed first-click safety mechanism prevents unfair instant losses",
-          "Three classic difficulty presets: Easy (9x9), Medium (12x12), and Hard (16x16)",
+          "Three balanced difficulty presets: Easy (9x9), Medium (12x12), and Hard (14x14)",
           "Mobile-friendly 'Flag Mode' toggle button allowing seamless one-tap flagging on touchscreens",
           "Dynamic retro-modern digital counters tracking remaining mines and elapsed game time",
           "Classic interactive smiley face reset button reflecting suspense, victory, and game-over states",
