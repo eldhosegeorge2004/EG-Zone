@@ -19,6 +19,14 @@ import {
 
 export const GAMES = [
   {
+    title: "Minesweeper",
+    slug: "minesweeper",
+    description: "Classic retro logic puzzle! Flag hidden mines and clear the grid with guaranteed first-click safety.",
+    category: "Logic",
+    image: "/images/minesweeper.svg",
+    color: "from-slate-700 to-slate-900",
+  },
+  {
     title: "Connect 4",
     slug: "connect4",
     description: "Classic two-player Four in a Row! Take turns dropping chips and connect 4 to win.",
