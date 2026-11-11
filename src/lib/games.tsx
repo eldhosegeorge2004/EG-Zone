@@ -19,6 +19,14 @@ import {
 
 export const GAMES = [
   {
+    title: "Connect 4",
+    slug: "connect4",
+    description: "Drop chips and connect 4 in a row. Play against smart computer AI or challenge a friend!",
+    category: "Strategy",
+    image: "/images/connect4.svg",
+    color: "from-blue-600 to-indigo-800",
+  },
+  {
     title: "Chess",
     slug: "chess",
     description: "Play classic chess against intelligent computer AI or challenge a friend in 2-player pass & play.",

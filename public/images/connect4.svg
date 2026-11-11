@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="50%" stop-color="#1e3a8a" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </radialGradient>
+
+    <linearGradient id="gridGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+
+    <!-- Red Disc -->
+    <linearGradient id="redDisc" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f43f5e" />
+      <stop offset="40%" stop-color="#e11d48" />
+      <stop offset="100%" stop-color="#9f1239" />
+    </linearGradient>
+
+    <!-- Yellow Disc -->
+    <linearGradient id="yellowDisc" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="40%" stop-color="#eab308" />
+      <stop offset="100%" stop-color="#ca8a04" />
+    </linearGradient>
+
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bgGlow)"/>
+
+  <!-- Ambient Light Orbs -->
+  <circle cx="200" cy="150" r="120" fill="#f43f5e" opacity="0.25" filter="url(#glow)"/>
+  <circle cx="620" cy="220" r="140" fill="#eab308" opacity="0.25" filter="url(#glow)"/>
+
+  <!-- 3D Connect 4 Vertical Board -->
+  <g transform="translate(140, 90)" filter="url(#shadow)">
+    <!-- Main Blue Board Frame -->
+    <rect width="520" height="380" rx="36" fill="url(#gridGrad)" stroke="#60a5fa" stroke-width="6"/>
+
+    <!-- Grid Holes (5 rows, 6 cols for art composition) -->
+    <!-- Column 0 -->
+    <circle cx="65" cy="65" r="32" fill="#0f172a" opacity="0.6"/>
+    <circle cx="65" cy="140" r="32" fill="#0f172a" opacity="0.6"/>
+    <circle cx="65" cy="215" r="32" fill="url(#yellowDisc)"/>
+    <circle cx="65" cy="290" r="32" fill="url(#redDisc)"/>
+
+    <!-- Column 1 -->
+    <circle cx="145" cy="65" r="32" fill="#0f172a" opacity="0.6"/>
+    <circle cx="145" cy="140" r="32" fill="url(#redDisc)"/>
+    <circle cx="145" cy="215" r="32" fill="url(#redDisc)"/>
+    <circle cx="145" cy="290" r="32" fill="url(#yellowDisc)"/>
+
+    <!-- Column 2 (Diagonal Win line component) -->
+    <circle cx="225" cy="65" r="32" fill="#0f172a" opacity="0.6"/>
+    <circle cx="225" cy="140" r="32" fill="url(#yellowDisc)"/>
+    <circle cx="225" cy="215" r="32" fill="url(#redDisc)" stroke="#ffffff" stroke-width="4" filter="url(#glow)"/>
+    <circle cx="225" cy="290" r="32" fill="url(#yellowDisc)"/>
+
+    <!-- Column 3 (Center - Winning disc) -->
+    <circle cx="305" cy="65" r="32" fill="#0f172a" opacity="0.6"/>
+    <circle cx="305" cy="140" r="32" fill="url(#redDisc)" stroke="#ffffff" stroke-width="4" filter="url(#glow)"/>
+    <circle cx="305" cy="215" r="32" fill="url(#yellowDisc)"/>
+    <circle cx="305" cy="290" r="32" fill="url(#redDisc)"/>
+
+    <!-- Column 4 -->
+    <circle cx="385" cy="65" r="32" fill="url(#redDisc)" stroke="#ffffff" stroke-width="4" filter="url(#glow)"/>
+    <circle cx="385" cy="140" r="32" fill="url(#yellowDisc)"/>
+    <circle cx="385" cy="215" r="32" fill="url(#yellowDisc)"/>
+    <circle cx="385" cy="290" r="32" fill="url(#redDisc)"/>
+
+    <!-- Column 5 -->
+    <circle cx="465" cy="65" r="32" fill="#0f172a" opacity="0.6"/>
+    <circle cx="465" cy="140" r="32" fill="#0f172a" opacity="0.6"/>
+    <circle cx="465" cy="215" r="32" fill="url(#redDisc)"/>
+    <circle cx="465" cy="290" r="32" fill="url(#yellowDisc)"/>
+
+    <!-- Winning Streak Laser Line -->
+    <line x1="225" y1="215" x2="385" y2="65" stroke="#fef08a" stroke-width="6" stroke-linecap="round" filter="url(#glow)"/>
+
+    <!-- Board Foot Base -->
+    <rect x="-20" y="360" width="80" height="24" rx="12" fill="#1e3a8a"/>
+    <rect x="460" y="360" width="80" height="24" rx="12" fill="#1e3a8a"/>
+  </g>
+
+  <!-- Dropping Animated Disc in Action -->
+  <g transform="translate(445, 50)" filter="url(#shadow)">
+    <circle cx="0" cy="0" r="34" fill="url(#redDisc)" stroke="#ffffff" stroke-width="3"/>
+    <!-- Motion lines -->
+    <line x1="0" y1="-50" x2="0" y2="-20" stroke="#f43f5e" stroke-width="4" stroke-dasharray="8,6" opacity="0.8"/>
+  </g>
+
+  <!-- Bottom Badge: CONNECT 4 -->
+  <g transform="translate(400, 520)">
+    <rect x="-140" y="-24" width="280" height="48" rx="24" fill="#0f172a" stroke="#3b82f6" stroke-width="2" filter="url(#shadow)"/>
+    <text x="0" y="7" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="22" fill="#ffffff" text-anchor="middle" letter-spacing="2">
+      CONNECT 4
+    </text>
+  </g>
+</svg>
