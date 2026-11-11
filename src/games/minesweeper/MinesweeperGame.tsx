@@ -344,22 +344,16 @@ export default function MinesweeperGame() {
         )}
 
         {/* Square Minesweeper Grid */}
-        <div className="w-full aspect-square bg-slate-900 p-2 sm:p-2.5 rounded-2xl border border-slate-700 flex items-center justify-center">
-          <div
-            className="w-full h-full grid gap-1"
-            style={{
-              gridTemplateColumns: `repeat(${config.cols}, minmax(0, 1fr))`,
-              gridTemplateRows: `repeat(${config.rows}, minmax(0, 1fr))`,
-            }}
-          >
-            {grid.map((row, r) =>
-              row.map((cell, c) => {
+        <div className="w-full aspect-square bg-slate-900 p-2 sm:p-2.5 rounded-2xl border border-slate-700 flex flex-col gap-1">
+          {grid.map((row, r) => (
+            <div key={r} className="flex gap-1 w-full flex-1">
+              {row.map((cell, c) => {
                 const textSize =
                   difficulty === "easy"
-                    ? "text-base sm:text-lg"
+                    ? "text-sm sm:text-base"
                     : difficulty === "medium"
-                    ? "text-xs sm:text-sm"
-                    : "text-[10px] sm:text-xs";
+                    ? "text-xs"
+                    : "text-[9px]";
 
                 return (
                   <button
@@ -367,14 +361,14 @@ export default function MinesweeperGame() {
                     type="button"
                     onClick={() => handleCellClick(r, c)}
                     onContextMenu={(e) => toggleFlag(r, c, e)}
-                    className={`w-full h-full rounded-md font-black flex items-center justify-center transition-all ${textSize} ${
+                    className={`flex-1 h-full rounded font-black flex items-center justify-center transition-all ${textSize} ${
                       cell.isRevealed
                         ? cell.isExploded
                           ? "bg-rose-600 text-white shadow-inner animate-pulse"
                           : cell.isMine
                           ? "bg-slate-700 text-white"
                           : "bg-slate-700/80 shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
-                        : "bg-slate-600 hover:bg-slate-500 active:bg-slate-700 shadow-md border-t border-slate-400"
+                        : "bg-slate-600 hover:bg-slate-500 active:bg-slate-700 shadow-sm border-t border-slate-400"
                     }`}
                   >
                     {cell.isRevealed ? (
@@ -390,9 +384,9 @@ export default function MinesweeperGame() {
                     ) : null}
                   </button>
                 );
-              })
-            )}
-          </div>
+              })}
+            </div>
+          ))}
         </div>
 
         {/* Best Time Display */}
