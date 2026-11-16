@@ -57,8 +57,8 @@ export default function SubwayRunner() {
     coinList: [] as Coin[],
     shieldList: [] as ShieldItem[],
     trackOffset: 0,
-    nextObstacleZ: 1200,
-    nextCoinZ: 500,
+    nextObstacleZ: 680,
+    nextCoinZ: 380,
     nextShieldZ: 2800,
     lastTime: 0,
   });
@@ -168,8 +168,8 @@ export default function SubwayRunner() {
     g.coinList = [];
     g.shieldList = [];
     g.trackOffset = 0;
-    g.nextObstacleZ = 1200; // First obstacle spawns far away (~3.5s warning)
-    g.nextCoinZ = 550;
+    g.nextObstacleZ = 680;
+    g.nextCoinZ = 380;
     g.nextShieldZ = 3000;
     g.lastTime = performance.now();
 
@@ -254,14 +254,11 @@ export default function SubwayRunner() {
         }
       }
 
-      // --- SPAWN OBSTACLES BY TIME TIER ---
-      // 0-12s: Only barriers to learn jumping
-      // 12-25s: Add overhead signs to learn sliding
-      // 25s+: Add trains
-      if (g.obstacles.length < 7 && g.nextObstacleZ < 2600) {
+      // --- SPAWN OBSTACLES (CHALLENGING TRACK VARIETY) ---
+      if (g.obstacles.length < 12 && g.nextObstacleZ < 2800) {
         const allowedTypes: ObstacleType[] = ["barrier"];
-        if (g.runTime > 12) allowedTypes.push("overhead");
-        if (g.runTime > 25) allowedTypes.push("train");
+        if (g.runTime > 4) allowedTypes.push("overhead");
+        if (g.runTime > 10) allowedTypes.push("train");
 
         const chosenType = allowedTypes[Math.floor(Math.random() * allowedTypes.length)];
         const chosenLane = (Math.floor(Math.random() * 3) - 1) as Lane;
@@ -273,19 +270,19 @@ export default function SubwayRunner() {
           type: chosenType,
         });
 
-        // Rare double-obstacle only after 45s of survival
-        if (g.runTime > 45 && Math.random() < 0.22) {
+        // Double-obstacle challenge (leaves 1 safe lane or jumpable gap)
+        if (g.runTime > 12 && Math.random() < 0.38) {
           const secondLane = (chosenLane === 0 ? (Math.random() < 0.5 ? -1 : 1) : 0) as Lane;
           g.obstacles.push({
             id: Math.random(),
             lane: secondLane,
             z: g.nextObstacleZ,
-            type: chosenType === "overhead" ? "barrier" : chosenType,
+            type: chosenType === "train" ? (Math.random() < 0.5 ? "barrier" : "overhead") : chosenType,
           });
         }
 
-        // Generous gap between hurdles
-        const spacing = g.runTime < 25 ? 1150 : Math.max(780, 1150 - g.speed * 25);
+        // Active obstacle spacing (tighter and challenging)
+        const spacing = g.runTime < 15 ? 560 : Math.max(380, 540 - g.speed * 14);
         g.nextObstacleZ += spacing;
       }
 
@@ -301,10 +298,10 @@ export default function SubwayRunner() {
             collected: false,
           });
         }
-        g.nextCoinZ += Math.max(500, 750 - g.speed * 10);
+        g.nextCoinZ += Math.max(450, 680 - g.speed * 10);
       }
 
-      // --- SPAWN SHIELD PICKUP (Every ~40-50s) ---
+      // --- SPAWN SHIELD PICKUP (Every ~35-45s) ---
       if (!g.hasShield && g.shieldList.length === 0 && g.nextShieldZ < 2200) {
         const shieldLane = (Math.floor(Math.random() * 3) - 1) as Lane;
         g.shieldList.push({
@@ -313,12 +310,13 @@ export default function SubwayRunner() {
           z: g.nextShieldZ,
           collected: false,
         });
-        g.nextShieldZ += 3200;
+        g.nextShieldZ += 2800;
       }
 
-      // Move and clean obstacles
+      // Move and clean obstacles (Express trains rush forward towards player!)
       for (const obs of g.obstacles) {
-        obs.z -= g.speed;
+        const obsSpeed = obs.type === "train" ? g.speed * 1.35 : g.speed;
+        obs.z -= obsSpeed;
       }
       g.obstacles = g.obstacles.filter((obs) => obs.z > -80);
       g.nextObstacleZ -= g.speed;

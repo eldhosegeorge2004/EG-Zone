@@ -46,6 +46,10 @@ interface TrafficCar {
   passed: boolean;
   nearMissed: boolean;
   brakeLight: boolean;
+  isAggressive?: boolean; // Tries to cut off or sideswipe player
+  isOncoming?: boolean;   // Barrelling down the wrong way towards player
+  swerveTimer?: number;
+  warningTimer?: number;
 }
 
 interface Collectible {
@@ -351,7 +355,17 @@ export default function CarRacingGame() {
     let carSpeed = 45 + Math.random() * 35; // base speed of traffic car in km/h
     let color = "#3b82f6"; // default blue
 
-    if (type === "sedan") {
+    // 20% chance of high-speed ONCOMING car after 80 meters (driving wrong way straight at player)
+    const isOncoming = g.distanceMeters > 80 && Math.random() < 0.22;
+    // 40% chance of AGGRESSIVE driver trying to swerve and hit/cut-off the player
+    const isAggressive = !isOncoming && (Math.random() < 0.42 || type === "police" || type === "sport");
+
+    if (isOncoming) {
+      color = "#dc2626"; // Crimson danger car
+      carSpeed = 85 + Math.random() * 30;
+      width = 44;
+      height = 78;
+    } else if (type === "sedan") {
       const colors = ["#2563eb", "#dc2626", "#eab308", "#f8fafc", "#475569"];
       color = colors[Math.floor(Math.random() * colors.length)];
       width = 42;
@@ -381,7 +395,7 @@ export default function CarRacingGame() {
     g.traffic.push({
       id: Date.now() + Math.random(),
       x: laneCenter,
-      y: -height - 20,
+      y: -height - 30,
       width,
       height,
       speed: carSpeed,
@@ -395,7 +409,40 @@ export default function CarRacingGame() {
       passed: false,
       nearMissed: false,
       brakeLight: false,
+      isOncoming,
+      isAggressive,
+      swerveTimer: 0,
+      warningTimer: 0,
     });
+
+    // Roadblock / Pinch: 28% chance after 60m of a second car spawning in an adjacent lane
+    if (g.distanceMeters > 60 && Math.random() < 0.28 && !isOncoming) {
+      const neighborLane = laneIndex > 0 ? laneIndex - 1 : laneIndex + 1;
+      const neighborCenter = ROAD_LEFT + neighborLane * LANE_WIDTH + LANE_WIDTH / 2;
+      const alreadyHasCar = g.traffic.some(c => c.currentLane === neighborLane && c.y < 150);
+      if (!alreadyHasCar) {
+        g.traffic.push({
+          id: Date.now() + Math.random() + 99,
+          x: neighborCenter,
+          y: -height - 60 - Math.random() * 40,
+          width: 42,
+          height: 76,
+          speed: carSpeed * 0.95,
+          currentLane: neighborLane,
+          targetLane: neighborLane,
+          isChangingLane: false,
+          laneChangeProgress: 0,
+          blinkerTimer: 0,
+          color: "#eab308",
+          type: "sedan",
+          passed: false,
+          nearMissed: false,
+          brakeLight: false,
+          isOncoming: false,
+          isAggressive: false,
+        });
+      }
+    }
   };
 
   // Collectible Spawner
@@ -639,12 +686,47 @@ export default function CarRacingGame() {
       // 5. UPDATE TRAFFIC CARS
       for (let i = g.traffic.length - 1; i >= 0; i--) {
         const car = g.traffic[i];
+        
         // Relative speed of traffic car against player
-        const relSpeed = ((g.speed - car.speed) / 3.6) * 18 * dt;
+        // Oncoming cars barrel down towards the player at combined speed!
+        const effectiveSpeed = car.isOncoming ? -car.speed : car.speed;
+        const relSpeed = ((g.speed - effectiveSpeed) / 3.6) * 18 * dt;
         car.y += relSpeed;
 
-        // Occasional AI lane switching behavior
-        if (!car.isChangingLane && Math.random() < 0.003 && car.y > -50 && car.y < 350) {
+        // AGGRESSIVE CUT-OFF & SIDESWIPE AI ("Car trying to hit player")
+        if (car.isAggressive && !car.passed && car.y > -20 && car.y < g.playerY + 40) {
+          const dy = g.playerY - car.y;
+          if (dy < 260 && dy > -30) {
+            const dx = g.playerX - car.x;
+            // If player is in an adjacent lane or approaching, swerve toward player's lane!
+            if (Math.abs(dx) > 12 && Math.abs(dx) < 150) {
+              const swerveSpeed = (95 + Math.min(60, (g.distanceMeters / 1000) * 20)) * dt;
+              car.x += Math.sign(dx) * swerveSpeed;
+              car.isChangingLane = true;
+              car.blinkerTimer = (car.blinkerTimer + dt * 10) % 1;
+
+              // Brake check if directly in front
+              if (dy < 130 && Math.abs(dx) < 50) {
+                car.brakeLight = true;
+              }
+
+              // Spawn swerving tire smoke
+              if (Math.random() < 0.2) {
+                g.particles.push({
+                  x: car.x - 12 + Math.random() * 24,
+                  y: car.y + car.height / 2,
+                  vx: (Math.random() - 0.5) * 2,
+                  vy: 2,
+                  life: 0.8,
+                  maxLife: 0.25,
+                  color: "#e2e8f0",
+                  size: 3 + Math.random() * 3,
+                });
+              }
+            }
+          }
+        } else if (!car.isChangingLane && Math.random() < 0.005 && car.y > -50 && car.y < 350 && !car.isOncoming) {
+          // Normal AI lane change
           const possibleLanes: number[] = [];
           if (car.currentLane > 0) possibleLanes.push(car.currentLane - 1);
           if (car.currentLane < LANES_COUNT - 1) possibleLanes.push(car.currentLane + 1);
@@ -655,9 +737,9 @@ export default function CarRacingGame() {
           }
         }
 
-        if (car.isChangingLane) {
+        if (car.isChangingLane && !car.isAggressive) {
           car.blinkerTimer = (car.blinkerTimer + dt * 6) % 1;
-          car.laneChangeProgress += dt * 1.2;
+          car.laneChangeProgress += dt * 1.3;
           const startX = ROAD_LEFT + car.currentLane * LANE_WIDTH + LANE_WIDTH / 2;
           const endX = ROAD_LEFT + car.targetLane * LANE_WIDTH + LANE_WIDTH / 2;
           car.x = startX + (endX - startX) * Math.min(1, car.laneChangeProgress);
@@ -669,18 +751,19 @@ export default function CarRacingGame() {
         }
 
         // NEAR MISS DETECTION:
-        // Player zooms past a car with narrow clearance (x distance < 62) while moving fast (>95 km/h)
         if (!car.passed && car.y > g.playerY) {
           car.passed = true;
           const dx = Math.abs(car.x - g.playerX);
-          if (dx < 62 && dx > 26 && g.speed >= 95 && !car.nearMissed) {
+          if (dx < 66 && dx > 24 && g.speed >= 85 && !car.nearMissed) {
             car.nearMissed = true;
             g.nearMisses++;
             playSound("nearmiss");
-            const bonus = 100 * (g.isBoosting ? 2 : 1);
-            g.coins += 5; // near miss rewards coins too!
-            g.nitro = Math.min(100, g.nitro + 15); // refill some nitro
-            addToast(g, `NEAR MISS! +${bonus}`, "CLOSE OVERTAKE BONUS", car.x, car.y, "#f59e0b");
+            const bonus = car.isOncoming ? 250 : 100 * (g.isBoosting ? 2 : 1);
+            g.coins += car.isOncoming ? 15 : 5;
+            g.nitro = Math.min(100, g.nitro + (car.isOncoming ? 30 : 15));
+            const toastText = car.isOncoming ? `HEAD-ON DODGE! +${bonus}` : `NEAR MISS! +${bonus}`;
+            const toastSub = car.isOncoming ? "RISKY DANGER DODGE" : "CLOSE OVERTAKE BONUS";
+            addToast(g, toastText, toastSub, car.x, car.y, car.isOncoming ? "#ef4444" : "#f59e0b");
           }
         }
 
@@ -1008,8 +1091,26 @@ export default function CarRacingGame() {
 
       // DRAW TRAFFIC CARS
       g.traffic.forEach(car => {
+        // Draw incoming danger alert at top of lane if car is oncoming
+        if (car.isOncoming && car.y < 120 && car.y > -250) {
+          ctx.save();
+          const isPulse = Math.floor(currentTime / 120) % 2 === 0;
+          if (isPulse) {
+            ctx.fillStyle = "#ef4444";
+            ctx.font = "900 13px sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("⚠️ ONCOMING!", car.x, 32);
+          }
+          ctx.restore();
+        }
+
         ctx.save();
         ctx.translate(car.x, car.y);
+
+        // If oncoming, flip vehicle 180 degrees so it faces the player
+        if (car.isOncoming) {
+          ctx.rotate(Math.PI);
+        }
 
         // Car Drop Shadow
         ctx.fillStyle = "rgba(0, 0, 0, 0.45)";
@@ -1058,10 +1159,18 @@ export default function CarRacingGame() {
           ctx.fillRect(2, -car.height / 2 + 30, 12, 6);
         }
 
-        // Taillights
-        ctx.fillStyle = "#ef4444";
-        ctx.fillRect(-car.width / 2 + 4, car.height / 2 - 4, 8, 4);
-        ctx.fillRect(car.width / 2 - 12, car.height / 2 - 4, 8, 4);
+        // Taillights or Oncoming Headlights
+        if (car.isOncoming) {
+          // Oncoming High-Beam Headlights pointing at player!
+          ctx.fillStyle = "#fef08a";
+          ctx.fillRect(-car.width / 2 + 4, car.height / 2 - 4, 8, 4);
+          ctx.fillRect(car.width / 2 - 12, car.height / 2 - 4, 8, 4);
+        } else {
+          // Standard Taillights
+          ctx.fillStyle = car.brakeLight ? "#ff0033" : "#ef4444";
+          ctx.fillRect(-car.width / 2 + 4, car.height / 2 - 4, 8, car.brakeLight ? 6 : 4);
+          ctx.fillRect(car.width / 2 - 12, car.height / 2 - 4, 8, car.brakeLight ? 6 : 4);
+        }
 
         // Lane Change Blinker Light
         if (car.isChangingLane && car.blinkerTimer > 0.5) {
@@ -1070,6 +1179,14 @@ export default function CarRacingGame() {
           ctx.beginPath();
           ctx.arc(blinkX, car.height / 2 - 2, 4, 0, Math.PI * 2);
           ctx.fill();
+        }
+
+        // Aggressive Swerve Indicator
+        if (car.isAggressive && car.isChangingLane) {
+          ctx.fillStyle = "#ef4444";
+          ctx.font = "900 11px sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText("SWERVE!", 0, -car.height / 2 - 8);
         }
 
         ctx.restore();
