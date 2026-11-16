@@ -75,7 +75,7 @@ export default function SubwayRunner() {
     if (!g.isJumping) {
       g.isJumping = true;
       g.isSliding = false;
-      g.velocityY = 15;
+      g.velocityY = 10;
     }
   }, [gameState]);
 
@@ -84,10 +84,10 @@ export default function SubwayRunner() {
     const g = gameRef.current;
     if (g.isJumping) {
       // Fast fall down
-      g.velocityY = -20;
+      g.velocityY = -15;
     }
     g.isSliding = true;
-    g.slideTimer = 25; // frames of sliding
+    g.slideTimer = 40; // ~0.7s of sliding
   }, [gameState]);
 
   // Keyboard controls
@@ -148,14 +148,14 @@ export default function SubwayRunner() {
     g.isJumping = false;
     g.isSliding = false;
     g.slideTimer = 0;
-    g.speed = 18;
+    g.speed = 6.5;
     g.distance = 0;
     g.coins = 0;
     g.obstacles = [];
     g.coinList = [];
     g.trackOffset = 0;
-    g.nextObstacleZ = 700;
-    g.nextCoinZ = 500;
+    g.nextObstacleZ = 1000;
+    g.nextCoinZ = 600;
     g.lastTime = performance.now();
 
     setScore(0);
@@ -185,18 +185,18 @@ export default function SubwayRunner() {
       const laneWidth = width * 0.22;
 
       // --- 1. UPDATE GAME STATE ---
-      g.distance += g.speed * 2.5 * dt;
-      g.speed = Math.min(36, 18 + g.distance * 0.008);
-      g.trackOffset = (g.trackOffset + g.speed * 2) % 100;
+      g.distance += g.speed * 4 * dt;
+      g.speed = Math.min(13, 6.5 + g.distance * 0.001);
+      g.trackOffset = (g.trackOffset + g.speed * 1.5) % 100;
 
-      // Smooth lane movement
+      // Smooth lane movement (snappy & responsive)
       const targetX = g.lane * laneWidth;
-      g.playerX += (targetX - g.playerX) * 0.25;
+      g.playerX += (targetX - g.playerX) * 0.35;
 
-      // Jump Physics
+      // Jump Physics (buoyant, floaty jump)
       if (g.isJumping) {
         g.playerY += g.velocityY;
-        g.velocityY -= 1.0; // Gravity
+        g.velocityY -= 0.45; // Gentle gravity
         if (g.playerY <= 0) {
           g.playerY = 0;
           g.isJumping = false;
@@ -212,8 +212,8 @@ export default function SubwayRunner() {
         }
       }
 
-      // Spawn Obstacles
-      if (g.obstacles.length < 8 && g.nextObstacleZ < 2400) {
+      // Spawn Obstacles (well-spaced, fair reaction time)
+      if (g.obstacles.length < 8 && g.nextObstacleZ < 2600) {
         const types: ObstacleType[] = ["barrier", "overhead", "train"];
         const chosenType = types[Math.floor(Math.random() * types.length)];
         const chosenLane = (Math.floor(Math.random() * 3) - 1) as Lane;
@@ -225,8 +225,8 @@ export default function SubwayRunner() {
           type: chosenType,
         });
 
-        // 20% chance of double obstacle across two lanes
-        if (Math.random() < 0.25) {
+        // 15% chance of double obstacle across two lanes (only after 200m)
+        if (g.distance > 200 && Math.random() < 0.2) {
           const secondLane = (chosenLane === 0 ? (Math.random() < 0.5 ? -1 : 1) : 0) as Lane;
           g.obstacles.push({
             id: Math.random(),
@@ -236,38 +236,38 @@ export default function SubwayRunner() {
           });
         }
 
-        g.nextObstacleZ += Math.max(380, 680 - g.speed * 8);
+        g.nextObstacleZ += Math.max(700, 1050 - g.speed * 20);
       }
 
       // Spawn Coins (in arc or row)
-      if (g.coinList.length < 15 && g.nextCoinZ < 2200) {
+      if (g.coinList.length < 15 && g.nextCoinZ < 2400) {
         const coinLane = (Math.floor(Math.random() * 3) - 1) as Lane;
         const count = 4;
         for (let i = 0; i < count; i++) {
           g.coinList.push({
             id: Math.random(),
             lane: coinLane,
-            z: g.nextCoinZ + i * 65,
+            z: g.nextCoinZ + i * 55,
             collected: false,
           });
         }
-        g.nextCoinZ += Math.max(450, 750 - g.speed * 6);
+        g.nextCoinZ += Math.max(500, 800 - g.speed * 12);
       }
 
-      // Move and clean obstacles
+      // Move and clean obstacles (at gentle real-time speed)
       for (const obs of g.obstacles) {
-        obs.z -= g.speed * 1.5;
+        obs.z -= g.speed;
       }
       g.obstacles = g.obstacles.filter((obs) => obs.z > -80);
-      g.nextObstacleZ -= g.speed * 1.5;
+      g.nextObstacleZ -= g.speed;
 
       // Move and clean coins
       for (const coin of g.coinList) {
-        coin.z -= g.speed * 1.5;
+        coin.z -= g.speed;
 
         // Coin collection check
         if (!coin.collected && coin.z > 20 && coin.z < 95) {
-          const laneMatches = coin.lane === g.lane || Math.abs(g.playerX - coin.lane * laneWidth) < laneWidth * 0.5;
+          const laneMatches = coin.lane === g.lane || Math.abs(g.playerX - coin.lane * laneWidth) < laneWidth * 0.55;
           if (laneMatches) {
             coin.collected = true;
             g.coins++;
@@ -275,29 +275,29 @@ export default function SubwayRunner() {
         }
       }
       g.coinList = g.coinList.filter((c) => c.z > -40);
-      g.nextCoinZ -= g.speed * 1.5;
+      g.nextCoinZ -= g.speed;
 
       // --- COLLISION DETECTION ---
       let collisionDetected = false;
       for (const obs of g.obstacles) {
-        // Player depth is around z: 40..85
-        if (obs.z > 25 && obs.z < 90) {
-          const inSameLane = Math.abs(g.playerX - obs.lane * laneWidth) < laneWidth * 0.45;
+        // Player depth window
+        if (obs.z > 25 && obs.z < 85) {
+          const inSameLane = Math.abs(g.playerX - obs.lane * laneWidth) < laneWidth * 0.42;
           if (inSameLane) {
             if (obs.type === "barrier") {
-              // Barrier must be jumped over (playerY must be > 40)
-              if (g.playerY < 38) {
+              // Barrier must be jumped over (playerY must be > 25)
+              if (g.playerY < 25) {
                 collisionDetected = true;
                 break;
               }
             } else if (obs.type === "overhead") {
-              // Overhead sign must be ducked/slid under (player must be sliding)
+              // Overhead sign must be ducked/slid under
               if (!g.isSliding) {
                 collisionDetected = true;
                 break;
               }
             } else if (obs.type === "train") {
-              // Trains cannot be jumped or slid under! Must avoid lane completely!
+              // Trains cannot be jumped or slid under! Must change lanes!
               collisionDetected = true;
               break;
             }
