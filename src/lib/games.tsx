@@ -27,12 +27,12 @@ export const GAMES = [
     color: "from-rose-600 to-amber-600",
   },
   {
-    title: "Subway Runner",
-    slug: "subway",
-    description: "Endless 3D parkour runner! Sprint down subway tracks, leap hurdles, dodge trains, and grab coins.",
-    category: "Action",
-    image: "/images/subway.svg",
-    color: "from-indigo-600 to-rose-600",
+    title: "Simon Says",
+    slug: "simon",
+    description: "Classic electronic memory pattern game! Watch the flashing colors, listen to the tones, and repeat the sequence.",
+    category: "Brain",
+    image: "/images/simon.svg",
+    color: "from-blue-600 to-emerald-600",
   },
   {
     title: "Minesweeper",
