@@ -47,7 +47,7 @@ export default function SubwayRunner() {
     isJumping: false,
     isSliding: false,
     slideTimer: 0,
-    speed: 3.6,
+    speed: 4.9,
     distance: 0,
     runTime: 0, // seconds elapsed
     coins: 0,
@@ -158,7 +158,7 @@ export default function SubwayRunner() {
     g.isJumping = false;
     g.isSliding = false;
     g.slideTimer = 0;
-    g.speed = 3.6; // Gentle initial speed
+    g.speed = 4.9; // Starting speed (4.9)
     g.distance = 0;
     g.runTime = 0;
     g.coins = 0;
@@ -168,7 +168,7 @@ export default function SubwayRunner() {
     g.coinList = [];
     g.shieldList = [];
     g.trackOffset = 0;
-    g.nextObstacleZ = 1200; // First obstacle spawns far away (~4s warning)
+    g.nextObstacleZ = 1200; // First obstacle spawns far away (~3.5s warning)
     g.nextCoinZ = 550;
     g.nextShieldZ = 3000;
     g.lastTime = performance.now();
@@ -176,7 +176,7 @@ export default function SubwayRunner() {
     setScore(0);
     setCoinsCollected(0);
     setHasShield(true);
-    setSpeedTier("1.0x");
+    setSpeedTier("1.0x (Start)");
     setSecondsElapsed(0);
     setGameState("playing");
   };
@@ -206,22 +206,22 @@ export default function SubwayRunner() {
       g.runTime += dt;
       g.distance += g.speed * 4.5 * dt;
 
-      // Gentle step-wise acceleration by time
+      // Step-wise progressive acceleration starting from 4.9
       if (g.runTime < 15) {
-        g.speed = 3.6; // Easy warmup (0-15s)
-        setSpeedTier("1.0x (Warmup)");
+        g.speed = 4.9; // Starting pace (0-15s)
+        setSpeedTier("1.0x (Paced)");
       } else if (g.runTime < 35) {
-        g.speed = 4.4; // Cruise (15-35s)
-        setSpeedTier("1.2x (Cruising)");
+        g.speed = 5.6; // Cruising (15-35s)
+        setSpeedTier("1.15x (Cruising)");
       } else if (g.runTime < 60) {
-        g.speed = 5.3; // Moderate (35-60s)
-        setSpeedTier("1.5x (Speeding)");
+        g.speed = 6.4; // Speeding (35-60s)
+        setSpeedTier("1.3x (Speeding)");
       } else if (g.runTime < 90) {
-        g.speed = 6.4; // Fast (60-90s)
-        setSpeedTier("1.8x (Fast)");
+        g.speed = 7.3; // Fast (60-90s)
+        setSpeedTier("1.5x (Fast)");
       } else {
-        g.speed = Math.min(8.8, 6.4 + (g.runTime - 90) * 0.04); // Top speed
-        setSpeedTier("2.2x (Max)");
+        g.speed = Math.min(9.2, 7.3 + (g.runTime - 90) * 0.03); // Top speed
+        setSpeedTier("1.8x (Max)");
       }
 
       g.trackOffset = (g.trackOffset + g.speed * 1.8) % 100;
