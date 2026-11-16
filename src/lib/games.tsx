@@ -19,6 +19,14 @@ import {
 
 export const GAMES = [
   {
+    title: "Subway Runner",
+    slug: "subway",
+    description: "Endless 3D parkour runner! Sprint down subway tracks, leap hurdles, dodge trains, and grab coins.",
+    category: "Action",
+    image: "/images/subway.svg",
+    color: "from-indigo-600 to-rose-600",
+  },
+  {
     title: "Minesweeper",
     slug: "minesweeper",
     description: "Classic retro logic puzzle! Flag hidden mines and clear the grid with guaranteed first-click safety.",

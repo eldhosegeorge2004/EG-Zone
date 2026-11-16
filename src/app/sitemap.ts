@@ -25,7 +25,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const gameRoutes = [
     '2048', 'aim', 'breaker', 'chess', 'colormatch', 'connect4', 'flappy', 
     'guessword', 'math', 'memory', 'minesweeper', 'pong', 'puzzle', 
-    'quiz', 'reaction', 'scramble', 'snake', 'stickman', 
+    'quiz', 'reaction', 'scramble', 'snake', 'stickman', 'subway', 
     'sudoku', 'tictactoe', 'typing', 'zip'
   ].map((game) => ({
     url: `${baseUrl}/games/${game}`,

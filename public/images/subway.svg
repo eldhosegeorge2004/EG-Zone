@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <!-- Background Night Sky -->
+    <radialGradient id="skyGrad" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#312e81" />
+      <stop offset="45%" stop-color="#1e1b4b" />
+      <stop offset="100%" stop-color="#050814" />
+    </radialGradient>
+
+    <!-- Track Bed Gradient -->
+    <linearGradient id="groundGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="50%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+
+    <!-- Train Body Gradient -->
+    <linearGradient id="trainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0369a1" />
+    </linearGradient>
+
+    <!-- Coin Gold -->
+    <radialGradient id="goldCoin" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#eab308" />
+      <stop offset="100%" stop-color="#a16207" />
+    </radialGradient>
+
+    <!-- Shadow & Glow Filters -->
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+
+    <filter id="neonGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Sky Backdrop -->
+  <rect width="800" height="600" fill="url(#skyGrad)"/>
+
+  <!-- Distant Neon Skyline Silhouette -->
+  <g fill="#0f172a" opacity="0.9">
+    <rect x="40" y="80" width="70" height="150" />
+    <rect x="130" y="120" width="85" height="110" />
+    <rect x="240" y="60" width="90" height="170" />
+    <rect x="350" y="100" width="100" height="130" />
+    <rect x="470" y="70" width="80" height="160" />
+    <rect x="570" y="110" width="90" height="120" />
+    <rect x="680" y="90" width="80" height="140" />
+  </g>
+
+  <!-- Ground / Railway Horizon at Y = 230 -->
+  <rect x="0" y="230" width="800" height="370" fill="url(#groundGrad)"/>
+
+  <!-- 3 Perspective Subway Tracks converging to Center Horizon (400, 230) -->
+  <!-- Outer Track Rails -->
+  <path d="M400,230 L-80,600 M400,230 L880,600" stroke="#475569" stroke-width="6"/>
+  <!-- Middle Rails -->
+  <path d="M400,230 L180,600 M400,230 L620,600" stroke="#64748b" stroke-width="5"/>
+  <!-- Inner Rails -->
+  <path d="M400,230 L320,600 M400,230 L480,600" stroke="#94a3b8" stroke-width="4"/>
+
+  <!-- Railroad Cross Ties (Sleepers) -->
+  <g stroke="rgba(148, 163, 184, 0.4)" stroke-width="4">
+    <line x1="380" y1="245" x2="420" y2="245" />
+    <line x1="365" y1="265" x2="435" y2="265" />
+    <line x1="345" y1="290" x2="455" y2="290" />
+    <line x1="315" y1="325" x2="485" y2="325" stroke-width="5"/>
+    <line x1="275" y1="375" x2="525" y2="375" stroke-width="6"/>
+    <line x1="220" y1="440" x2="580" y2="440" stroke-width="8"/>
+    <line x1="140" y1="525" x2="660" y2="525" stroke-width="10"/>
+  </g>
+
+  <!-- Oncoming Metro Train on Left Track -->
+  <g transform="translate(180, 200)" filter="url(#shadow)">
+    <!-- Train Body -->
+    <rect x="0" y="0" width="130" height="210" rx="20" fill="url(#trainGrad)" stroke="#38bdf8" stroke-width="3"/>
+    <!-- Windshield -->
+    <rect x="15" y="25" width="100" height="70" rx="10" fill="#090d16" stroke="#0284c7" stroke-width="2"/>
+    <!-- Glowing Headlights -->
+    <circle cx="35" cy="155" r="14" fill="#fef08a" filter="url(#neonGlow)"/>
+    <circle cx="95" cy="155" r="14" fill="#fef08a" filter="url(#neonGlow)"/>
+    <!-- Train Bumper -->
+    <rect x="10" y="185" width="110" height="18" rx="6" fill="#1e293b"/>
+  </g>
+
+  <!-- Jumping Parkour Runner in Center/Right Foreground -->
+  <g transform="translate(480, 310)" filter="url(#shadow)">
+    <!-- Runner Shadow on Track -->
+    <ellipse cx="0" cy="140" rx="42" ry="12" fill="rgba(0,0,0,0.55)"/>
+
+    <!-- Mid-Air Leap Pose -->
+    <!-- Legs -->
+    <path d="M-12,70 L-30,105 L-40,95" stroke="#1e293b" stroke-width="14" stroke-linecap="round" fill="none"/>
+    <path d="M12,70 L25,100 L42,108" stroke="#1e293b" stroke-width="14" stroke-linecap="round" fill="none"/>
+    <!-- White Sneakers -->
+    <rect x="-48" y="88" width="20" height="10" rx="4" fill="#ffffff" transform="rotate(20 -48 88)"/>
+    <rect x="36" y="102" width="20" height="10" rx="4" fill="#ffffff" transform="rotate(-15 36 102)"/>
+
+    <!-- Hoodie Torso -->
+    <rect x="-24" y="0" width="48" height="70" rx="14" fill="#4f46e5"/>
+    <rect x="-18" y="10" width="36" height="50" rx="8" fill="#6366f1"/>
+
+    <!-- Arms in Sprint Motion -->
+    <path d="M-22,20 L-45,45" stroke="#4f46e5" stroke-width="12" stroke-linecap="round"/>
+    <path d="M22,20 L48,-5" stroke="#4f46e5" stroke-width="12" stroke-linecap="round"/>
+
+    <!-- Head & Cap -->
+    <circle cx="0" cy="-20" r="18" fill="#fed7aa"/>
+    <!-- Red Cap -->
+    <path d="M-20,-22 C-20,-38 20,-38 20,-22 Z" fill="#ef4444"/>
+    <rect x="0" y="-24" width="30" height="8" rx="3" fill="#dc2626"/>
+  </g>
+
+  <!-- Floating Golden Coins Arc -->
+  <g filter="url(#neonGlow)">
+    <circle cx="370" cy="280" r="16" fill="url(#goldCoin)" stroke="#fef08a" stroke-width="2"/>
+    <circle cx="430" cy="220" r="20" fill="url(#goldCoin)" stroke="#fef08a" stroke-width="3"/>
+    <circle cx="500" cy="180" r="22" fill="url(#goldCoin)" stroke="#fef08a" stroke-width="3"/>
+    <circle cx="580" cy="170" r="20" fill="url(#goldCoin)" stroke="#fef08a" stroke-width="3"/>
+  </g>
+
+  <!-- Motion Speed Streaks -->
+  <line x1="310" y1="235" x2="260" y2="480" stroke="rgba(56, 189, 248, 0.4)" stroke-width="3" stroke-dasharray="16,12"/>
+  <line x1="490" y1="235" x2="560" y2="520" stroke="rgba(244, 63, 94, 0.4)" stroke-width="3" stroke-dasharray="16,12"/>
+
+  <!-- Title Badge: SUBWAY RUNNER -->
+  <g transform="translate(400, 530)">
+    <rect x="-170" y="-26" width="340" height="52" rx="26" fill="#0f172a" stroke="#4f46e5" stroke-width="3" filter="url(#shadow)"/>
+    <text x="0" y="9" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="24" fill="#ffffff" text-anchor="middle" letter-spacing="2">
+      SUBWAY RUNNER
+    </text>
+  </g>
+</svg>
