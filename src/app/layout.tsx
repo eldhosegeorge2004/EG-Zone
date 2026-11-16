@@ -1,10 +1,11 @@
 /* eslint-disable */
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CookieConsent from "@/components/CookieConsent";
+import SiteProtection from "@/components/SiteProtection";
 import Script from "next/script";
 
 const geistSans = Geist({
@@ -16,6 +17,13 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 export const metadata: Metadata = {
   title: "EG ZONE | Play Free Mini-Games",
@@ -58,6 +66,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-indigo-500/20">
+        <SiteProtection />
         <Navbar />
         <main className="flex-1">
           {children}
