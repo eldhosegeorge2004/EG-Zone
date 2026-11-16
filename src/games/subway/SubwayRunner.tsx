@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { RotateCcw, Trophy, Play, Coins, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Zap, Volume2, VolumeX } from "lucide-react";
+import { RotateCcw, Trophy, Play, Coins, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Zap, Shield, ShieldAlert, Timer } from "lucide-react";
 
 type Lane = -1 | 0 | 1; // Left, Center, Right
 type ObstacleType = "barrier" | "overhead" | "train";
@@ -10,11 +10,18 @@ type ObstacleType = "barrier" | "overhead" | "train";
 interface Obstacle {
   id: number;
   lane: Lane;
-  z: number; // Distance in 3D space from camera
+  z: number;
   type: ObstacleType;
 }
 
 interface Coin {
+  id: number;
+  lane: Lane;
+  z: number;
+  collected: boolean;
+}
+
+interface ShieldItem {
   id: number;
   lane: Lane;
   z: number;
@@ -27,33 +34,37 @@ export default function SubwayRunner() {
   const [score, setScore] = useState<number>(0);
   const [coinsCollected, setCoinsCollected] = useState<number>(0);
   const [highScore, setHighScore] = useState<number>(0);
-  const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
+  const [hasShield, setHasShield] = useState<boolean>(true);
+  const [speedTier, setSpeedTier] = useState<string>("1.0x");
+  const [secondsElapsed, setSecondsElapsed] = useState<number>(0);
 
-  // Game internal mutable state (avoids React re-render lag inside requestAnimationFrame)
+  // Game internal mutable state
   const gameRef = useRef({
     lane: 0 as Lane,
-    playerX: 0, // smoothly interpolated x
-    playerY: 0, // jump height
+    playerX: 0,
+    playerY: 0,
     velocityY: 0,
     isJumping: false,
     isSliding: false,
     slideTimer: 0,
-    speed: 16,
+    speed: 3.6,
     distance: 0,
+    runTime: 0, // seconds elapsed
     coins: 0,
+    hasShield: true,
+    invincibleTimer: 0, // frames of invincibility after shield breaks
     obstacles: [] as Obstacle[],
     coinList: [] as Coin[],
+    shieldList: [] as ShieldItem[],
     trackOffset: 0,
-    nextObstacleZ: 800,
-    nextCoinZ: 600,
-    animFrameId: 0,
+    nextObstacleZ: 1200,
+    nextCoinZ: 500,
+    nextShieldZ: 2800,
     lastTime: 0,
   });
 
-  // Touch swipe handling
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
-  // Load high score from localStorage
   useEffect(() => {
     const saved = localStorage.getItem("subway_runner_highscore");
     if (saved) setHighScore(parseInt(saved, 10));
@@ -75,7 +86,7 @@ export default function SubwayRunner() {
     if (!g.isJumping) {
       g.isJumping = true;
       g.isSliding = false;
-      g.velocityY = 10;
+      g.velocityY = 8.5; // gentle, high clearance jump
     }
   }, [gameState]);
 
@@ -83,11 +94,10 @@ export default function SubwayRunner() {
     if (gameState !== "playing") return;
     const g = gameRef.current;
     if (g.isJumping) {
-      // Fast fall down
-      g.velocityY = -15;
+      g.velocityY = -12; // Fast dive down
     }
     g.isSliding = true;
-    g.slideTimer = 40; // ~0.7s of sliding
+    g.slideTimer = 45; // ~0.75s of sliding
   }, [gameState]);
 
   // Keyboard controls
@@ -148,18 +158,26 @@ export default function SubwayRunner() {
     g.isJumping = false;
     g.isSliding = false;
     g.slideTimer = 0;
-    g.speed = 6.5;
+    g.speed = 3.6; // Gentle initial speed
     g.distance = 0;
+    g.runTime = 0;
     g.coins = 0;
+    g.hasShield = true; // Every run starts with 1 free shield!
+    g.invincibleTimer = 0;
     g.obstacles = [];
     g.coinList = [];
+    g.shieldList = [];
     g.trackOffset = 0;
-    g.nextObstacleZ = 1000;
-    g.nextCoinZ = 600;
+    g.nextObstacleZ = 1200; // First obstacle spawns far away (~4s warning)
+    g.nextCoinZ = 550;
+    g.nextShieldZ = 3000;
     g.lastTime = performance.now();
 
     setScore(0);
     setCoinsCollected(0);
+    setHasShield(true);
+    setSpeedTier("1.0x");
+    setSecondsElapsed(0);
     setGameState("playing");
   };
 
@@ -184,19 +202,43 @@ export default function SubwayRunner() {
       const horizonY = height * 0.36;
       const laneWidth = width * 0.22;
 
-      // --- 1. UPDATE GAME STATE ---
-      g.distance += g.speed * 4 * dt;
-      g.speed = Math.min(13, 6.5 + g.distance * 0.001);
-      g.trackOffset = (g.trackOffset + g.speed * 1.5) % 100;
+      // --- 1. PROGRESSIVE DIFFICULTY BASED ON SURVIVAL TIME ---
+      g.runTime += dt;
+      g.distance += g.speed * 4.5 * dt;
 
-      // Smooth lane movement (snappy & responsive)
+      // Gentle step-wise acceleration by time
+      if (g.runTime < 15) {
+        g.speed = 3.6; // Easy warmup (0-15s)
+        setSpeedTier("1.0x (Warmup)");
+      } else if (g.runTime < 35) {
+        g.speed = 4.4; // Cruise (15-35s)
+        setSpeedTier("1.2x (Cruising)");
+      } else if (g.runTime < 60) {
+        g.speed = 5.3; // Moderate (35-60s)
+        setSpeedTier("1.5x (Speeding)");
+      } else if (g.runTime < 90) {
+        g.speed = 6.4; // Fast (60-90s)
+        setSpeedTier("1.8x (Fast)");
+      } else {
+        g.speed = Math.min(8.8, 6.4 + (g.runTime - 90) * 0.04); // Top speed
+        setSpeedTier("2.2x (Max)");
+      }
+
+      g.trackOffset = (g.trackOffset + g.speed * 1.8) % 100;
+
+      // Decrement invincibility flash timer
+      if (g.invincibleTimer > 0) {
+        g.invincibleTimer--;
+      }
+
+      // Smooth lane movement (responsive interpolation)
       const targetX = g.lane * laneWidth;
       g.playerX += (targetX - g.playerX) * 0.35;
 
       // Jump Physics (buoyant, floaty jump)
       if (g.isJumping) {
         g.playerY += g.velocityY;
-        g.velocityY -= 0.45; // Gentle gravity
+        g.velocityY -= 0.35; // Soft gravity
         if (g.playerY <= 0) {
           g.playerY = 0;
           g.isJumping = false;
@@ -212,10 +254,16 @@ export default function SubwayRunner() {
         }
       }
 
-      // Spawn Obstacles (well-spaced, fair reaction time)
-      if (g.obstacles.length < 8 && g.nextObstacleZ < 2600) {
-        const types: ObstacleType[] = ["barrier", "overhead", "train"];
-        const chosenType = types[Math.floor(Math.random() * types.length)];
+      // --- SPAWN OBSTACLES BY TIME TIER ---
+      // 0-12s: Only barriers to learn jumping
+      // 12-25s: Add overhead signs to learn sliding
+      // 25s+: Add trains
+      if (g.obstacles.length < 7 && g.nextObstacleZ < 2600) {
+        const allowedTypes: ObstacleType[] = ["barrier"];
+        if (g.runTime > 12) allowedTypes.push("overhead");
+        if (g.runTime > 25) allowedTypes.push("train");
+
+        const chosenType = allowedTypes[Math.floor(Math.random() * allowedTypes.length)];
         const chosenLane = (Math.floor(Math.random() * 3) - 1) as Lane;
 
         g.obstacles.push({
@@ -225,8 +273,8 @@ export default function SubwayRunner() {
           type: chosenType,
         });
 
-        // 15% chance of double obstacle across two lanes (only after 200m)
-        if (g.distance > 200 && Math.random() < 0.2) {
+        // Rare double-obstacle only after 45s of survival
+        if (g.runTime > 45 && Math.random() < 0.22) {
           const secondLane = (chosenLane === 0 ? (Math.random() < 0.5 ? -1 : 1) : 0) as Lane;
           g.obstacles.push({
             id: Math.random(),
@@ -236,11 +284,13 @@ export default function SubwayRunner() {
           });
         }
 
-        g.nextObstacleZ += Math.max(700, 1050 - g.speed * 20);
+        // Generous gap between hurdles
+        const spacing = g.runTime < 25 ? 1150 : Math.max(780, 1150 - g.speed * 25);
+        g.nextObstacleZ += spacing;
       }
 
-      // Spawn Coins (in arc or row)
-      if (g.coinList.length < 15 && g.nextCoinZ < 2400) {
+      // --- SPAWN COINS (Abundant lines of 4 coins) ---
+      if (g.coinList.length < 16 && g.nextCoinZ < 2400) {
         const coinLane = (Math.floor(Math.random() * 3) - 1) as Lane;
         const count = 4;
         for (let i = 0; i < count; i++) {
@@ -251,10 +301,22 @@ export default function SubwayRunner() {
             collected: false,
           });
         }
-        g.nextCoinZ += Math.max(500, 800 - g.speed * 12);
+        g.nextCoinZ += Math.max(500, 750 - g.speed * 10);
       }
 
-      // Move and clean obstacles (at gentle real-time speed)
+      // --- SPAWN SHIELD PICKUP (Every ~40-50s) ---
+      if (!g.hasShield && g.shieldList.length === 0 && g.nextShieldZ < 2200) {
+        const shieldLane = (Math.floor(Math.random() * 3) - 1) as Lane;
+        g.shieldList.push({
+          id: Math.random(),
+          lane: shieldLane,
+          z: g.nextShieldZ,
+          collected: false,
+        });
+        g.nextShieldZ += 3200;
+      }
+
+      // Move and clean obstacles
       for (const obs of g.obstacles) {
         obs.z -= g.speed;
       }
@@ -264,8 +326,6 @@ export default function SubwayRunner() {
       // Move and clean coins
       for (const coin of g.coinList) {
         coin.z -= g.speed;
-
-        // Coin collection check
         if (!coin.collected && coin.z > 20 && coin.z < 95) {
           const laneMatches = coin.lane === g.lane || Math.abs(g.playerX - coin.lane * laneWidth) < laneWidth * 0.55;
           if (laneMatches) {
@@ -277,50 +337,79 @@ export default function SubwayRunner() {
       g.coinList = g.coinList.filter((c) => c.z > -40);
       g.nextCoinZ -= g.speed;
 
-      // --- COLLISION DETECTION ---
+      // Move and clean shields
+      for (const sh of g.shieldList) {
+        sh.z -= g.speed;
+        if (!sh.collected && sh.z > 20 && sh.z < 95) {
+          const laneMatches = sh.lane === g.lane || Math.abs(g.playerX - sh.lane * laneWidth) < laneWidth * 0.55;
+          if (laneMatches) {
+            sh.collected = true;
+            g.hasShield = true;
+            setHasShield(true);
+          }
+        }
+      }
+      g.shieldList = g.shieldList.filter((s) => s.z > -40);
+      g.nextShieldZ -= g.speed;
+
+      // --- COLLISION DETECTION WITH SHIELD PROTECTION ---
       let collisionDetected = false;
+      let collidedObstacle: Obstacle | null = null;
+
       for (const obs of g.obstacles) {
-        // Player depth window
         if (obs.z > 25 && obs.z < 85) {
           const inSameLane = Math.abs(g.playerX - obs.lane * laneWidth) < laneWidth * 0.42;
           if (inSameLane) {
             if (obs.type === "barrier") {
-              // Barrier must be jumped over (playerY must be > 25)
-              if (g.playerY < 25) {
+              if (g.playerY < 24) {
                 collisionDetected = true;
+                collidedObstacle = obs;
                 break;
               }
             } else if (obs.type === "overhead") {
-              // Overhead sign must be ducked/slid under
               if (!g.isSliding) {
                 collisionDetected = true;
+                collidedObstacle = obs;
                 break;
               }
             } else if (obs.type === "train") {
-              // Trains cannot be jumped or slid under! Must change lanes!
               collisionDetected = true;
+              collidedObstacle = obs;
               break;
             }
           }
         }
       }
 
-      if (collisionDetected) {
-        const finalScore = Math.floor(g.distance) + g.coins * 10;
-        setScore(finalScore);
-        setCoinsCollected(g.coins);
-        setHighScore((prev) => {
-          const newHigh = Math.max(prev, finalScore);
-          localStorage.setItem("subway_runner_highscore", newHigh.toString());
-          return newHigh;
-        });
-        setGameState("gameover");
-        return;
+      if (collisionDetected && g.invincibleTimer <= 0) {
+        if (g.hasShield) {
+          // Shield absorbs the crash! Gives player a 2nd chance
+          g.hasShield = false;
+          g.invincibleTimer = 90; // ~1.5s of invincibility
+          setHasShield(false);
+          if (collidedObstacle) {
+            collidedObstacle.z = -120; // remove hit obstacle
+          }
+        } else {
+          // Game Over only when shield is depleted
+          const finalScore = Math.floor(g.distance) + g.coins * 10;
+          setScore(finalScore);
+          setCoinsCollected(g.coins);
+          setSecondsElapsed(Math.floor(g.runTime));
+          setHighScore((prev) => {
+            const newHigh = Math.max(prev, finalScore);
+            localStorage.setItem("subway_runner_highscore", newHigh.toString());
+            return newHigh;
+          });
+          setGameState("gameover");
+          return;
+        }
       }
 
-      // Live React State update for HUD
+      // Live HUD updates
       setScore(Math.floor(g.distance) + g.coins * 10);
       setCoinsCollected(g.coins);
+      setSecondsElapsed(Math.floor(g.runTime));
 
       // --- 2. RENDER PSEUDO-3D WORLD ---
       ctx.clearRect(0, 0, width, height);
@@ -340,7 +429,6 @@ export default function SubwayRunner() {
         const bH = 60 + ((i * 37) % 55);
         const bX = i * (width / 8) - 20;
         ctx.fillRect(bX, horizonY - bH, bW, bH);
-        // Windows
         ctx.fillStyle = i % 2 === 0 ? "rgba(253, 224, 71, 0.4)" : "rgba(56, 189, 248, 0.4)";
         ctx.fillRect(bX + 8, horizonY - bH + 12, 6, 8);
         ctx.fillRect(bX + 22, horizonY - bH + 12, 6, 8);
@@ -378,7 +466,7 @@ export default function SubwayRunner() {
         ctx.stroke();
       }
 
-      // Horizontal Railroad Sleepers / Ties (moving forward)
+      // Horizontal Railroad Ties
       ctx.strokeStyle = "rgba(100, 116, 139, 0.35)";
       ctx.lineWidth = 2;
       for (let z = (g.trackOffset % 40); z < 1800; z += 40) {
@@ -390,7 +478,7 @@ export default function SubwayRunner() {
         ctx.stroke();
       }
 
-      // Draw Tunnel Neon Ring Arcs in Distance
+      // Neon Tunnel Arcs
       for (let z = ((g.trackOffset * 1.5) % 250); z < 1600; z += 250) {
         const p = project(0, z);
         const ringW = laneWidth * 3.4 * p.scale;
@@ -402,14 +490,16 @@ export default function SubwayRunner() {
         ctx.stroke();
       }
 
-      // Combine Obstacles & Coins for Depth Sorting (back-to-front rendering)
+      // Depth sorting for render items
       type Renderable =
         | { kind: "obstacle"; obj: Obstacle; z: number }
-        | { kind: "coin"; obj: Coin; z: number };
+        | { kind: "coin"; obj: Coin; z: number }
+        | { kind: "shield"; obj: ShieldItem; z: number };
 
       const renderables: Renderable[] = [
         ...g.obstacles.map((obs) => ({ kind: "obstacle" as const, obj: obs, z: obs.z })),
         ...g.coinList.filter((c) => !c.collected).map((c) => ({ kind: "coin" as const, obj: c, z: c.z })),
+        ...g.shieldList.filter((s) => !s.collected).map((s) => ({ kind: "shield" as const, obj: s, z: s.z })),
       ];
 
       renderables.sort((a, b) => b.z - a.z);
@@ -430,12 +520,31 @@ export default function SubwayRunner() {
           ctx.shadowBlur = 10 * p.scale;
           ctx.fill();
 
-          // Inner gold ring
           ctx.beginPath();
           ctx.arc(p.x, p.y, r * 0.55, 0, Math.PI * 2);
           ctx.strokeStyle = "#fef08a";
           ctx.lineWidth = 2 * p.scale;
           ctx.stroke();
+          ctx.restore();
+        } else if (item.kind === "shield") {
+          // Floating Shield Pickup
+          const sh = item.obj;
+          const p = project(sh.lane * laneWidth, sh.z, 30);
+          if (p.scale <= 0) continue;
+
+          const r = Math.max(5, 18 * p.scale);
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+          ctx.fillStyle = "#38bdf8";
+          ctx.shadowColor = "#0284c7";
+          ctx.shadowBlur = 14 * p.scale;
+          ctx.fill();
+
+          ctx.fillStyle = "#ffffff";
+          ctx.font = `bold ${Math.max(8, 14 * p.scale)}px sans-serif`;
+          ctx.textAlign = "center";
+          ctx.fillText("🛡️", p.x, p.y + 5 * p.scale);
           ctx.restore();
         } else {
           const obs = item.obj;
@@ -443,18 +552,15 @@ export default function SubwayRunner() {
           if (p.scale <= 0) continue;
 
           if (obs.type === "barrier") {
-            // Low Hurdle (Red/White striped barrier to JUMP over)
             const bW = laneWidth * 0.85 * p.scale;
             const bH = 38 * p.scale;
             const bX = p.x - bW / 2;
             const bY = p.y - bH;
 
-            // Barrier Stand Legs
             ctx.fillStyle = "#334155";
             ctx.fillRect(bX + 4 * p.scale, bY + bH * 0.3, 5 * p.scale, bH * 0.7);
             ctx.fillRect(bX + bW - 9 * p.scale, bY + bH * 0.3, 5 * p.scale, bH * 0.7);
 
-            // Barrier Board Striped
             ctx.fillStyle = "#e11d48";
             ctx.fillRect(bX, bY, bW, bH * 0.65);
             ctx.fillStyle = "#ffffff";
@@ -462,19 +568,16 @@ export default function SubwayRunner() {
               ctx.fillRect(bX + s, bY, 7 * p.scale, bH * 0.65);
             }
           } else if (obs.type === "overhead") {
-            // Overhead Sign/Bar (Yellow warning beam to SLIDE under)
             const sW = laneWidth * 0.9 * p.scale;
             const sH = 34 * p.scale;
             const sX = p.x - sW / 2;
             const clearance = 42 * p.scale;
             const sY = p.y - clearance - sH;
 
-            // Tall Support Posts
             ctx.fillStyle = "#475569";
             ctx.fillRect(sX - 4 * p.scale, sY, 6 * p.scale, clearance + sH);
             ctx.fillRect(sX + sW - 2 * p.scale, sY, 6 * p.scale, clearance + sH);
 
-            // Warning Stripe Beam
             ctx.fillStyle = "#ca8a04";
             ctx.fillRect(sX, sY, sW, sH);
             ctx.fillStyle = "#000000";
@@ -482,34 +585,28 @@ export default function SubwayRunner() {
               ctx.fillRect(sX + s, sY, 8 * p.scale, sH);
             }
 
-            // Down Arrow symbol indicating "Slide Down"
             ctx.fillStyle = "#ffffff";
             ctx.font = `bold ${Math.max(10, 16 * p.scale)}px sans-serif`;
             ctx.textAlign = "center";
             ctx.fillText("▼ DUCK ▼", p.x, sY + sH * 0.75);
           } else if (obs.type === "train") {
-            // Subway Train Car (Massive solid obstacle, must change lane!)
             const tW = laneWidth * 0.9 * p.scale;
             const tH = 110 * p.scale;
             const tX = p.x - tW / 2;
             const tY = p.y - tH;
 
-            // Train Front Body
-            ctx.fillStyle = "#0284c7"; // Blue Express Train
+            ctx.fillStyle = "#0284c7";
             ctx.fillRect(tX, tY, tW, tH);
 
-            // Windshield Window
             ctx.fillStyle = "#0f172a";
             ctx.fillRect(tX + tW * 0.15, tY + tH * 0.15, tW * 0.7, tH * 0.35);
 
-            // Headlights
             ctx.fillStyle = "#facc15";
             ctx.beginPath();
             ctx.arc(tX + tW * 0.25, tY + tH * 0.75, 7 * p.scale, 0, Math.PI * 2);
             ctx.arc(tX + tW * 0.75, tY + tH * 0.75, 7 * p.scale, 0, Math.PI * 2);
             ctx.fill();
 
-            // Train Bumper
             ctx.fillStyle = "#1e293b";
             ctx.fillRect(tX + tW * 0.08, tY + tH * 0.88, tW * 0.84, tH * 0.12);
           }
@@ -528,71 +625,74 @@ export default function SubwayRunner() {
       ctx.ellipse(shadowProj.x, shadowProj.y, shadowW, shadowH, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // Draw Player Character
-      ctx.save();
-      const pScale = playerProj.scale;
-      const pX = playerProj.x;
-      const pY = playerProj.y;
+      // Invincibility flash effect
+      const isInvincibleFlashing = g.invincibleTimer > 0 && Math.floor(g.invincibleTimer / 4) % 2 === 0;
 
-      if (g.isSliding) {
-        // Sliding / Ducking pose
-        const duckW = 46 * pScale;
-        const duckH = 22 * pScale;
-        ctx.fillStyle = "#6366f1"; // Indigo Hoodie
-        ctx.fillRect(pX - duckW / 2, pY - duckH, duckW, duckH);
+      if (!isInvincibleFlashing) {
+        ctx.save();
+        const pScale = playerProj.scale;
+        const pX = playerProj.x;
+        const pY = playerProj.y;
 
-        // Cap/Head
-        ctx.fillStyle = "#f43f5e"; // Red Cap
-        ctx.beginPath();
-        ctx.arc(pX + duckW * 0.3, pY - duckH * 0.6, 9 * pScale, 0, Math.PI * 2);
-        ctx.fill();
+        // Draw Active Shield Aura
+        if (g.hasShield) {
+          ctx.strokeStyle = "rgba(56, 189, 248, 0.75)";
+          ctx.lineWidth = 3.5 * pScale;
+          ctx.beginPath();
+          ctx.arc(pX, pY - 24 * pScale, 36 * pScale, 0, Math.PI * 2);
+          ctx.shadowColor = "#38bdf8";
+          ctx.shadowBlur = 12 * pScale;
+          ctx.stroke();
+        }
 
-        // Slide dust particles
-        ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
-        ctx.fillRect(pX - duckW * 0.8, pY - 5 * pScale, 6 * pScale, 3 * pScale);
-        ctx.fillRect(pX - duckW * 0.6, pY - 8 * pScale, 8 * pScale, 4 * pScale);
-      } else {
-        // Standing / Running / Jumping pose
-        const bodyW = 28 * pScale;
-        const bodyH = 46 * pScale;
+        if (g.isSliding) {
+          const duckW = 46 * pScale;
+          const duckH = 22 * pScale;
+          ctx.fillStyle = "#6366f1";
+          ctx.fillRect(pX - duckW / 2, pY - duckH, duckW, duckH);
 
-        // Legs (animated swing)
-        const runCycle = Math.sin((g.distance * 0.8) % (Math.PI * 2));
-        const legOffset = g.isJumping ? 0 : runCycle * 8 * pScale;
+          ctx.fillStyle = "#f43f5e";
+          ctx.beginPath();
+          ctx.arc(pX + duckW * 0.3, pY - duckH * 0.6, 9 * pScale, 0, Math.PI * 2);
+          ctx.fill();
 
-        // Pants / Jeans
-        ctx.fillStyle = "#1e293b";
-        ctx.fillRect(pX - bodyW * 0.45, pY - 18 * pScale + legOffset, 8 * pScale, 18 * pScale);
-        ctx.fillRect(pX + bodyW * 0.15, pY - 18 * pScale - legOffset, 8 * pScale, 18 * pScale);
+          ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+          ctx.fillRect(pX - duckW * 0.8, pY - 5 * pScale, 6 * pScale, 3 * pScale);
+          ctx.fillRect(pX - duckW * 0.6, pY - 8 * pScale, 8 * pScale, 4 * pScale);
+        } else {
+          const bodyW = 28 * pScale;
+          const bodyH = 46 * pScale;
 
-        // Shoes
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(pX - bodyW * 0.5, pY - 4 * pScale + legOffset, 10 * pScale, 4 * pScale);
-        ctx.fillRect(pX + bodyW * 0.1, pY - 4 * pScale - legOffset, 10 * pScale, 4 * pScale);
+          const runCycle = Math.sin((g.distance * 0.5) % (Math.PI * 2));
+          const legOffset = g.isJumping ? 0 : runCycle * 7 * pScale;
 
-        // Torso / Vibrant Hoodie
-        ctx.fillStyle = "#4f46e5";
-        ctx.fillRect(pX - bodyW / 2, pY - bodyH, bodyW, bodyH * 0.65);
+          ctx.fillStyle = "#1e293b";
+          ctx.fillRect(pX - bodyW * 0.45, pY - 18 * pScale + legOffset, 8 * pScale, 18 * pScale);
+          ctx.fillRect(pX + bodyW * 0.15, pY - 18 * pScale - legOffset, 8 * pScale, 18 * pScale);
 
-        // Backpack
-        ctx.fillStyle = "#10b981";
-        ctx.fillRect(pX - bodyW * 0.6, pY - bodyH * 0.9, 6 * pScale, bodyH * 0.45);
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(pX - bodyW * 0.5, pY - 4 * pScale + legOffset, 10 * pScale, 4 * pScale);
+          ctx.fillRect(pX + bodyW * 0.1, pY - 4 * pScale - legOffset, 10 * pScale, 4 * pScale);
 
-        // Head / Skin
-        ctx.fillStyle = "#fed7aa";
-        ctx.beginPath();
-        ctx.arc(pX, pY - bodyH - 10 * pScale, 10 * pScale, 0, Math.PI * 2);
-        ctx.fill();
+          ctx.fillStyle = "#4f46e5";
+          ctx.fillRect(pX - bodyW / 2, pY - bodyH, bodyW, bodyH * 0.65);
 
-        // Red Streetwear Cap
-        ctx.fillStyle = "#f43f5e";
-        ctx.beginPath();
-        ctx.arc(pX, pY - bodyH - 12 * pScale, 11 * pScale, Math.PI, 0, false);
-        ctx.fill();
-        // Cap Visor
-        ctx.fillRect(pX - 4 * pScale, pY - bodyH - 13 * pScale, 18 * pScale, 4 * pScale);
+          ctx.fillStyle = "#10b981";
+          ctx.fillRect(pX - bodyW * 0.6, pY - bodyH * 0.9, 6 * pScale, bodyH * 0.45);
+
+          ctx.fillStyle = "#fed7aa";
+          ctx.beginPath();
+          ctx.arc(pX, pY - bodyH - 10 * pScale, 10 * pScale, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = "#f43f5e";
+          ctx.beginPath();
+          ctx.arc(pX, pY - bodyH - 12 * pScale, 11 * pScale, Math.PI, 0, false);
+          ctx.fill();
+          ctx.fillRect(pX - 4 * pScale, pY - bodyH - 13 * pScale, 18 * pScale, 4 * pScale);
+        }
+        ctx.restore();
       }
-      ctx.restore();
 
       animId = requestAnimationFrame(loop);
     };
@@ -601,20 +701,44 @@ export default function SubwayRunner() {
     return () => cancelAnimationFrame(animId);
   }, [gameState]);
 
+  const formatTime = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${m}:${s < 10 ? "0" : ""}${s}`;
+  };
+
   return (
     <div className="flex flex-col items-center select-none w-full max-w-lg mx-auto">
       {/* Top HUD Stats Bar */}
-      <div className="w-full flex justify-between items-center mb-3 bg-white px-5 py-3 rounded-2xl border border-gray-200 shadow-sm">
-        {/* Score */}
-        <div className="flex flex-col">
-          <span className="text-[10px] font-black uppercase tracking-wider text-gray-400">Score</span>
-          <span className="text-2xl font-black text-gray-900 leading-none">{score}</span>
+      <div className="w-full flex justify-between items-center mb-3 bg-white px-4 py-2.5 rounded-2xl border border-gray-200 shadow-sm gap-2">
+        {/* Score & Time */}
+        <div className="flex items-center gap-3">
+          <div className="flex flex-col">
+            <span className="text-[10px] font-black uppercase tracking-wider text-gray-400">Score</span>
+            <span className="text-xl font-black text-gray-900 leading-none">{score}</span>
+          </div>
+          <div className="flex items-center gap-1 bg-gray-100 px-2 py-1 rounded-lg text-xs font-bold text-gray-600">
+            <Timer className="w-3.5 h-3.5 text-indigo-500" />
+            {formatTime(secondsElapsed)}
+          </div>
+        </div>
+
+        {/* Shield Indicator */}
+        <div
+          className={`flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-black transition-all ${
+            hasShield
+              ? "bg-sky-50 text-sky-700 border border-sky-200"
+              : "bg-gray-100 text-gray-400"
+          }`}
+        >
+          {hasShield ? <Shield className="w-3.5 h-3.5 text-sky-500 fill-sky-400" /> : <ShieldAlert className="w-3.5 h-3.5" />}
+          {hasShield ? "Shield 1x" : "Shield Empty"}
         </div>
 
         {/* Coins */}
-        <div className="flex items-center gap-1.5 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200 shadow-xs">
-          <Coins className="w-5 h-5 text-amber-500 fill-amber-400" />
-          <span className="text-xl font-black text-amber-700 leading-none">{coinsCollected}</span>
+        <div className="flex items-center gap-1 bg-amber-50 px-2.5 py-1 rounded-xl border border-amber-200">
+          <Coins className="w-4 h-4 text-amber-500 fill-amber-400" />
+          <span className="text-base font-black text-amber-700 leading-none">{coinsCollected}</span>
         </div>
 
         {/* Best Score */}
@@ -622,7 +746,7 @@ export default function SubwayRunner() {
           <span className="text-[10px] font-black uppercase tracking-wider text-gray-400 flex items-center">
             <Trophy className="w-3 h-3 mr-1 text-amber-500" /> Best
           </span>
-          <span className="text-2xl font-black text-amber-600 leading-none">{highScore}</span>
+          <span className="text-xl font-black text-amber-600 leading-none">{highScore}</span>
         </div>
       </div>
 
@@ -639,6 +763,13 @@ export default function SubwayRunner() {
           className="w-full h-full block object-cover"
         />
 
+        {/* Live Speed Tier Tag in Top Left */}
+        {gameState === "playing" && (
+          <div className="absolute top-3 left-3 z-10 bg-black/60 backdrop-blur-xs px-2.5 py-1 rounded-full border border-white/10 text-[10px] font-bold text-slate-300">
+            Speed: <span className="text-emerald-400">{speedTier}</span>
+          </div>
+        )}
+
         {/* Start Menu Overlay */}
         {gameState === "menu" && (
           <div className="absolute inset-0 z-20 bg-black/75 backdrop-blur-xs flex flex-col items-center justify-center p-6 text-center text-white">
@@ -646,15 +777,18 @@ export default function SubwayRunner() {
               <Zap className="w-8 h-8 text-white fill-white" />
             </div>
             <h2 className="text-3xl font-black tracking-tight mb-2">Subway Runner</h2>
-            <p className="text-slate-300 text-xs sm:text-sm max-w-xs mb-6 font-medium leading-relaxed">
-              Dodge speeding trains, leap over hurdles, and slide under barriers across 3 fast-paced subway tracks!
+            <p className="text-slate-300 text-xs sm:text-sm max-w-xs mb-3 font-medium leading-relaxed">
+              Starts calm & easy, accelerates as you survive! Collect coins and use your free shield to stay alive.
             </p>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-sky-500/20 text-sky-300 border border-sky-400/30 rounded-full text-xs font-bold mb-6">
+              <Shield className="w-3.5 h-3.5" /> 1 Free Shield Included!
+            </div>
             <button
               type="button"
               onClick={startGame}
               className="px-8 py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-full font-black text-base shadow-lg shadow-emerald-500/30 active:scale-95 transition-all flex items-center gap-2"
             >
-              <Play className="w-5 h-5 fill-white" /> Run Now
+              <Play className="w-5 h-5 fill-white" /> Start Run
             </button>
           </div>
         )}
@@ -662,7 +796,7 @@ export default function SubwayRunner() {
         {/* Game Over Overlay */}
         {gameState === "gameover" && (
           <div className="absolute inset-0 z-20 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center text-white animate-fade-in">
-            <span className="text-rose-500 font-black tracking-widest uppercase text-xs mb-1">Crashed!</span>
+            <span className="text-rose-500 font-black tracking-widest uppercase text-xs mb-1">Run Finished!</span>
             <h2 className="text-3xl font-black mb-4">Game Over</h2>
 
             <div className="w-full max-w-xs bg-slate-900 border border-slate-800 rounded-2xl p-4 mb-6 shadow-inner">
@@ -671,9 +805,15 @@ export default function SubwayRunner() {
                 <span className="text-xl font-black text-white">{score}</span>
               </div>
               <div className="flex justify-between items-center mb-2">
+                <span className="text-xs text-slate-400 font-bold">Time Survived</span>
+                <span className="text-base font-black text-indigo-400 flex items-center gap-1">
+                  <Timer className="w-3.5 h-3.5" /> {formatTime(secondsElapsed)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center mb-2">
                 <span className="text-xs text-slate-400 font-bold">Coins Picked</span>
-                <span className="text-lg font-black text-amber-400 flex items-center gap-1">
-                  <Coins className="w-4 h-4" /> {coinsCollected}
+                <span className="text-base font-black text-amber-400 flex items-center gap-1">
+                  <Coins className="w-3.5 h-3.5" /> {coinsCollected}
                 </span>
               </div>
               <div className="flex justify-between items-center pt-2 border-t border-slate-800">
