@@ -19,6 +19,14 @@ import {
 
 export const GAMES = [
   {
+    title: "Highway Car Racer",
+    slug: "racing",
+    description: "High-speed 3D traffic racer! Weave through dense highway lanes, hit nitro boost, and execute near misses.",
+    category: "Action",
+    image: "/images/racing.svg",
+    color: "from-rose-600 to-amber-600",
+  },
+  {
     title: "Subway Runner",
     slug: "subway",
     description: "Endless 3D parkour runner! Sprint down subway tracks, leap hurdles, dodge trains, and grab coins.",
