@@ -2,7 +2,8 @@
 .mm-wrap {
   position: relative;
   width: 100%;
-  min-height: 100svh;
+  height: min(85vh, 680px);
+  min-height: 520px;
   background: linear-gradient(#7fd6ff 0%, #c8f0ff 38%, #9be564 38.1%, #5cbf3a 100%);
   font-family: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
   color: #fff;
@@ -41,7 +42,7 @@
   position: relative;
   max-width: 480px;
   margin: 0 auto;
-  min-height: 100svh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   padding: 12px 14px 18px;
@@ -260,7 +261,7 @@
 
 /* Overlay */
 .mm-overlay {
-  position: fixed;
+  position: absolute;
   inset: 0;
   background: radial-gradient(circle, #0006, #000b);
   display: flex;

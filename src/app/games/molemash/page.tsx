@@ -1,20 +1,8 @@
 /* eslint-disable */
-import dynamic from "next/dynamic";
+import MoleMash from "@/games/molemash/MoleMash";
 import GameSEO from "@/components/GameSEO";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-
-const MoleMash = dynamic(() => import("@/games/molemash/MoleMash"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center justify-center w-full h-64 bg-gray-900 rounded-xl">
-      <div className="flex flex-col items-center gap-3">
-        <div className="w-10 h-10 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin" />
-        <p className="text-gray-400 text-sm font-medium">Loading Mole Mash...</p>
-      </div>
-    </div>
-  ),
-});
 
 export const metadata = {
   title: "Play Mole Mash Online Free — Whack-a-Mole Arcade Game | EG ZONE",
@@ -24,19 +12,32 @@ export const metadata = {
 
 export default function MoleMashPage() {
   return (
-    <div className="min-h-screen bg-[#090d18] text-white">
-      <div className="max-w-2xl mx-auto px-4 pt-6 pb-2">
+    <div className="max-w-4xl mx-auto px-2 sm:px-4 lg:px-6 pt-3 pb-12">
+      {/* Top Navigation */}
+      <div className="flex items-center justify-between mb-4">
         <Link
           href="/games"
-          className="inline-flex items-center text-slate-400 hover:text-white mb-4 transition-colors font-medium"
+          className="inline-flex items-center text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" /> Back to Games
+          <ArrowLeft className="w-4 h-4 mr-1.5" /> Back to Games
         </Link>
+        <div className="text-right">
+          <h1 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight leading-none">
+            Mole Mash
+          </h1>
+          <p className="text-[11px] sm:text-xs text-slate-500 font-medium hidden sm:block">
+            Whack moles, avoid bomb beavers, and chain combos!
+          </p>
+        </div>
       </div>
 
-      <MoleMash />
+      {/* Main Game Screen */}
+      <div className="rounded-2xl overflow-hidden shadow-2xl border border-gray-200">
+        <MoleMash />
+      </div>
 
-      <div className="max-w-4xl mx-auto px-4 mt-8 pb-16 text-slate-900">
+      {/* AdSense SEO Component */}
+      <div className="mt-12">
         <GameSEO
           gameName="Mole Mash"
           description="Mole Mash is a fast-paced whack-a-mole arcade game with a colourful cast of characters bursting out of holes in the ground. Race against the clock to smash as many moles as possible, chain combos for bonus points, and steer clear of the bomb-laden beaver that will cost you 10 points. With three difficulty modes, special golden and icy moles, star power-ups, and a local high-score tracker, every 30-second round feels fresh and competitive. The smooth animations, satisfying hammer swing, and cheerful art make it equally enjoyable on desktop and mobile."
