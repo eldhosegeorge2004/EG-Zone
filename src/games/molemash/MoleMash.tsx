@@ -134,7 +134,6 @@ export default function MoleMash() {
 
   // DOM refs
   const boardRef   = useRef<HTMLDivElement>(null);
-  const hammerRef  = useRef<HTMLDivElement>(null);
   const scoreRef   = useRef<HTMLElement | null>(null);
   const timeRef    = useRef<HTMLElement | null>(null);
   const bestRef    = useRef<HTMLElement | null>(null);
@@ -401,21 +400,6 @@ export default function MoleMash() {
     // Start RAF
     rafRef.current = requestAnimationFrame(frameLoop);
 
-    // Hammer cursor
-    const moveH = (x: number, y: number) => {
-      if (hammerRef.current) hammerRef.current.style.transform = `translate(${x}px,${y}px)`;
-    };
-    const onMove = (e: PointerEvent) => moveH(e.clientX, e.clientY);
-    const onDown = (e: PointerEvent) => {
-      moveH(e.clientX, e.clientY);
-      if (hammerRef.current) {
-        hammerRef.current.style.rotate = "-60deg";
-        setTimeout(() => { if (hammerRef.current) hammerRef.current.style.rotate = "0deg"; }, 90);
-      }
-    };
-    window.addEventListener("pointermove", onMove, { passive: true });
-    window.addEventListener("pointerdown", onDown);
-
     // Keyboard pause
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "p" || e.key === "P" || e.key === "Escape") togglePause();
@@ -430,8 +414,6 @@ export default function MoleMash() {
 
     return () => {
       cancelAnimationFrame(rafRef.current);
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerdown", onDown);
       window.removeEventListener("keydown", onKey);
       document.removeEventListener("visibilitychange", onVis);
       musicStop();
@@ -522,22 +504,6 @@ export default function MoleMash() {
             </div>
           ))}
         </div>
-      </div>
-
-      {/* Hammer cursor */}
-      <div className="mm-hammer" ref={hammerRef}>
-        <svg viewBox="0 0 96 96" width="96" height="96" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="mmhg" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#ff8787" /><stop offset="1" stopColor="#e03131" />
-            </linearGradient>
-          </defs>
-          <rect x="42" y="34" width="12" height="58" rx="6" fill="#c68642" stroke="#7a4a17" strokeWidth="3" />
-          <rect x="14" y="8" width="68" height="36" rx="12" fill="url(#mmhg)" stroke="#8f1d1d" strokeWidth="4" />
-          <rect x="8" y="14" width="10" height="24" rx="4" fill="#ffd43b" stroke="#8f6a00" strokeWidth="3" />
-          <rect x="78" y="14" width="10" height="24" rx="4" fill="#ffd43b" stroke="#8f6a00" strokeWidth="3" />
-          <rect x="24" y="14" width="30" height="7" rx="3.5" fill="#fff" opacity=".45" />
-        </svg>
       </div>
 
       {/* Overlay — menu / paused / gameover */}

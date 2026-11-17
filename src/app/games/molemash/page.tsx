@@ -12,9 +12,9 @@ export const metadata = {
 
 export default function MoleMashPage() {
   return (
-    <div className="max-w-4xl mx-auto px-2 sm:px-4 lg:px-6 pt-3 pb-12">
+    <div className="max-w-4xl mx-auto px-2 sm:px-4 lg:px-6 pt-2 pb-12">
       {/* Top Navigation */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-2">
         <Link
           href="/games"
           className="inline-flex items-center text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors"
@@ -22,17 +22,17 @@ export default function MoleMashPage() {
           <ArrowLeft className="w-4 h-4 mr-1.5" /> Back to Games
         </Link>
         <div className="text-right">
-          <h1 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight leading-none">
+          <h1 className="text-base sm:text-xl font-black text-slate-900 tracking-tight leading-none">
             Mole Mash
           </h1>
-          <p className="text-[11px] sm:text-xs text-slate-500 font-medium hidden sm:block">
+          <p className="text-[10px] sm:text-xs text-slate-500 font-medium hidden sm:block">
             Whack moles, avoid bomb beavers, and chain combos!
           </p>
         </div>
       </div>
 
-      {/* Main Game Screen */}
-      <div className="rounded-2xl overflow-hidden shadow-2xl border border-gray-200">
+      {/* Main Game Screen — fits tightly inside the screen viewport on laptop & mobile */}
+      <div className="rounded-2xl overflow-hidden shadow-2xl border border-gray-200 h-[min(70vh,520px)] max-h-[calc(100vh-140px)] min-h-[420px] w-full">
         <MoleMash />
       </div>
 

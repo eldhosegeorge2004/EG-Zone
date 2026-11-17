@@ -2,8 +2,8 @@
 .mm-wrap {
   position: relative;
   width: 100%;
-  height: min(85vh, 680px);
-  min-height: 520px;
+  height: 100%;
+  max-height: 100%;
   background: linear-gradient(#7fd6ff 0%, #c8f0ff 38%, #9be564 38.1%, #5cbf3a 100%);
   font-family: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
   color: #fff;
@@ -11,15 +11,15 @@
   touch-action: manipulation;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  cursor: none;
+  cursor: default;
 }
 
 /* Clouds */
 .mm-cloud {
   position: absolute;
   top: 6%;
-  width: 120px;
-  height: 36px;
+  width: 100px;
+  height: 30px;
   background: #fff;
   border-radius: 40px;
   opacity: 0.9;
@@ -32,51 +32,51 @@
   background: #fff;
   border-radius: 50%;
 }
-.mm-cloud::before { width: 50px; height: 50px; left: 18px; top: -24px; }
-.mm-cloud::after  { width: 36px; height: 36px; left: 60px; top: -14px; }
-.mm-cloud2 { top: 16%; transform: scale(0.7); animation-duration: 55s; animation-delay: -20s; }
-@keyframes mm-drift { from { left: -160px; } to { left: 110%; } }
+.mm-cloud::before { width: 42px; height: 42px; left: 15px; top: -20px; }
+.mm-cloud::after  { width: 30px; height: 30px; left: 50px; top: -12px; }
+.mm-cloud2 { top: 14%; transform: scale(0.65); animation-duration: 55s; animation-delay: -20s; }
+@keyframes mm-drift { from { left: -140px; } to { left: 110%; } }
 
-/* App layout */
+/* App layout — fits tightly inside the game box */
 .mm-app {
   position: relative;
-  max-width: 480px;
+  max-width: 440px;
   margin: 0 auto;
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 12px 14px 18px;
+  padding: 8px 12px 10px;
   z-index: 2;
 }
 
 /* HUD */
 .mm-hud {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   background: linear-gradient(#b9783a, #8d5524);
-  border: 4px solid #5e3716;
-  border-radius: 18px;
-  padding: 8px;
-  box-shadow: 0 6px 0 #4a2a10, inset 0 2px 0 #e0a064;
+  border: 3px solid #5e3716;
+  border-radius: 14px;
+  padding: 4px 6px;
+  box-shadow: 0 4px 0 #4a2a10, inset 0 2px 0 #e0a064;
 }
 .mm-stat {
   flex: 1;
   background: #5e3716;
-  border-radius: 12px;
-  padding: 5px 0;
+  border-radius: 9px;
+  padding: 3px 0;
   text-align: center;
-  box-shadow: inset 0 3px 6px #0006;
+  box-shadow: inset 0 2px 4px #0006;
 }
-.mm-stat span { display: block; font-size: 10px; letter-spacing: .12em; color: #f2c999; font-weight: 700; }
-.mm-stat b { font-size: 26px; color: #fff3c4; text-shadow: 0 2px 0 #0006; display: block; }
+.mm-stat span { display: block; font-size: 9px; letter-spacing: .1em; color: #f2c999; font-weight: 700; }
+.mm-stat b { font-size: 20px; color: #fff3c4; text-shadow: 0 2px 0 #0006; display: block; line-height: 1.15; }
 
 /* Timer bar */
 .mm-bar {
-  height: 14px;
+  height: 10px;
   background: #5e3716;
-  border: 3px solid #4a2a10;
-  border-radius: 10px;
-  margin: 10px 4px 0;
+  border: 2px solid #4a2a10;
+  border-radius: 8px;
+  margin: 6px 2px 0;
   overflow: hidden;
 }
 .mm-barfill {
@@ -85,7 +85,7 @@
   width: 100%;
   background: linear-gradient(90deg, #ff6b6b, #ffd43b, #69db7c);
   background-size: 300% 100%;
-  border-radius: 6px;
+  border-radius: 5px;
   transition: width 0.1s linear;
 }
 .mm-bar.mm-bar-frozen .mm-barfill {
@@ -98,34 +98,35 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 2px;
 }
 .mm-title {
   text-align: center;
-  font-size: 32px;
+  font-size: 22px;
   font-weight: 900;
-  margin: 8px 0 0;
+  margin: 2px 0 0;
   color: #ffe066;
   letter-spacing: .05em;
-  -webkit-text-stroke: 2px #8a4b08;
+  -webkit-text-stroke: 1.5px #8a4b08;
   paint-order: stroke fill;
-  text-shadow: 0 4px 0 #8a4b08;
+  text-shadow: 0 3px 0 #8a4b08;
 }
 .mm-ctrl {
   position: absolute;
   right: 0;
-  top: 8px;
+  top: 2px;
   display: flex;
-  gap: 6px;
+  gap: 4px;
 }
 .mm-ib {
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
   padding: 0;
-  font-size: 18px;
+  font-size: 15px;
   border-radius: 50%;
   background: linear-gradient(#ffd43b, #f59f00);
   color: #5c3b00;
-  box-shadow: 0 3px 0 #b36b00;
+  box-shadow: 0 2px 0 #b36b00;
   border: none;
   cursor: pointer;
   font-family: inherit;
@@ -135,47 +136,53 @@
 
 /* Badges */
 .mm-badges {
-  height: 26px;
+  height: 20px;
   display: flex;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   align-items: center;
   margin-top: 2px;
 }
 .mm-badge {
   font-weight: 900;
-  font-size: 13px;
-  padding: 3px 10px;
-  border-radius: 20px;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 16px;
   background: #0007;
-  border: 2px solid #fff6;
+  border: 1.5px solid #fff6;
 }
 
 /* Combo */
 .mm-combo {
-  height: 22px;
+  height: 18px;
   text-align: center;
   font-weight: 900;
-  font-size: 18px;
+  font-size: 15px;
   color: #fff;
-  text-shadow: 0 2px 0 #c2410c, 0 0 12px #ff922b;
+  text-shadow: 0 2px 0 #c2410c, 0 0 10px #ff922b;
 }
 
-/* Board */
+/* 3x3 Mole Board — flexes and fits 100% of available height without overflow */
 .mm-board {
   flex: 1;
+  min-height: 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 6px 10px;
-  align-content: center;
-  cursor: none;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 4px 8px;
+  align-content: stretch;
+  cursor: pointer;
+  margin-top: 2px;
 }
 
 /* Each cell */
 .mm-cell {
   position: relative;
-  aspect-ratio: 1 / 1.12;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
   overflow: hidden;
+  cursor: pointer;
 }
 .mm-back {
   position: absolute;
@@ -193,8 +200,8 @@
   z-index: 3;
   background: radial-gradient(ellipse at 50% 0%, #7a4a22 0%, #5a3414 70%);
   border-radius: 50% 50% 45% 45% / 70% 70% 30% 30%;
-  border-top: 5px solid #6bbf3a;
-  box-shadow: 0 -3px 0 #8be04e inset;
+  border-top: 4px solid #6bbf3a;
+  box-shadow: 0 -2px 0 #8be04e inset;
 }
 
 /* Mole */
@@ -220,46 +227,33 @@
   position: absolute;
   z-index: 6;
   font-weight: 900;
-  font-size: 30px;
+  font-size: 26px;
   pointer-events: none;
   animation: mm-rise 0.8s forwards;
-  -webkit-text-stroke: 2px #0008;
+  -webkit-text-stroke: 1.5px #0008;
   paint-order: stroke fill;
   white-space: nowrap;
 }
 @keyframes mm-rise {
   from { transform: translateY(0) scale(0.6); }
   30%  { transform: translateY(-14px) scale(1.2); }
-  to   { transform: translateY(-60px) scale(1); opacity: 0; }
-}
-
-/* Hammer cursor */
-.mm-hammer {
-  position: fixed;
-  left: 0; top: 0;
-  width: 96px; height: 96px;
-  pointer-events: none;
-  z-index: 20;
-  margin: -26px 0 0 -48px;
-  transform-origin: 50% 90%;
-  will-change: transform;
-  transition: rotate 0.07s ease-out;
+  to   { transform: translateY(-50px) scale(1); opacity: 0; }
 }
 
 /* Board shake */
 .mm-shake { animation: mm-shake 0.3s; }
 @keyframes mm-shake {
-  20% { transform: translate(-8px, 2px); }
-  40% { transform: translate(8px, -2px); }
-  60% { transform: translate(-5px, 0); }
-  80% { transform: translate(5px, 0); }
+  20% { transform: translate(-6px, 2px); }
+  40% { transform: translate(6px, -2px); }
+  60% { transform: translate(-4px, 0); }
+  80% { transform: translate(4px, 0); }
 }
 
 /* Bomb spark */
 .mm-spark { animation: mm-blink 0.2s infinite alternate; }
 @keyframes mm-blink { to { opacity: 0.3; } }
 
-/* Overlay */
+/* Overlay — menu / paused / gameover */
 .mm-overlay {
   position: absolute;
   inset: 0;
@@ -270,47 +264,47 @@
   justify-content: center;
   z-index: 30;
   text-align: center;
-  padding: 16px;
+  padding: 12px;
 }
 .mm-card {
   background: linear-gradient(#fff8e1, #ffe9a8);
   color: #6b3a0a;
-  border: 5px solid #8d5524;
-  border-radius: 26px;
-  padding: 20px 22px 24px;
-  width: min(360px, 100%);
-  box-shadow: 0 10px 0 #5e3716, 0 20px 40px #0008;
+  border: 4px solid #8d5524;
+  border-radius: 20px;
+  padding: 16px 18px 18px;
+  width: min(340px, 95%);
+  box-shadow: 0 8px 0 #5e3716, 0 16px 30px #0008;
 }
-.mm-card h2 { margin: 0 0 6px; font-size: 34px; text-shadow: 0 3px 0 #fff; color: #6b3a0a; }
-.mm-card p  { margin: 0 0 12px; line-height: 1.45; font-size: 15px; }
+.mm-card h2 { margin: 0 0 4px; font-size: 26px; text-shadow: 0 2px 0 #fff; color: #6b3a0a; }
+.mm-card p  { margin: 0 0 10px; line-height: 1.4; font-size: 13px; }
 
 /* Legend */
 .mm-legend {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 6px;
-  margin: 0 0 12px;
+  gap: 5px;
+  margin: 0 0 10px;
   font-weight: 800;
-  font-size: 12px;
+  font-size: 11px;
 }
-.mm-legend div { background: #0001; border-radius: 10px; padding: 5px 8px; }
+.mm-legend div { background: #0001; border-radius: 8px; padding: 4px 7px; }
 
 /* Mode buttons */
 .mm-modes {
   display: flex;
   gap: 6px;
   justify-content: center;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 .mm-mode {
-  font-size: 14px;
-  padding: 8px 14px;
-  border-radius: 20px;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 18px;
   background: #fff;
   color: #6b3a0a;
-  box-shadow: 0 3px 0 #c9a06a;
-  border: 3px solid transparent;
+  box-shadow: 0 2px 0 #c9a06a;
+  border: 2px solid transparent;
   cursor: pointer;
   font-family: inherit;
   font-weight: 900;
@@ -318,26 +312,26 @@
 .mm-mode.mm-mode-on { background: #ffd43b; border-color: #8d5524; }
 
 /* CTA buttons */
-.mm-btns { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.mm-btns { display: flex; flex-direction: column; gap: 10px; align-items: center; }
 .mm-btns button {
   font-family: inherit;
   font-weight: 900;
-  font-size: 22px;
+  font-size: 19px;
   letter-spacing: .05em;
-  padding: 11px 40px;
+  padding: 9px 36px;
   border: 0;
   border-radius: 50px;
   background: linear-gradient(#69db7c, #2f9e44);
   color: #fff;
   text-shadow: 0 2px 0 #1b5e20;
-  box-shadow: 0 6px 0 #1b6e2e, 0 10px 18px #0004;
+  box-shadow: 0 5px 0 #1b6e2e, 0 8px 14px #0004;
   cursor: pointer;
 }
-.mm-btns button:active { transform: translateY(4px); box-shadow: 0 2px 0 #1b6e2e; }
+.mm-btns button:active { transform: translateY(3px); box-shadow: 0 2px 0 #1b6e2e; }
 
 /* Confetti */
 .mm-conf {
-  position: fixed;
+  position: absolute;
   top: -20px;
   width: 10px;
   height: 14px;
@@ -345,4 +339,4 @@
   pointer-events: none;
   animation: mm-fall linear forwards;
 }
-@keyframes mm-fall { to { transform: translateY(110vh) rotate(720deg); } }
+@keyframes mm-fall { to { transform: translateY(110%) rotate(720deg); } }
