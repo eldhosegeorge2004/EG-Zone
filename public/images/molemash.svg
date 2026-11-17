@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7fd6ff"/>
+      <stop offset="60%" stop-color="#c8f0ff"/>
+    </linearGradient>
+    <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9be564"/>
+      <stop offset="100%" stop-color="#5cbf3a"/>
+    </linearGradient>
+    <linearGradient id="molebody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c68642"/>
+      <stop offset="100%" stop-color="#8d5524"/>
+    </linearGradient>
+    <linearGradient id="hammerhead" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ff8787"/>
+      <stop offset="100%" stop-color="#e03131"/>
+    </linearGradient>
+    <radialGradient id="hole" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#1c0f06"/>
+      <stop offset="100%" stop-color="#3a2210"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Sky -->
+  <rect width="800" height="370" fill="url(#sky)"/>
+
+  <!-- Clouds -->
+  <g opacity="0.9">
+    <ellipse cx="120" cy="80" rx="70" ry="22" fill="white"/>
+    <ellipse cx="100" cy="62" rx="30" ry="30" fill="white"/>
+    <ellipse cx="140" cy="66" rx="22" ry="22" fill="white"/>
+  </g>
+  <g opacity="0.8">
+    <ellipse cx="600" cy="60" rx="55" ry="18" fill="white"/>
+    <ellipse cx="582" cy="47" rx="24" ry="24" fill="white"/>
+    <ellipse cx="618" cy="50" rx="18" ry="18" fill="white"/>
+  </g>
+  <g opacity="0.7">
+    <ellipse cx="380" cy="100" rx="45" ry="15" fill="white"/>
+    <ellipse cx="366" cy="89" rx="20" ry="20" fill="white"/>
+    <ellipse cx="400" cy="92" rx="15" ry="15" fill="white"/>
+  </g>
+
+  <!-- Ground / Grass -->
+  <rect y="360" width="800" height="240" fill="url(#grass)"/>
+
+  <!-- Dirt holes (3) -->
+  <ellipse cx="210" cy="390" rx="80" ry="28" fill="#3a2210"/>
+  <ellipse cx="210" cy="390" rx="68" ry="22" fill="#1c0f06"/>
+
+  <ellipse cx="590" cy="390" rx="80" ry="28" fill="#3a2210"/>
+  <ellipse cx="590" cy="390" rx="68" ry="22" fill="#1c0f06"/>
+
+  <!-- Center hole + mole emerging -->
+  <ellipse cx="400" cy="420" rx="90" ry="30" fill="#3a2210"/>
+  <ellipse cx="400" cy="420" rx="76" ry="24" fill="#1c0f06"/>
+
+  <!-- Mole body (center) -->
+  <ellipse cx="400" cy="395" rx="52" ry="60" fill="url(#molebody)"/>
+  <!-- Mole belly -->
+  <ellipse cx="400" cy="410" rx="34" ry="40" fill="#f0c97a"/>
+  <!-- Mole eyes -->
+  <circle cx="384" cy="372" r="8" fill="#111"/>
+  <circle cx="416" cy="372" r="8" fill="#111"/>
+  <circle cx="386" cy="370" r="3" fill="white"/>
+  <circle cx="418" cy="370" r="3" fill="white"/>
+  <!-- Mole nose -->
+  <ellipse cx="400" cy="386" rx="10" ry="7" fill="#c0427a"/>
+  <!-- Mole smile -->
+  <path d="M 388 395 Q 400 408 412 395" stroke="#6b2e08" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- Mole ears -->
+  <ellipse cx="354" cy="358" rx="16" ry="20" fill="#b36030"/>
+  <ellipse cx="354" cy="358" rx="10" ry="13" fill="#e8945a"/>
+  <ellipse cx="446" cy="358" rx="16" ry="20" fill="#b36030"/>
+  <ellipse cx="446" cy="358" rx="10" ry="13" fill="#e8945a"/>
+  <!-- Mole arms -->
+  <ellipse cx="345" cy="400" rx="14" ry="22" fill="#c68642" transform="rotate(-20,345,400)"/>
+  <ellipse cx="455" cy="400" rx="14" ry="22" fill="#c68642" transform="rotate(20,455,400)"/>
+  <!-- Dirt mound front -->
+  <ellipse cx="400" cy="435" rx="90" ry="22" fill="#5a3414"/>
+  <path d="M310 430 Q400 410 490 430 Q490 460 310 460 Z" fill="#6b4120"/>
+
+  <!-- Hammer (top right, swinging) -->
+  <g transform="translate(610,120) rotate(35,10,90)">
+    <!-- Handle -->
+    <rect x="2" y="50" width="16" height="80" rx="8" fill="#c68642" stroke="#7a4a17" stroke-width="3"/>
+    <!-- Head -->
+    <rect x="-28" y="10" width="90" height="48" rx="14" fill="url(#hammerhead)" stroke="#8f1d1d" stroke-width="4"/>
+    <!-- Gold bands -->
+    <rect x="-38" y="17" width="13" height="34" rx="5" fill="#ffd43b" stroke="#8f6a00" stroke-width="2.5"/>
+    <rect x="52" y="17" width="13" height="34" rx="5" fill="#ffd43b" stroke="#8f6a00" stroke-width="2.5"/>
+    <!-- Shine -->
+    <rect x="-10" y="13" width="40" height="8" rx="4" fill="white" opacity="0.4"/>
+  </g>
+
+  <!-- Stars / sparkles near hammer -->
+  <text x="680" y="115" font-size="28" fill="#ffd43b" opacity="0.9">✨</text>
+  <text x="655" y="85" font-size="18" fill="#fff" opacity="0.7">✦</text>
+  <text x="700" y="150" font-size="14" fill="#fff" opacity="0.6">✦</text>
+
+  <!-- Score bubbles -->
+  <circle cx="720" cy="260" r="36" fill="#ffd43b" stroke="#b36b00" stroke-width="3" opacity="0.95"/>
+  <text x="720" y="268" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="22" font-weight="900" fill="#5c3b00">+5</text>
+
+  <circle cx="80" cy="280" r="30" fill="#ff6b6b" stroke="#8f1d1d" stroke-width="3" opacity="0.9"/>
+  <text x="80" y="289" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="20" font-weight="900" fill="white">+1</text>
+
+  <!-- Title text -->
+  <text x="400" y="310" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-size="62" font-weight="900"
+        fill="#ffe066" stroke="#8a4b08" stroke-width="5" paint-order="stroke fill"
+        letter-spacing="4">MOLE MASH</text>
+
+  <!-- Tagline -->
+  <text x="400" y="345" text-anchor="middle" font-family="Trebuchet MS,Arial,sans-serif" font-size="22"
+        fill="#ffe9a8" stroke="#5a3414" stroke-width="3" paint-order="stroke fill">Whack · Combo · Survive!</text>
+</svg>

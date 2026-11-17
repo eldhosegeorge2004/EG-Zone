@@ -1,0 +1,347 @@
+/* Mole Mash Game Styles */
+.mm-wrap {
+  position: relative;
+  width: 100%;
+  min-height: 100svh;
+  background: linear-gradient(#7fd6ff 0%, #c8f0ff 38%, #9be564 38.1%, #5cbf3a 100%);
+  font-family: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
+  color: #fff;
+  overflow: hidden;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: none;
+}
+
+/* Clouds */
+.mm-cloud {
+  position: absolute;
+  top: 6%;
+  width: 120px;
+  height: 36px;
+  background: #fff;
+  border-radius: 40px;
+  opacity: 0.9;
+  animation: mm-drift 40s linear infinite;
+}
+.mm-cloud::before,
+.mm-cloud::after {
+  content: "";
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+}
+.mm-cloud::before { width: 50px; height: 50px; left: 18px; top: -24px; }
+.mm-cloud::after  { width: 36px; height: 36px; left: 60px; top: -14px; }
+.mm-cloud2 { top: 16%; transform: scale(0.7); animation-duration: 55s; animation-delay: -20s; }
+@keyframes mm-drift { from { left: -160px; } to { left: 110%; } }
+
+/* App layout */
+.mm-app {
+  position: relative;
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 14px 18px;
+  z-index: 2;
+}
+
+/* HUD */
+.mm-hud {
+  display: flex;
+  gap: 8px;
+  background: linear-gradient(#b9783a, #8d5524);
+  border: 4px solid #5e3716;
+  border-radius: 18px;
+  padding: 8px;
+  box-shadow: 0 6px 0 #4a2a10, inset 0 2px 0 #e0a064;
+}
+.mm-stat {
+  flex: 1;
+  background: #5e3716;
+  border-radius: 12px;
+  padding: 5px 0;
+  text-align: center;
+  box-shadow: inset 0 3px 6px #0006;
+}
+.mm-stat span { display: block; font-size: 10px; letter-spacing: .12em; color: #f2c999; font-weight: 700; }
+.mm-stat b { font-size: 26px; color: #fff3c4; text-shadow: 0 2px 0 #0006; display: block; }
+
+/* Timer bar */
+.mm-bar {
+  height: 14px;
+  background: #5e3716;
+  border: 3px solid #4a2a10;
+  border-radius: 10px;
+  margin: 10px 4px 0;
+  overflow: hidden;
+}
+.mm-barfill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #ff6b6b, #ffd43b, #69db7c);
+  background-size: 300% 100%;
+  border-radius: 6px;
+  transition: width 0.1s linear;
+}
+.mm-bar.mm-bar-frozen .mm-barfill {
+  background: linear-gradient(90deg, #74c0fc, #e7f5ff);
+}
+
+/* Title row */
+.mm-titlerow {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.mm-title {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 900;
+  margin: 8px 0 0;
+  color: #ffe066;
+  letter-spacing: .05em;
+  -webkit-text-stroke: 2px #8a4b08;
+  paint-order: stroke fill;
+  text-shadow: 0 4px 0 #8a4b08;
+}
+.mm-ctrl {
+  position: absolute;
+  right: 0;
+  top: 8px;
+  display: flex;
+  gap: 6px;
+}
+.mm-ib {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  font-size: 18px;
+  border-radius: 50%;
+  background: linear-gradient(#ffd43b, #f59f00);
+  color: #5c3b00;
+  box-shadow: 0 3px 0 #b36b00;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 900;
+}
+.mm-ib:active { box-shadow: 0 1px 0 #b36b00; transform: translateY(2px); }
+
+/* Badges */
+.mm-badges {
+  height: 26px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  align-items: center;
+  margin-top: 2px;
+}
+.mm-badge {
+  font-weight: 900;
+  font-size: 13px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: #0007;
+  border: 2px solid #fff6;
+}
+
+/* Combo */
+.mm-combo {
+  height: 22px;
+  text-align: center;
+  font-weight: 900;
+  font-size: 18px;
+  color: #fff;
+  text-shadow: 0 2px 0 #c2410c, 0 0 12px #ff922b;
+}
+
+/* Board */
+.mm-board {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px 10px;
+  align-content: center;
+  cursor: none;
+}
+
+/* Each cell */
+.mm-cell {
+  position: relative;
+  aspect-ratio: 1 / 1.12;
+  overflow: hidden;
+}
+.mm-back {
+  position: absolute;
+  left: 3%; right: 3%;
+  bottom: 8%;
+  height: 28%;
+  background: radial-gradient(ellipse at 50% 30%, #1c0f06 40%, #3a2210 100%);
+  border-radius: 50%;
+  z-index: 0;
+}
+.mm-front {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 24%;
+  z-index: 3;
+  background: radial-gradient(ellipse at 50% 0%, #7a4a22 0%, #5a3414 70%);
+  border-radius: 50% 50% 45% 45% / 70% 70% 30% 30%;
+  border-top: 5px solid #6bbf3a;
+  box-shadow: 0 -3px 0 #8be04e inset;
+}
+
+/* Mole */
+.mm-mole {
+  position: absolute;
+  left: 13%;
+  width: 74%;
+  bottom: -85%;
+  transition: bottom 0.12s cubic-bezier(0.3, 1.6, 0.6, 1);
+  z-index: 1;
+}
+.mm-mole.mm-mole-up { bottom: 14%; }
+.mm-mole svg { width: 100%; display: block; pointer-events: none; overflow: visible; }
+.mm-mole.mm-mole-hit svg { animation: mm-squash 0.22s; }
+@keyframes mm-squash {
+  0%   { transform: scale(1, 1); }
+  40%  { transform: scale(1.15, 0.7) translateY(12%); }
+  100% { transform: scale(1, 0.9); }
+}
+
+/* Floating score pop */
+.mm-pop {
+  position: absolute;
+  z-index: 6;
+  font-weight: 900;
+  font-size: 30px;
+  pointer-events: none;
+  animation: mm-rise 0.8s forwards;
+  -webkit-text-stroke: 2px #0008;
+  paint-order: stroke fill;
+  white-space: nowrap;
+}
+@keyframes mm-rise {
+  from { transform: translateY(0) scale(0.6); }
+  30%  { transform: translateY(-14px) scale(1.2); }
+  to   { transform: translateY(-60px) scale(1); opacity: 0; }
+}
+
+/* Hammer cursor */
+.mm-hammer {
+  position: fixed;
+  left: 0; top: 0;
+  width: 96px; height: 96px;
+  pointer-events: none;
+  z-index: 20;
+  margin: -26px 0 0 -48px;
+  transform-origin: 50% 90%;
+  will-change: transform;
+  transition: rotate 0.07s ease-out;
+}
+
+/* Board shake */
+.mm-shake { animation: mm-shake 0.3s; }
+@keyframes mm-shake {
+  20% { transform: translate(-8px, 2px); }
+  40% { transform: translate(8px, -2px); }
+  60% { transform: translate(-5px, 0); }
+  80% { transform: translate(5px, 0); }
+}
+
+/* Bomb spark */
+.mm-spark { animation: mm-blink 0.2s infinite alternate; }
+@keyframes mm-blink { to { opacity: 0.3; } }
+
+/* Overlay */
+.mm-overlay {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle, #0006, #000b);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+  text-align: center;
+  padding: 16px;
+}
+.mm-card {
+  background: linear-gradient(#fff8e1, #ffe9a8);
+  color: #6b3a0a;
+  border: 5px solid #8d5524;
+  border-radius: 26px;
+  padding: 20px 22px 24px;
+  width: min(360px, 100%);
+  box-shadow: 0 10px 0 #5e3716, 0 20px 40px #0008;
+}
+.mm-card h2 { margin: 0 0 6px; font-size: 34px; text-shadow: 0 3px 0 #fff; color: #6b3a0a; }
+.mm-card p  { margin: 0 0 12px; line-height: 1.45; font-size: 15px; }
+
+/* Legend */
+.mm-legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 12px;
+  font-weight: 800;
+  font-size: 12px;
+}
+.mm-legend div { background: #0001; border-radius: 10px; padding: 5px 8px; }
+
+/* Mode buttons */
+.mm-modes {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+.mm-mode {
+  font-size: 14px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: #fff;
+  color: #6b3a0a;
+  box-shadow: 0 3px 0 #c9a06a;
+  border: 3px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 900;
+}
+.mm-mode.mm-mode-on { background: #ffd43b; border-color: #8d5524; }
+
+/* CTA buttons */
+.mm-btns { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.mm-btns button {
+  font-family: inherit;
+  font-weight: 900;
+  font-size: 22px;
+  letter-spacing: .05em;
+  padding: 11px 40px;
+  border: 0;
+  border-radius: 50px;
+  background: linear-gradient(#69db7c, #2f9e44);
+  color: #fff;
+  text-shadow: 0 2px 0 #1b5e20;
+  box-shadow: 0 6px 0 #1b6e2e, 0 10px 18px #0004;
+  cursor: pointer;
+}
+.mm-btns button:active { transform: translateY(4px); box-shadow: 0 2px 0 #1b6e2e; }
+
+/* Confetti */
+.mm-conf {
+  position: fixed;
+  top: -20px;
+  width: 10px;
+  height: 14px;
+  z-index: 35;
+  pointer-events: none;
+  animation: mm-fall linear forwards;
+}
+@keyframes mm-fall { to { transform: translateY(110vh) rotate(720deg); } }

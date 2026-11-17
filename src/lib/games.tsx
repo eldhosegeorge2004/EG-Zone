@@ -35,6 +35,14 @@ export const GAMES = [
     color: "from-blue-600 to-emerald-600",
   },
   {
+    title: "Mole Mash",
+    slug: "molemash",
+    description: "Whack moles before they hide! Dodge the bomb-beaver, smash golden moles for bonus points, and chain combos to top the leaderboard.",
+    category: "Arcade",
+    image: "/images/molemash.svg",
+    color: "from-lime-500 to-green-600",
+  },
+  {
     title: "Minesweeper",
     slug: "minesweeper",
     description: "Classic retro logic puzzle! Flag hidden mines and clear the grid with guaranteed first-click safety.",
