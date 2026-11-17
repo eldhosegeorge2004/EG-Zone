@@ -23,10 +23,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const gameRoutes = [
-    '2048', 'aim', 'breaker', 'chess', 'colormatch', 'connect4', 'flappy', 
-    'guessword', 'math', 'memory', 'minesweeper', 'pong', 'puzzle', 
-    'quiz', 'racing', 'reaction', 'scramble', 'simon', 'snake', 'stickman', 
-    'sudoku', 'tictactoe', 'typing', 'zip'
+    '2048', 'aim', 'breaker', 'bubbles', 'chess', 'colormatch', 'connect4', 'cookie',
+    'crossword', 'dino', 'flappy', 'fruitninja', 'geodash', 'guessword', 'invaders',
+    'math', 'memory', 'minesweeper', 'mole', 'nonogram', 'platform', 'pong', 'puzzle', 
+    'quiz', 'racing', 'reaction', 'scramble', 'simon', 'sliding', 'snake',
+    'stack', 'stickman', 'sudoku', 'tictactoe', 'typing', 'zip'
   ].map((game) => ({
     url: `${baseUrl}/games/${game}`,
     lastModified: new Date(),

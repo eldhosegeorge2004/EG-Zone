@@ -1,0 +1,158 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#020617" />
+      <stop offset="60%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e1b4b" />
+    </linearGradient>
+    <filter id="neon" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bg)"/>
+
+  <!-- Starfield -->
+  <g fill="#ffffff" opacity="0.6">
+    <circle cx="80" cy="70" r="1.5" />
+    <circle cx="150" cy="190" r="2" />
+    <circle cx="240" cy="80" r="1" />
+    <circle cx="360" cy="140" r="1.5" />
+    <circle cx="480" cy="60" r="2" />
+    <circle cx="580" cy="160" r="1" />
+    <circle cx="710" cy="90" r="2.5" />
+    <circle cx="680" cy="240" r="1" />
+    <circle cx="110" cy="340" r="1.5" />
+    <circle cx="740" cy="380" r="2" />
+  </g>
+
+  <!-- Red Mystery UFO at the top -->
+  <g transform="translate(400, 75)" filter="url(#neon)">
+    <ellipse cx="0" cy="0" rx="60" ry="16" fill="#f43f5e" />
+    <ellipse cx="0" cy="-10" rx="30" ry="14" fill="#fb7185" />
+    <circle cx="-35" cy="0" r="5" fill="#fef08a" />
+    <circle cx="-12" cy="2" r="5" fill="#fef08a" />
+    <circle cx="12" cy="2" r="5" fill="#fef08a" />
+    <circle cx="35" cy="0" r="5" fill="#fef08a" />
+  </g>
+
+  <!-- Space Invaders Grid (Pixel Art Style via rects) -->
+  <!-- Top Alien: Squid (Cyan) -->
+  <g transform="translate(240, 160)" fill="#06b6d4" filter="url(#neon)">
+    <rect x="24" y="0" width="8" height="8" />
+    <rect x="24" y="8" width="8" height="8" />
+    <rect x="8" y="16" width="40" height="8" />
+    <rect x="0" y="24" width="56" height="8" />
+    <rect x="0" y="32" width="16" height="8" />
+    <rect x="24" y="32" width="8" height="8" />
+    <rect x="40" y="32" width="16" height="8" />
+    <rect x="8" y="40" width="16" height="8" />
+    <rect x="32" y="40" width="16" height="8" />
+    <rect x="0" y="48" width="8" height="8" />
+    <rect x="16" y="48" width="8" height="8" />
+    <rect x="32" y="48" width="8" height="8" />
+    <rect x="48" y="48" width="8" height="8" />
+  </g>
+
+  <!-- Mid Alien: Crab (Purple/Pink) -->
+  <g transform="translate(372, 155)" fill="#c084fc" filter="url(#neon)">
+    <rect x="16" y="0" width="8" height="8" />
+    <rect x="40" y="0" width="8" height="8" />
+    <rect x="24" y="8" width="16" height="8" />
+    <rect x="8" y="16" width="48" height="8" />
+    <rect x="0" y="24" width="64" height="8" />
+    <rect x="0" y="32" width="16" height="8" />
+    <rect x="24" y="32" width="16" height="8" />
+    <rect x="48" y="32" width="16" height="8" />
+    <rect x="0" y="40" width="8" height="16" />
+    <rect x="56" y="40" width="8" height="16" />
+    <rect x="16" y="40" width="8" height="8" />
+    <rect x="40" y="40" width="8" height="8" />
+  </g>
+
+  <!-- Top Alien: Squid 2 (Cyan) -->
+  <g transform="translate(504, 160)" fill="#06b6d4" filter="url(#neon)">
+    <rect x="24" y="0" width="8" height="8" />
+    <rect x="24" y="8" width="8" height="8" />
+    <rect x="8" y="16" width="40" height="8" />
+    <rect x="0" y="24" width="56" height="8" />
+    <rect x="0" y="32" width="16" height="8" />
+    <rect x="24" y="32" width="8" height="8" />
+    <rect x="40" y="32" width="16" height="8" />
+    <rect x="8" y="40" width="16" height="8" />
+    <rect x="32" y="40" width="16" height="8" />
+    <rect x="0" y="48" width="8" height="8" />
+    <rect x="16" y="48" width="8" height="8" />
+    <rect x="32" y="48" width="8" height="8" />
+    <rect x="48" y="48" width="8" height="8" />
+  </g>
+
+  <!-- Bottom Alien: Octopus (Yellow/Green) -->
+  <g transform="translate(300, 240)" fill="#4ade80" filter="url(#neon)">
+    <rect x="16" y="0" width="32" height="8" />
+    <rect x="8" y="8" width="48" height="8" />
+    <rect x="0" y="16" width="64" height="8" />
+    <rect x="0" y="24" width="16" height="8" />
+    <rect x="24" y="24" width="16" height="8" />
+    <rect x="48" y="24" width="16" height="8" />
+    <rect x="0" y="32" width="64" height="8" />
+    <rect x="16" y="40" width="8" height="8" />
+    <rect x="40" y="40" width="8" height="8" />
+    <rect x="8" y="48" width="8" height="8" />
+    <rect x="48" y="48" width="8" height="8" />
+  </g>
+
+  <g transform="translate(440, 240)" fill="#facc15" filter="url(#neon)">
+    <rect x="16" y="0" width="32" height="8" />
+    <rect x="8" y="8" width="48" height="8" />
+    <rect x="0" y="16" width="64" height="8" />
+    <rect x="0" y="24" width="16" height="8" />
+    <rect x="24" y="24" width="16" height="8" />
+    <rect x="48" y="24" width="16" height="8" />
+    <rect x="0" y="32" width="64" height="8" />
+    <rect x="16" y="40" width="8" height="8" />
+    <rect x="40" y="40" width="8" height="8" />
+    <rect x="8" y="48" width="8" height="8" />
+    <rect x="48" y="48" width="8" height="8" />
+  </g>
+
+  <!-- Alien Bomb Projectiles -->
+  <g stroke="#f43f5e" stroke-width="4" fill="none">
+    <path d="M332,310 l-4,8 l8,8 l-8,8 l4,8" />
+    <path d="M472,310 l4,8 l-8,8 l8,8 l-4,8" />
+  </g>
+
+  <!-- Defensive Bunkers (Shields) -->
+  <g fill="#22c55e" opacity="0.85">
+    <!-- Shield 1 -->
+    <path d="M180,410 h70 v30 h-20 v-15 h-30 v15 h-20 Z" />
+    <!-- Shield 2 (Chipped/damaged) -->
+    <path d="M550,410 h60 v15 h-10 v15 h-15 v-15 h-25 v15 h-10 Z" />
+  </g>
+
+  <!-- Player Cannon Ship -->
+  <g transform="translate(370, 440)" fill="#22c55e" filter="url(#neon)">
+    <rect x="26" y="0" width="8" height="12" />
+    <rect x="20" y="12" width="20" height="8" />
+    <rect x="4" y="20" width="52" height="16" />
+    <rect x="0" y="28" width="60" height="12" />
+  </g>
+
+  <!-- Player Laser Beam firing up -->
+  <rect x="398" y="290" width="4" height="145" fill="#4ade80" filter="url(#neon)" />
+
+  <!-- Ground Line -->
+  <line x1="50" y1="495" x2="750" y2="495" stroke="#334155" stroke-width="3" />
+
+  <!-- Title Badge -->
+  <g transform="translate(400, 545)">
+    <text x="0" y="0" font-family="'Courier New', Courier, monospace" font-weight="900" font-size="34" fill="#22c55e" text-anchor="middle" letter-spacing="6" filter="url(#neon)">
+      SPACE INVADERS
+    </text>
+  </g>
+</svg>

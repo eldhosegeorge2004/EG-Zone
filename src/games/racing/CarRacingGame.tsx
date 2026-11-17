@@ -6,8 +6,6 @@ import {
   Trophy, 
   RotateCcw, 
   Play, 
-  Volume2, 
-  VolumeX, 
   Zap, 
   Shield, 
   Coins, 
@@ -94,12 +92,7 @@ export default function CarRacingGame() {
   const [nearMissCount, setNearMissCount] = useState<number>(0);
   const [hasShield, setHasShield] = useState<boolean>(true);
   const [nitroAmount, setNitroAmount] = useState<number>(100);
-  const [isMuted, setIsMuted] = useState<boolean>(false);
-
-  // Audio Context Ref
-  const audioCtxRef = useRef<AudioContext | null>(null);
-  const engineOscRef = useRef<OscillatorNode | null>(null);
-  const engineGainRef = useRef<GainNode | null>(null);
+  // Audio removed — sound disabled per user preference
 
   // Mutable Game Engine state
   const gameRef = useRef({
@@ -146,160 +139,14 @@ export default function CarRacingGame() {
     lastFrameTime: 0,
   });
 
-  // Sound synthesis
-  const initAudio = useCallback(() => {
-    if (audioCtxRef.current || isMuted) return;
-    try {
-      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
-      audioCtxRef.current = ctx;
-
-      // Engine drone oscillator
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "sawtooth";
-      osc.frequency.setValueAtTime(55, ctx.currentTime);
-      gain.gain.setValueAtTime(0.04, ctx.currentTime);
-
-      // Lowpass filter for smooth rumble
-      const filter = ctx.createBiquadFilter();
-      filter.type = "lowpass";
-      filter.frequency.setValueAtTime(220, ctx.currentTime);
-
-      osc.connect(filter);
-      filter.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-
-      engineOscRef.current = osc;
-      engineGainRef.current = gain;
-    } catch {
-      // AudioContext could fail on unsupported browsers
-    }
-  }, [isMuted]);
-
-  const playSound = useCallback((type: "coin" | "boost" | "crash" | "nearmiss" | "shield" | "brake") => {
-    if (isMuted || !audioCtxRef.current) return;
-    try {
-      const ctx = audioCtxRef.current;
-      if (ctx.state === "suspended") {
-        ctx.resume();
-      }
-      const t = ctx.currentTime;
-
-      if (type === "coin") {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(987.77, t); // B5
-        osc.frequency.exponentialRampToValueAtTime(1318.51, t + 0.12); // E6
-        gain.gain.setValueAtTime(0.15, t);
-        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(t);
-        osc.stop(t + 0.18);
-      } else if (type === "nearmiss") {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = "triangle";
-        osc.frequency.setValueAtTime(440, t);
-        osc.frequency.exponentialRampToValueAtTime(880, t + 0.2);
-        gain.gain.setValueAtTime(0.2, t);
-        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(t);
-        osc.stop(t + 0.25);
-      } else if (type === "boost") {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(150, t);
-        osc.frequency.exponentialRampToValueAtTime(450, t + 0.35);
-        gain.gain.setValueAtTime(0.18, t);
-        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(t);
-        osc.stop(t + 0.4);
-      } else if (type === "shield") {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = "square";
-        osc.frequency.setValueAtTime(320, t);
-        osc.frequency.exponentialRampToValueAtTime(640, t + 0.25);
-        gain.gain.setValueAtTime(0.12, t);
-        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(t);
-        osc.stop(t + 0.3);
-      } else if (type === "brake") {
-        // Noise screech
-        const bufferSize = ctx.sampleRate * 0.15;
-        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          data[i] = Math.random() * 2 - 1;
-        }
-        const noise = ctx.createBufferSource();
-        noise.buffer = buffer;
-        const filter = ctx.createBiquadFilter();
-        filter.type = "bandpass";
-        filter.frequency.setValueAtTime(1600, t);
-        const gain = ctx.createGain();
-        gain.gain.setValueAtTime(0.08, t);
-        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
-        noise.connect(filter);
-        filter.connect(gain);
-        gain.connect(ctx.destination);
-        noise.start(t);
-      } else if (type === "crash") {
-        const bufferSize = ctx.sampleRate * 0.6;
-        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.15));
-        }
-        const noise = ctx.createBufferSource();
-        noise.buffer = buffer;
-        const gain = ctx.createGain();
-        gain.gain.setValueAtTime(0.35, t);
-        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
-        noise.connect(gain);
-        gain.connect(ctx.destination);
-        noise.start(t);
-      }
-    } catch {
-      // Audio error fallback
-    }
-  }, [isMuted]);
-
   // Read saved high score
   useEffect(() => {
     const saved = localStorage.getItem("highway_racer_highscore");
     if (saved) setHighScore(parseInt(saved, 10));
   }, []);
 
-  // Update engine sound frequency based on speed
-  const updateEngineAudio = useCallback((speed: number, isBoosting: boolean) => {
-    if (isMuted || !engineOscRef.current || !engineGainRef.current || !audioCtxRef.current) return;
-    try {
-      const ctx = audioCtxRef.current;
-      const freq = 45 + (speed / 215) * 85 + (isBoosting ? 30 : 0);
-      engineOscRef.current.frequency.setTargetAtTime(freq, ctx.currentTime, 0.05);
-      const volume = 0.03 + (speed / 215) * 0.06;
-      engineGainRef.current.gain.setTargetAtTime(volume, ctx.currentTime, 0.05);
-    } catch {
-      //
-    }
-  }, [isMuted]);
-
   // Start / Reset Game
   const startGame = useCallback(() => {
-    initAudio();
     const g = gameRef.current;
     g.playerX = ROAD_LEFT + ROAD_WIDTH / 2;
     g.playerY = 480;
@@ -335,7 +182,7 @@ export default function CarRacingGame() {
     setHasShield(true);
     setNitroAmount(100);
     setGameState("playing");
-  }, [initAudio]);
+  }, []);
 
   // Traffic Spawner
   const spawnTraffic = (g: typeof gameRef.current) => {
@@ -591,7 +438,6 @@ export default function CarRacingGame() {
           g.decel = 2.4;
           // Spawn brake smoke
           if (Math.random() < 0.3) {
-            playSound("brake");
             g.particles.push({
               x: g.playerX - 16 + (Math.random() < 0.5 ? 0 : 32),
               y: g.playerY + g.playerHeight / 2,
@@ -650,7 +496,6 @@ export default function CarRacingGame() {
       g.distanceMeters += (g.speed / 3.6) * dt;
 
       // Update audio
-      updateEngineAudio(g.speed, g.isBoosting);
 
       // Magnet timer countdown
       if (g.magnetTimer > 0) {
@@ -757,7 +602,6 @@ export default function CarRacingGame() {
           if (dx < 66 && dx > 24 && g.speed >= 85 && !car.nearMissed) {
             car.nearMissed = true;
             g.nearMisses++;
-            playSound("nearmiss");
             const bonus = car.isOncoming ? 250 : 100 * (g.isBoosting ? 2 : 1);
             g.coins += car.isOncoming ? 15 : 5;
             g.nitro = Math.min(100, g.nitro + (car.isOncoming ? 30 : 15));
@@ -781,7 +625,6 @@ export default function CarRacingGame() {
               g.invincibleTimer = 2.0; // 2 seconds of flashing invulnerability
               g.shakeIntensity = 8.0;
               g.speed = Math.max(g.minSpeed, g.speed * 0.6); // slow down on impact
-              playSound("shield");
               addToast(g, "SHIELD BROKEN!", "ARMOR SAVED YOU", g.playerX, g.playerY - 40, "#38bdf8");
 
               // Spawn shield explosion sparks
@@ -799,7 +642,6 @@ export default function CarRacingGame() {
               }
             } else {
               // GAME OVER! CRASH!
-              playSound("crash");
               g.shakeIntensity = 15.0;
 
               // Massive crash particle burst
@@ -868,20 +710,16 @@ export default function CarRacingGame() {
 
           if (item.type === "coin") {
             g.coins++;
-            playSound("coin");
             addToast(g, "+10", undefined, item.x, item.y, "#fbbf24");
           } else if (item.type === "nitro") {
             g.nitro = 100;
-            playSound("boost");
             addToast(g, "NITRO FULL!", undefined, item.x, item.y, "#38bdf8");
           } else if (item.type === "shield") {
             g.hasShield = true;
             setHasShield(true);
-            playSound("shield");
             addToast(g, "SHIELD ACTIVE!", undefined, item.x, item.y, "#34d399");
           } else if (item.type === "magnet") {
             g.magnetTimer = 8.0;
-            playSound("shield");
             addToast(g, "COIN MAGNET!", undefined, item.x, item.y, "#c084fc");
           }
 
@@ -1325,7 +1163,7 @@ export default function CarRacingGame() {
 
     animId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(animId);
-  }, [gameState, playSound, updateEngineAudio, highScore]);
+  }, [gameState, highScore]);
 
   // Touch controls for steering
   const handleTouchSteer = (direction: "left" | "right", isDown: boolean) => {
@@ -1396,15 +1234,6 @@ export default function CarRacingGame() {
             </span>
           </div>
 
-          {/* Audio Mute Toggle */}
-          <button
-            onClick={() => setIsMuted(prev => !prev)}
-            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors border border-slate-700"
-            title={isMuted ? "Unmute Audio" : "Mute Audio"}
-            aria-label="Toggle Sound"
-          >
-            {isMuted ? <VolumeX className="w-4 h-4 text-rose-400" /> : <Volume2 className="w-4 h-4 text-emerald-400" />}
-          </button>
         </div>
       </div>
 

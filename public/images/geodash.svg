@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0520" />
+      <stop offset="100%" stop-color="#1b0a38" />
+    </linearGradient>
+    <linearGradient id="cubeGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#facc15" />
+      <stop offset="100%" stop-color="#f97316" />
+    </linearGradient>
+    <linearGradient id="spikeGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ef4444" />
+      <stop offset="100%" stop-color="#991b1b" />
+    </linearGradient>
+    <linearGradient id="portalGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#ec4899" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bgGrad)" />
+
+  <!-- Grid Lines -->
+  <g stroke="rgba(250, 204, 21, 0.15)" stroke-width="1.5">
+    <line x1="0" y1="100" x2="800" y2="100" />
+    <line x1="0" y1="200" x2="800" y2="200" />
+    <line x1="0" y1="300" x2="800" y2="300" />
+    <line x1="0" y1="400" x2="800" y2="400" />
+    <line x1="100" y1="0" x2="100" y2="600" />
+    <line x1="200" y1="0" x2="200" y2="600" />
+    <line x1="300" y1="0" x2="300" y2="600" />
+    <line x1="400" y1="0" x2="400" y2="600" />
+    <line x1="500" y1="0" x2="500" y2="600" />
+    <line x1="600" y1="0" x2="600" y2="600" />
+    <line x1="700" y1="0" x2="700" y2="600" />
+  </g>
+
+  <!-- Ground -->
+  <rect x="0" y="440" width="800" height="160" fill="#0f172a" />
+  <line x1="0" y1="440" x2="800" y2="440" stroke="#38bdf8" stroke-width="6" filter="url(#glow)" />
+  <line x1="0" y1="446" x2="800" y2="446" stroke="#0284c7" stroke-width="2" />
+
+  <!-- Ground Pattern -->
+  <g stroke="#1e293b" stroke-width="2">
+    <line x1="40" y1="440" x2="0" y2="480" />
+    <line x1="120" y1="440" x2="80" y2="480" />
+    <line x1="200" y1="440" x2="160" y2="480" />
+    <line x1="280" y1="440" x2="240" y2="480" />
+    <line x1="360" y1="440" x2="320" y2="480" />
+    <line x1="440" y1="440" x2="400" y2="480" />
+    <line x1="520" y1="440" x2="480" y2="480" />
+    <line x1="600" y1="440" x2="560" y2="480" />
+    <line x1="680" y1="440" x2="640" y2="480" />
+    <line x1="760" y1="440" x2="720" y2="480" />
+  </g>
+
+  <!-- Spikes -->
+  <polygon points="380,440 410,360 440,440" fill="url(#spikeGrad)" stroke="#f87171" stroke-width="2" />
+  <polygon points="440,440 470,360 500,440" fill="url(#spikeGrad)" stroke="#f87171" stroke-width="2" />
+  <polygon points="680,440 705,370 730,440" fill="url(#spikeGrad)" stroke="#f87171" stroke-width="2" />
+
+  <!-- Platform Block -->
+  <rect x="570" y="340" width="80" height="40" rx="6" fill="#3b82f6" stroke="#93c5fd" stroke-width="3" filter="url(#glow)" />
+  <rect x="580" y="350" width="60" height="20" rx="3" fill="#1d4ed8" />
+
+  <!-- Gravity Portal -->
+  <rect x="740" y="240" width="40" height="200" rx="20" fill="url(#portalGrad)" opacity="0.85" filter="url(#glow)" />
+  <ellipse cx="760" cy="340" rx="12" ry="70" fill="#ffffff" opacity="0.75" />
+
+  <!-- Leaping Cube -->
+  <g transform="translate(250, 260) rotate(-25)">
+    <!-- Trail Effect -->
+    <rect x="-80" y="-10" width="60" height="60" rx="8" fill="#facc15" opacity="0.2" />
+    <rect x="-40" y="-5" width="70" height="70" rx="10" fill="#facc15" opacity="0.4" />
+    
+    <!-- Main Cube Body -->
+    <rect x="0" y="0" width="80" height="80" rx="14" fill="url(#cubeGrad)" stroke="#fff" stroke-width="4" filter="url(#glow)" />
+    <!-- Inner square eye/core -->
+    <rect x="18" y="18" width="44" height="44" rx="8" fill="#1e1b4b" stroke="#fef08a" stroke-width="3" />
+    <rect x="28" y="28" width="24" height="24" rx="4" fill="#fbbf24" />
+  </g>
+
+  <!-- Particle Sparks -->
+  <circle cx="210" cy="340" r="5" fill="#fde047" opacity="0.8" />
+  <circle cx="230" cy="365" r="4" fill="#f97316" opacity="0.7" />
+  <circle cx="180" cy="320" r="3" fill="#facc15" opacity="0.9" />
+  <circle cx="160" cy="350" r="4.5" fill="#e11d48" opacity="0.6" />
+
+  <!-- Title Text Banner -->
+  <text x="400" y="110" font-family="system-ui, -apple-system, sans-serif" font-size="52" font-weight="900" text-anchor="middle" fill="#facc15" letter-spacing="4" filter="url(#glow)">
+    GEOMETRY DASH
+  </text>
+  <text x="400" y="150" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" text-anchor="middle" fill="#fdba74" letter-spacing="6">
+    RHYTHM PLATFORMER
+  </text>
+</svg>
