@@ -755,6 +755,7 @@ export default function CarRacingGame() {
 
       // Update React UI states periodically
       setNitroAmount(Math.round(g.nitro));
+      setCoinsCollected(g.coins);
       setDistanceKm((g.distanceMeters / 1000).toFixed(2));
       setScore(Math.floor(g.distanceMeters + g.coins * 25 + g.nearMisses * 100));
 
