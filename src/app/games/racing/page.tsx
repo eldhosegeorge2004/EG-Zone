@@ -11,21 +11,31 @@ export const metadata = {
 
 export default function HighwayRacerPage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Link href="/games" className="inline-flex items-center text-gray-500 hover:text-gray-900 mb-8 transition-colors font-medium">
-        <ArrowLeft className="w-4 h-4 mr-2" /> Back to Games
-      </Link>
-      
-      <div className="text-center mb-10">
-        <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-3">Highway Car Racer</h1>
-        <p className="text-gray-600 font-medium">
-          Dodge heavy highway traffic, hit blistering nitro speeds over 200 km/h, rack up near-miss overtaking combos, and climb the leaderboard.
-        </p>
+    <div className="max-w-6xl mx-auto px-2 sm:px-4 lg:px-6 pt-3 pb-12">
+      {/* Compact Top Navigation Bar */}
+      <div className="flex items-center justify-between mb-3">
+        <Link 
+          href="/games" 
+          className="inline-flex items-center text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4 mr-1.5" /> Back to Games
+        </Link>
+        <div className="text-right">
+          <h1 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight leading-none">
+            Highway Car Racer
+          </h1>
+          <p className="text-[11px] sm:text-xs text-slate-500 font-medium hidden sm:block">
+            Dodge traffic, hit nitro boosts, and perform close near misses
+          </p>
+        </div>
       </div>
 
+      {/* Main Game Screen (Auto-fits within screen) */}
       <CarRacingGame />
 
-      <GameSEO 
+      {/* AdSense SEO Component */}
+      <div className="mt-12">
+        <GameSEO 
         gameName="Highway Car Racer"
         description="Highway Car Racer is an adrenaline-fueled 3D arcade traffic racing game where speed, precision steering, and split-second reflexes determine your survival. Taking inspiration from iconic driving titles such as Traffic Racer and OutRun, you sit behind the wheel of a high-performance sports car hurtling down a crowded 4-lane expressway. Weave between sedans, semi-trailer trucks, sports coupes, and police cruisers while maintaining peak velocity. Activating your nitrous oxide booster catapults your vehicle past 210 km/h with blazing exhaust flames and dynamic motion blur. To keep players engaged and reward daring maneuvers, closely overtaking adjacent traffic without crashing triggers high-multiplier Near Miss bonuses that supercharge your score. EG ZONE brings this complete arcade racing experience straight to your web browser with buttery smooth 60FPS canvas graphics, procedural day-to-night lighting transitions, rich synthesized engine audio, and universal touch support for mobile and desktop."
         howToPlay={[
