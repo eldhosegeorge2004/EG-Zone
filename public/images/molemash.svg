@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-133.5 0 1067 600" width="800" height="600">
   <defs>
     <!-- Sky & Grass -->
     <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
@@ -46,7 +46,7 @@
   </defs>
 
   <!-- Sky Background -->
-  <rect width="800" height="380" fill="url(#skyGrad)"/>
+  <rect x="-200" width="1267" height="380" fill="url(#skyGrad)"/>
 
   <!-- Clouds -->
   <g opacity="0.92">
@@ -100,9 +100,9 @@
   </g>
 
   <!-- Grass Ground -->
-  <rect y="360" width="800" height="240" fill="url(#grassGrad)"/>
+  <rect x="-200" y="360" width="1267" height="240" fill="url(#grassGrad)"/>
   <!-- Grass edge trim -->
-  <path d="M0 360 Q 200 350 400 360 T 800 360 L 800 375 L 0 375 Z" fill="#8be04e"/>
+  <path d="M-200 360 Q 200 350 400 360 T 1067 360 L 1067 375 L -200 375 Z" fill="#8be04e"/>
 
   <!-- ============================================================== -->
   <!-- HOLE 1 (LEFT): ICE MOLE ❄️ -->
