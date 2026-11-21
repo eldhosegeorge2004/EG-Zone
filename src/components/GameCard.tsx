@@ -19,20 +19,20 @@ export default function GameCard({ title, description, slug, category, image, co
       <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${color} opacity-5 blur-3xl rounded-full group-hover:opacity-15 transition-opacity duration-500 z-0`} />
       
       {/* Thumbnail Section */}
-      <div className="relative w-full aspect-[16/9] overflow-hidden bg-slate-100">
+      <div className="relative w-full aspect-video overflow-hidden bg-slate-100 flex items-center justify-center">
         {image ? (
           <Image 
             src={image} 
             alt={title} 
             fill 
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover transform group-hover:scale-105 transition-transform duration-500"
+            className="object-contain p-2 group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
           <div className={`w-full h-full bg-gradient-to-br ${color} opacity-20`} />
         )}
-        <div className="absolute top-4 right-4 z-10">
-          <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md text-gray-900 shadow-sm">
+        <div className="absolute top-3 right-3 z-10">
+          <span className="text-xs font-bold px-3 py-1 rounded-full bg-white/90 backdrop-blur-md text-gray-900 shadow-sm">
             {category}
           </span>
         </div>
