@@ -5,50 +5,81 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Play Zip | EG ZONE",
-  description: "Connect the numbers in sequential order with a single, continuous line without crossing.",
+  title: "Play Zip Online Free — 15 Rounds of Path Puzzles | EG ZONE",
+  description:
+    "Play Zip online for free! Connect the numbers in order and fill every single square on the grid without hitting walls. 15 procedural rounds with hints and star ratings.",
 };
 
 export default function ZipPage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <Link href="/games" className="inline-flex items-center text-gray-500 hover:text-gray-900 mb-8 transition-colors font-medium">
-        <ArrowLeft className="w-4 h-4 mr-2" /> Back to Games
-      </Link>
-      
-      <div className="text-center mb-10">
-        <h1 className="text-4xl font-black text-gray-900 tracking-tight mb-3">Zip</h1>
-        <p className="text-gray-600 font-medium">Connect the numbers with a single, continuous line.</p>
+    <div className="max-w-4xl mx-auto px-2 sm:px-4 lg:px-6 pt-3 pb-12">
+      <div className="flex items-center justify-between mb-4">
+        <Link
+          href="/games"
+          className="inline-flex items-center text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4 mr-1.5" /> Back to Games
+        </Link>
+        <div className="text-right">
+          <h1 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight leading-none">
+            Zip
+          </h1>
+          <p className="text-[11px] sm:text-xs text-slate-500 font-medium hidden sm:block">
+            Connect numbers in order, respect the walls, and fill every cell
+          </p>
+        </div>
       </div>
 
-      <ZipGame />
+      <div className="rounded-2xl p-4 sm:p-6 bg-white border border-slate-200 shadow-xl">
+        <ZipGame />
+      </div>
 
-      <GameSEO 
-        gameName="Zip"
-        description="Zip is a relaxing but mentally engaging puzzle game where you must connect numbered dots in sequential order using a single, non-overlapping line."
-        howToPlay={[
-          "Start at One: Find the dot labeled '1' to begin.",
-          "Drag to Connect: Click and hold (or tap and drag) to draw a line from dot 1 to dot 2, then to dot 3, and so on.",
-          "Don't Cross Lines: Your line cannot cross over itself or any other existing lines.",
-          "Fill the Grid: The puzzle is solved when all numbers are connected in order and every square on the grid is filled."
-        ]}
-        features={[
-          "Simple, satisfying line-drawing mechanics",
-          "Hundreds of puzzles ranging from easy to mind-bending",
-          "Great for developing spatial reasoning",
-          "Relaxing, stress-free gameplay with no time limits"
-        ]}
-        faqs={[
-          {
-            question: "What if I make a mistake?",
-            answer: "You can easily undo your line by dragging back over it, or pressing a reset button to start the puzzle from scratch."
-          },
-          {
-            question: "Why do I have to fill the whole grid?",
-            answer: "Filling the entire grid is part of the challenge! It forces you to think about the path you take, rather than just taking the shortest route between two numbers."
-          }
-        ]}
-      />
+      <div className="mt-12">
+        <GameSEO
+          gameName="Zip"
+          description="Zip is a captivating spatial logic puzzle game where your objective is to connect numbers in sequential order and cover every single square on the grid with a continuous path. As you advance through 15 increasingly difficult rounds, grids expand from 4x4 up to 7x7, while dark partition walls block direct routes and fewer numbered clues are provided. The challenge lies in routing your line so no empty pockets are left behind. Fast completion times and zero hints reward you with maximum 3-star ratings across all 15 rounds."
+          howToPlay={[
+            "Start from Number 1: Drag your finger or mouse starting from the circled '1' node.",
+            "Connect in Ascending Order: You must visit number 2, then 3, then 4 in strictly ascending sequence.",
+            "Fill Every Single Cell: The puzzle is only solved when your line snakes through every empty square on the board.",
+            "Avoid Partition Walls: Dark bold lines on the grid are solid barriers — your line cannot cross through them.",
+            "Non-Overlapping Path: Your path cannot cross itself or reuse any previously visited square.",
+            "Undo and Retrace: Dragging backwards or clicking the Undo button allows you to retrace steps freely without penalty.",
+            "Use Hints Wisely: When stuck, the Hint button backs you up to your last correct tile and highlights the next 3 steps, but adds a 10-second penalty."
+          ]}
+          features={[
+            "15 progressive procedural rounds with dynamic grid sizes scaling from 4x4 up to 7x7",
+            "Unique Hamilton path solver algorithm ensuring every puzzle has a valid solution",
+            "Intelligent wall partition generator that introduces clever labyrinth mazes",
+            "Performance-based 3-star rating system based on your solve time and hint usage",
+            "Seamless drag-and-draw touch and mouse controls with sub-step collision detection",
+            "Built-in smart hint system to teach routing techniques on challenging levels",
+            "Persistent local high-score tracking storing your best star collection"
+          ]}
+          faqs={[
+            {
+              question: "Why does the line stop moving when I drag?",
+              answer:
+                "Your path cannot cross over walls, jump over visited cells, or hit a numbered clue out of order (for example, stepping on 3 before touching 2). Plan your route around barriers."
+            },
+            {
+              question: "How do I earn 3 stars on a level?",
+              answer:
+                "To earn 3 stars, solve the puzzle within the par time limit (based on grid size) without using any hints. Using hints or taking extra time will reduce your rating to 1 or 2 stars."
+            },
+            {
+              question: "Can I play Zip on mobile devices?",
+              answer:
+                "Yes! Zip is fully optimized for touchscreens with high-precision pointer tracking and zero input lag on iOS and Android devices."
+            },
+            {
+              question: "What happens if I make a wrong turn?",
+              answer:
+                "You can either drag your finger backwards along your line to smoothly retract it, tap the Undo button to remove the last cell, or click Reset to start the level fresh."
+            }
+          ]}
+        />
+      </div>
     </div>
   );
 }

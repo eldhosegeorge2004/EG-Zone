@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="splashBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8f4ff"/>
+      <stop offset="100%" stop-color="#cfe2ff"/>
+    </linearGradient>
+    <filter id="tileShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="4" flood-color="#1b2559" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#splashBg)"/>
+
+  <!-- Color grid mockup -->
+  <g transform="translate(230, 160)" filter="url(#tileShadow)">
+    <rect x="-15" y="-15" width="370" height="370" rx="28" fill="#fff" stroke="#d2e4ff" stroke-width="4"/>
+    
+    <!-- 4x4 colorful tiles -->
+    <!-- Row 0 -->
+    <rect x="0" y="0" width="75" height="75" rx="16" fill="#22c493"/>
+    <text x="37" y="47" text-anchor="middle" font-size="28" fill="#fff">▲</text>
+
+    <rect x="85" y="0" width="75" height="75" rx="16" fill="#22c493"/>
+    <text x="122" y="47" text-anchor="middle" font-size="28" fill="#fff">▲</text>
+
+    <rect x="170" y="0" width="75" height="75" rx="16" fill="#ff5a5f"/>
+    <text x="207" y="47" text-anchor="middle" font-size="28" fill="#fff">●</text>
+
+    <rect x="255" y="0" width="75" height="75" rx="16" fill="#ffc233"/>
+    <text x="292" y="47" text-anchor="middle" font-size="28" fill="#fff">■</text>
+
+    <!-- Row 1 -->
+    <rect x="0" y="85" width="75" height="75" rx="16" fill="#22c493"/>
+    <text x="37" y="132" text-anchor="middle" font-size="28" fill="#fff">▲</text>
+
+    <rect x="85" y="85" width="75" height="75" rx="16" fill="#3b82f6"/>
+    <text x="122" y="132" text-anchor="middle" font-size="28" fill="#fff">◆</text>
+
+    <rect x="170" y="85" width="75" height="75" rx="16" fill="#a855f7"/>
+    <text x="207" y="132" text-anchor="middle" font-size="28" fill="#fff">★</text>
+
+    <rect x="255" y="85" width="75" height="75" rx="16" fill="#3b82f6"/>
+    <text x="292" y="132" text-anchor="middle" font-size="28" fill="#fff">◆</text>
+
+    <!-- Row 2 -->
+    <rect x="0" y="170" width="75" height="75" rx="16" fill="#ff5a5f"/>
+    <text x="37" y="217" text-anchor="middle" font-size="28" fill="#fff">●</text>
+
+    <rect x="85" y="170" width="75" height="75" rx="16" fill="#a855f7"/>
+    <text x="122" y="217" text-anchor="middle" font-size="28" fill="#fff">★</text>
+
+    <rect x="170" y="170" width="75" height="75" rx="16" fill="#ffc233"/>
+    <text x="207" y="217" text-anchor="middle" font-size="28" fill="#fff">■</text>
+
+    <rect x="255" y="170" width="75" height="75" rx="16" fill="#22c493"/>
+    <text x="292" y="217" text-anchor="middle" font-size="28" fill="#fff">▲</text>
+
+    <!-- Row 3 -->
+    <rect x="0" y="255" width="75" height="75" rx="16" fill="#3b82f6"/>
+    <text x="37" y="302" text-anchor="middle" font-size="28" fill="#fff">◆</text>
+
+    <rect x="85" y="255" width="75" height="75" rx="16" fill="#ff5a5f"/>
+    <text x="122" y="302" text-anchor="middle" font-size="28" fill="#fff">●</text>
+
+    <rect x="170" y="255" width="75" height="75" rx="16" fill="#3b82f6"/>
+    <text x="207" y="302" text-anchor="middle" font-size="28" fill="#fff">◆</text>
+
+    <rect x="255" y="255" width="75" height="75" rx="16" fill="#a855f7"/>
+    <text x="292" y="302" text-anchor="middle" font-size="28" fill="#fff">★</text>
+  </g>
+
+  <!-- Splashes / paint droplets around -->
+  <circle cx="150" cy="220" r="16" fill="#22c493" opacity="0.8"/>
+  <circle cx="170" cy="190" r="8" fill="#22c493" opacity="0.6"/>
+  <circle cx="650" cy="240" r="18" fill="#a855f7" opacity="0.8"/>
+  <circle cx="675" cy="215" r="9" fill="#a855f7" opacity="0.6"/>
+  <circle cx="660" cy="400" r="14" fill="#ff5a5f" opacity="0.8"/>
+  <circle cx="130" cy="380" r="14" fill="#3b82f6" opacity="0.8"/>
+
+  <!-- Title Text -->
+  <text x="400" y="85" text-anchor="middle" font-family="'Arial Black', Impact, sans-serif" font-size="64" font-weight="900"
+        fill="#0f9d74" stroke="#1b2559" stroke-width="3" paint-order="stroke fill" letter-spacing="2">SPLASH</text>
+  <text x="400" y="125" text-anchor="middle" font-family="'Trebuchet MS', sans-serif" font-size="20" font-weight="800"
+        fill="#1b2559" letter-spacing="1">COLOR FLOOD · CHAIN · CLEAR</text>
+</svg>

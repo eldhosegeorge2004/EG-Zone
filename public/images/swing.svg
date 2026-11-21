@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="nightSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#14123a"/>
+      <stop offset="100%" stop-color="#2d1a5c"/>
+    </linearGradient>
+    <radialGradient id="lanternGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd23f" stop-opacity="0.9"/>
+      <stop offset="40%" stop-color="#ffd23f" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#ffd23f" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#nightSky)"/>
+
+  <!-- Stars -->
+  <g fill="#e9e6ff" opacity="0.6">
+    <circle cx="90" cy="80" r="1.5"/>
+    <circle cx="210" cy="140" r="2"/>
+    <circle cx="340" cy="60" r="1.5"/>
+    <circle cx="500" cy="110" r="2.5"/>
+    <circle cx="680" cy="70" r="1.5"/>
+    <circle cx="740" cy="190" r="2"/>
+    <circle cx="120" cy="450" r="1.5"/>
+    <circle cx="280" cy="520" r="2"/>
+    <circle cx="620" cy="480" r="1.5"/>
+  </g>
+
+  <!-- Fireflies -->
+  <g fill="#ffd23f" opacity="0.7" filter="url(#glowFilter)">
+    <circle cx="160" cy="280" r="3"/>
+    <circle cx="320" cy="400" r="2.5"/>
+    <circle cx="610" cy="310" r="3"/>
+    <circle cx="690" cy="240" r="2"/>
+  </g>
+
+  <!-- Background Lantern (Anchor 1) -->
+  <g transform="translate(180, 260)">
+    <circle cx="0" cy="0" r="70" fill="url(#lanternGlow)"/>
+    <circle cx="0" cy="0" r="16" fill="#ffd23f" filter="url(#glowFilter)"/>
+    <circle cx="0" cy="0" r="7" fill="#fff6c9"/>
+  </g>
+
+  <!-- Foreground Main Lantern (Anchor 2) -->
+  <g transform="translate(480, 240)">
+    <circle cx="0" cy="0" r="90" fill="url(#lanternGlow)"/>
+    <circle cx="0" cy="0" r="20" fill="#ffd23f" filter="url(#glowFilter)"/>
+    <circle cx="0" cy="0" r="9" fill="#fff6c9"/>
+
+    <!-- Tether Rope -->
+    <line x1="0" y1="0" x2="-80" y2="90" stroke="#3ddbb0" stroke-width="4.5" opacity="0.85"/>
+
+    <!-- Player Ball on Tether -->
+    <g transform="translate(-80, 90)">
+      <!-- Motion Particle Trail -->
+      <circle cx="-18" cy="16" r="8" fill="#3ddbb0" opacity="0.3"/>
+      <circle cx="-32" cy="30" r="5" fill="#3ddbb0" opacity="0.15"/>
+      <!-- Player -->
+      <circle cx="0" cy="0" r="16" fill="#3ddbb0" filter="url(#glowFilter)"/>
+      <circle cx="4" cy="-3" r="4" fill="#14123a"/>
+    </g>
+  </g>
+
+  <!-- Next Lantern in Distance (Anchor 3) -->
+  <g transform="translate(710, 320)">
+    <circle cx="0" cy="0" r="60" fill="url(#lanternGlow)"/>
+    <circle cx="0" cy="0" r="14" fill="#ffd23f"/>
+    <circle cx="0" cy="0" r="6" fill="#fff6c9"/>
+  </g>
+
+  <!-- Pink Gem Pickups -->
+  <g transform="translate(320, 210) rotate(15)">
+    <polygon points="0,-16 12,0 0,16 -12,0" fill="#ff5d8f" filter="url(#glowFilter)"/>
+    <polygon points="0,-10 7,0 0,10 -7,0" fill="#ff9ebb"/>
+  </g>
+  <g transform="translate(600, 370) rotate(-10)">
+    <polygon points="0,-14 10,0 0,14 -10,0" fill="#ff5d8f" filter="url(#glowFilter)"/>
+  </g>
+
+  <!-- Toast / Perfect combo -->
+  <g transform="translate(480, 115)">
+    <rect x="-85" y="-18" width="170" height="36" rx="18" fill="#3ddbb0" filter="url(#glowFilter)"/>
+    <text x="0" y="6" text-anchor="middle" font-family="'Trebuchet MS', Arial, sans-serif" font-size="18" font-weight="900" fill="#14123a">PERFECT x3! ✨</text>
+  </g>
+
+  <!-- Title Text -->
+  <text x="400" y="520" text-anchor="middle" font-family="'Arial Black', Impact, sans-serif" font-size="62" font-weight="900"
+        fill="#3ddbb0" stroke="#14123a" stroke-width="4" paint-order="stroke fill" letter-spacing="3">SWING</text>
+  <text x="400" y="555" text-anchor="middle" font-family="'Trebuchet MS', sans-serif" font-size="19" font-weight="800"
+        fill="#ffd23f" letter-spacing="1">ORBIT · RELEASE · SOAR</text>
+</svg>

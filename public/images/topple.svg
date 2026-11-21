@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8f4ff"/>
+      <stop offset="100%" stop-color="#b6dcf8"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#1b2559" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Sky gradient -->
+  <rect width="800" height="600" fill="url(#bgGrad)"/>
+
+  <!-- Tower base platform -->
+  <rect x="180" y="520" width="440" height="80" rx="10" fill="#1b2559" opacity="0.15"/>
+
+  <!-- Tower Blocks Stacked -->
+  <!-- Level 1 (Base - Purple) -->
+  <g filter="url(#shadow)">
+    <rect x="250" y="460" width="300" height="36" rx="8" fill="#a855f7"/>
+    <rect x="256" y="464" width="288" height="6" rx="3" fill="#fff" opacity="0.35"/>
+  </g>
+
+  <!-- Level 2 (Blue) -->
+  <g filter="url(#shadow)">
+    <rect x="270" y="420" width="260" height="36" rx="8" fill="#3b82f6"/>
+    <rect x="276" y="424" width="248" height="6" rx="3" fill="#fff" opacity="0.35"/>
+  </g>
+
+  <!-- Level 3 (Mint) -->
+  <g filter="url(#shadow)">
+    <rect x="280" y="380" width="240" height="36" rx="8" fill="#22c493"/>
+    <rect x="286" y="384" width="228" height="6" rx="3" fill="#fff" opacity="0.35"/>
+  </g>
+
+  <!-- Level 4 (Yellow) -->
+  <g filter="url(#shadow)">
+    <rect x="290" y="340" width="220" height="36" rx="8" fill="#ffc233"/>
+    <rect x="296" y="344" width="208" height="6" rx="3" fill="#fff" opacity="0.35"/>
+  </g>
+
+  <!-- Level 5 (Red / Coral) -->
+  <g filter="url(#shadow)">
+    <rect x="300" y="300" width="200" height="36" rx="8" fill="#ff5a5f"/>
+    <rect x="306" y="304" width="188" height="6" rx="3" fill="#fff" opacity="0.35"/>
+  </g>
+
+  <!-- Level 6 (Sliding Current Block - Purple with motion lines) -->
+  <g filter="url(#shadow)" transform="translate(40, 0)">
+    <rect x="320" y="240" width="200" height="36" rx="8" fill="#a855f7"/>
+    <rect x="326" y="244" width="188" height="6" rx="3" fill="#fff" opacity="0.4"/>
+    <!-- Motion trails -->
+    <line x1="220" y1="258" x2="300" y2="258" stroke="#a855f7" stroke-width="4" stroke-dasharray="8 6" opacity="0.6"/>
+  </g>
+
+  <!-- Falling Trimmed Debris piece -->
+  <g transform="translate(540, 360) rotate(25)">
+    <rect x="0" y="0" width="40" height="36" rx="6" fill="#ff5a5f" opacity="0.85"/>
+  </g>
+
+  <!-- Perfect combo flash text -->
+  <g transform="translate(400, 205)">
+    <rect x="-80" y="-20" width="160" height="40" rx="20" fill="#22c493" filter="url(#shadow)"/>
+    <text x="0" y="7" text-anchor="middle" font-family="'Trebuchet MS', Arial, sans-serif" font-size="20" font-weight="900" fill="#fff">PERFECT! ✨</text>
+  </g>
+
+  <!-- Game Title -->
+  <text x="400" y="90" text-anchor="middle" font-family="'Arial Black', Impact, sans-serif" font-size="64" font-weight="900"
+        fill="#e5484d" stroke="#1b2559" stroke-width="3" paint-order="stroke fill" letter-spacing="2">TOPPLE</text>
+  <text x="400" y="130" text-anchor="middle" font-family="'Trebuchet MS', sans-serif" font-size="20" font-weight="800"
+        fill="#1b2559" letter-spacing="1">STACK · BALANCE · ASCEND</text>
+</svg>
