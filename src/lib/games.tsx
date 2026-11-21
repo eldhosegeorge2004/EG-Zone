@@ -47,7 +47,7 @@ export const GAMES = [
     slug: "topple",
     description: "Drop sliding blocks with pinpoint precision to stack the tallest skyscraper and chain perfect combos.",
     category: "Arcade",
-    image: "/images/topple.svg",
+    image: "/images/topple.jpg",
     color: "from-rose-500 to-amber-500",
   },
   {
@@ -55,7 +55,7 @@ export const GAMES = [
     slug: "splash",
     description: "Flood the board with matching colors from the corner before your moves run out! Relaxing yet tricky logic.",
     category: "Puzzle",
-    image: "/images/splash.svg",
+    image: "/images/splash.jpg",
     color: "from-emerald-400 to-teal-600",
   },
   {
@@ -63,7 +63,7 @@ export const GAMES = [
     slug: "swing",
     description: "Launch between celestial lanterns with physics pendulum swings, grab core combos, and collect gems.",
     category: "Arcade",
-    image: "/images/swing.svg",
+    image: "/images/swing.jpg",
     color: "from-indigo-600 to-purple-600",
   },
   {
