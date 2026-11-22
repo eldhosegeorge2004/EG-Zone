@@ -4,6 +4,7 @@
 import { useState, useEffect, useCallback, useTransition } from "react";
 import { Chess, Square, PieceSymbol, Color } from "chess.js";
 import { RotateCcw, Trophy, Users, Bot, Undo2, ArrowUpDown } from "lucide-react";
+import SubmitScoreModal from "@/components/SubmitScoreModal";
 
 // Piece value mapping for AI evaluation
 const PIECE_VALUES: Record<PieceSymbol, number> = {
@@ -83,6 +84,7 @@ export default function ChessGame() {
   const [isThinking, setIsThinking] = useState(false);
   const [pendingPromotion, setPendingPromotion] = useState<{ from: Square; to: Square } | null>(null);
   const [history, setHistory] = useState<string[]>([]);
+  const [showSubmitModal, setShowSubmitModal] = useState<boolean>(false);
   const [, startTransition] = useTransition();
 
   // Auto fade-out green last-move tile highlight after 1.5s
@@ -207,6 +209,12 @@ export default function ChessGame() {
         // If playing vs AI and game is not over, schedule AI turn
         if (gameMode === "ai" && !game.isGameOver()) {
           setTimeout(makeAIMove, 200);
+        }
+
+        // If in AI mode and human just delivered checkmate, open score modal
+        if (gameMode === "ai" && game.isCheckmate() && game.turn() === "b") {
+          // White (human) just checkmated Black (AI)
+          setShowSubmitModal(true);
         }
       }
     } catch {
@@ -554,6 +562,13 @@ export default function ChessGame() {
           ))}
         </div>
       </div>
+
+      <SubmitScoreModal
+        isOpen={showSubmitModal}
+        score={history.length > 0 ? Math.max(100, 2000 - history.length * 20) : 100}
+        gameId="chess"
+        onClose={() => setShowSubmitModal(false)}
+      />
     </div>
   );
 }

@@ -3,6 +3,7 @@
 
 import { useState, useCallback } from "react";
 import { RotateCcw, Users, Undo2 } from "lucide-react";
+import SubmitScoreModal from "@/components/SubmitScoreModal";
 
 type Player = "R" | "Y"; // R = Red (Player 1), Y = Yellow (Player 2)
 type BoardState = (Player | null)[][]; // 6 rows, 7 cols
@@ -90,6 +91,8 @@ export default function Connect4Game() {
   const [hoverCol, setHoverCol] = useState<number | null>(null);
   const [scores, setScores] = useState({ red: 0, yellow: 0, draws: 0 });
   const [history, setHistory] = useState<{ board: BoardState; turn: Player }[]>([]);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
+  const [finalScore, setFinalScore] = useState(0);
 
   const resetBoard = useCallback(() => {
     setBoard(Array.from({ length: ROWS }, () => Array(COLS).fill(null)));
@@ -126,6 +129,11 @@ export default function Connect4Game() {
           red: winResult.winner === "R" ? s.red + 1 : s.red,
           yellow: winResult.winner === "Y" ? s.yellow + 1 : s.yellow,
         }));
+        // Calculate score: fewer moves = higher score
+        const movesUsed = newBoard.flat().filter(Boolean).length;
+        const computed = Math.max(100, 1000 - movesUsed * 50);
+        setFinalScore(computed);
+        setShowSubmitModal(true);
         return true;
       }
 
@@ -346,6 +354,13 @@ export default function Connect4Game() {
       <p className="mt-4 text-xs text-gray-400 font-medium text-center">
         Take turns with a friend. Click or tap any column to drop your chip. Connect 4 in a row to win!
       </p>
+
+      <SubmitScoreModal
+        isOpen={showSubmitModal}
+        score={finalScore}
+        gameId="connect4"
+        onClose={() => setShowSubmitModal(false)}
+      />
     </div>
   );
 }

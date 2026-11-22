@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { RotateCcw, Trophy, Play, Coins, ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Zap, Shield, ShieldAlert, Timer } from "lucide-react";
+import SubmitScoreModal from "@/components/SubmitScoreModal";
 
 type Lane = -1 | 0 | 1; // Left, Center, Right
 type ObstacleType = "barrier" | "overhead" | "train";
@@ -37,6 +38,7 @@ export default function SubwayRunner() {
   const [hasShield, setHasShield] = useState<boolean>(true);
   const [speedTier, setSpeedTier] = useState<string>("1.0x");
   const [secondsElapsed, setSecondsElapsed] = useState<number>(0);
+  const [showSubmitModal, setShowSubmitModal] = useState<boolean>(false);
 
   // Game internal mutable state
   const gameRef = useRef({
@@ -399,6 +401,9 @@ export default function SubwayRunner() {
             localStorage.setItem("subway_runner_highscore", newHigh.toString());
             return newHigh;
           });
+          if (finalScore > 0) {
+            setShowSubmitModal(true);
+          }
           setGameState("gameover");
           return;
         }
@@ -822,13 +827,24 @@ export default function SubwayRunner() {
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={startGame}
-              className="px-8 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full font-black text-base shadow-lg shadow-indigo-600/30 active:scale-95 transition-all flex items-center gap-2"
-            >
-              <RotateCcw className="w-5 h-5" /> Play Again
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={startGame}
+                className="px-7 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full font-black text-sm sm:text-base shadow-lg shadow-indigo-600/30 active:scale-95 transition-all flex items-center gap-2"
+              >
+                <RotateCcw className="w-4 h-4" /> Play Again
+              </button>
+              {score > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setShowSubmitModal(true)}
+                  className="px-7 py-3 bg-amber-500 hover:bg-amber-600 text-slate-900 rounded-full font-black text-sm sm:text-base shadow-lg active:scale-95 transition-all flex items-center gap-1.5"
+                >
+                  <Trophy className="w-4 h-4" /> Save Score
+                </button>
+              )}
+            </div>
           </div>
         )}
       </div>
@@ -879,6 +895,13 @@ export default function SubwayRunner() {
         <span><kbd className="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded font-mono text-[11px]">↑</kbd> / <kbd className="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded font-mono text-[11px]">Space</kbd> Jump</span>
         <span><kbd className="px-1.5 py-0.5 bg-gray-100 border border-gray-300 rounded font-mono text-[11px]">↓</kbd> Slide / Duck</span>
       </div>
+
+      <SubmitScoreModal
+        isOpen={showSubmitModal}
+        score={score}
+        gameId="subway"
+        onClose={() => setShowSubmitModal(false)}
+      />
     </div>
   );
 }

@@ -3,6 +3,7 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { RotateCcw, X, Circle, Trophy, User, Bot, Users } from "lucide-react";
+import SubmitScoreModal from "@/components/SubmitScoreModal";
 
 type Player = "X" | "O" | null;
 type Mode = "AI" | "2P";
@@ -24,6 +25,7 @@ export default function TicTacToe() {
   // Custom Settings from repo
   const [mode, setMode] = useState<Mode>("AI");
   const [humanPlayer, setHumanPlayer] = useState<Player>("X");
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
   
   // Audio Refs
   const clickSoundRef = useRef<HTMLAudioElement>(null);
@@ -121,6 +123,9 @@ export default function TicTacToe() {
         drawSoundRef.current?.play().catch(e => console.error(e));
       } else {
         winSoundRef.current?.play().catch(e => console.error(e));
+        if (mode === "AI" && result.winner === humanPlayer) {
+          setShowSubmitModal(true);
+        }
       }
 
     } else {
@@ -302,6 +307,13 @@ export default function TicTacToe() {
 
         </div>
       </div>
+
+      <SubmitScoreModal
+        isOpen={showSubmitModal}
+        score={(scores[humanPlayer || "X"] || 1) * 100}
+        gameId="tictactoe"
+        onClose={() => setShowSubmitModal(false)}
+      />
     </div>
   );
 }

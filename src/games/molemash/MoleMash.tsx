@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import SubmitScoreModal from "@/components/SubmitScoreModal";
 import "./MoleMash.css";
 
 // ── Types ────────────────────────────────────────────────────────────────────
@@ -115,6 +116,8 @@ export default function MoleMash() {
   const [showLegend, setShowLegend]     = useState(true);
   const [showModes, setShowModes]       = useState(true);
   const [muted, setMuted] = useState(false);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
+  const [finalScore, setFinalScore] = useState(0);
 
   // Mutable refs — no re-render needed
   const modeRef   = useRef<ModeConfig>(MODES.normal);
@@ -289,10 +292,12 @@ export default function MoleMash() {
       sfx(400, 150, .5, "sawtooth", .05);
     }
     setTimeout(() => {
+      setFinalScore(gc.score);
       setOverlayTitle(nb ? "🏆 New Best!" : "Time's Up!");
       setOverlayDesc(`You scored <b style="font-size:34px">${gc.score}</b><br/>Best: ${gc.best}`);
       setShowLegend(false); setShowModes(true);
       setPhase("gameover"); phaseRef.current = "gameover";
+      if (gc.score > 0) setShowSubmitModal(true);
     }, 350);
   }, [musicStop, hideMole, sfx, confetti]);
 
@@ -539,12 +544,29 @@ export default function MoleMash() {
               {phase === "paused" ? (
                 <button onClick={togglePause}>RESUME</button>
               ) : (
-                <button onClick={startGame}>{phase === "menu" ? "PLAY" : "PLAY AGAIN"}</button>
+                <>
+                  <button onClick={startGame}>{phase === "menu" ? "PLAY" : "PLAY AGAIN"}</button>
+                  {phase === "gameover" && finalScore > 0 && (
+                    <button 
+                      onClick={() => setShowSubmitModal(true)} 
+                      style={{ background: "#4f46e5", color: "#fff" }}
+                    >
+                      SAVE SCORE
+                    </button>
+                  )}
+                </>
               )}
             </div>
           </div>
         </div>
       )}
+
+      <SubmitScoreModal
+        isOpen={showSubmitModal}
+        score={finalScore}
+        gameId="molemash"
+        onClose={() => setShowSubmitModal(false)}
+      />
     </div>
   );
 }

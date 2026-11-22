@@ -2,7 +2,8 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Play, RotateCcw, MonitorSmartphone } from "lucide-react";
+import { Play, RotateCcw, MonitorSmartphone, Trophy } from "lucide-react";
+import SubmitScoreModal from "@/components/SubmitScoreModal";
 
 export default function PongGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -10,6 +11,8 @@ export default function PongGame() {
   
   const [isPlaying, setIsPlaying] = useState(false);
   const [score, setScore] = useState({ player: 0, ai: 0 });
+  const [gameOver, setGameOver] = useState<{ winner: "player" | "ai"; finalScore: number } | null>(null);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
 
   // Game state held in refs to avoid React re-renders in the game loop
   const state = useRef({
@@ -120,11 +123,27 @@ export default function PongGame() {
       // Scoring
       if (s.ballX < 0) {
         // AI scored
-        setScore(prev => ({ ...prev, ai: prev.ai + 1 }));
+        setScore(prev => {
+          const next = { ...prev, ai: prev.ai + 1 };
+          if (next.ai >= 7) {
+            setIsPlaying(false);
+            setGameOver({ winner: "ai", finalScore: next.player * 100 });
+          }
+          return next;
+        });
         resetBall(1);
       } else if (s.ballX > s.width) {
         // Player scored
-        setScore(prev => ({ ...prev, player: prev.player + 1 }));
+        setScore(prev => {
+          const next = { ...prev, player: prev.player + 1 };
+          if (next.player >= 7) {
+            setIsPlaying(false);
+            const pts = 700 + (7 - next.ai) * 50;
+            setGameOver({ winner: "player", finalScore: pts });
+            setShowSubmitModal(true);
+          }
+          return next;
+        });
         resetBall(-1);
       }
 
@@ -205,6 +224,7 @@ export default function PongGame() {
 
   const startGame = () => {
     setScore({ player: 0, ai: 0 });
+    setGameOver(null);
     resetBall(1);
     setIsPlaying(true);
   };
@@ -239,14 +259,14 @@ export default function PongGame() {
             className="w-full h-full object-contain"
           />
 
-          {!isPlaying && (
+          {!isPlaying && !gameOver && (
             <div className="absolute inset-0 z-50 bg-white/95 backdrop-blur-sm flex flex-col items-center justify-center p-4 sm:p-8 text-center rounded-3xl cursor-auto overflow-y-auto">
                <div className="w-12 h-12 sm:w-20 sm:h-20 bg-gradient-to-br from-cyan-50 to-pink-50 rounded-full flex items-center justify-center mb-2 sm:mb-6 shadow-inner border border-gray-100 shrink-0">
                 <MonitorSmartphone className="w-6 h-6 sm:w-10 sm:h-10 text-cyan-500" />
               </div>
               <h2 className="text-xl sm:text-3xl font-black text-gray-900 mb-1 sm:mb-3 tracking-tight">Pong</h2>
               <p className="text-gray-500 text-xs sm:text-base mb-3 sm:mb-8 max-w-[280px] font-medium leading-relaxed">
-                Move your mouse or slide your finger to control the cyan paddle. First to miss loses a point!
+                Move your mouse or slide your finger to control the cyan paddle. First to 7 points wins the match!
               </p>
               <button
                 onClick={startGame}
@@ -256,8 +276,42 @@ export default function PongGame() {
               </button>
             </div>
           )}
+
+          {gameOver && (
+            <div className="absolute inset-0 z-50 bg-white/95 backdrop-blur-sm flex flex-col items-center justify-center p-4 sm:p-8 text-center rounded-3xl cursor-auto overflow-y-auto">
+              <h2 className={`text-2xl sm:text-4xl font-black tracking-tight mb-2 ${gameOver.winner === "player" ? "text-emerald-600" : "text-rose-600"}`}>
+                {gameOver.winner === "player" ? "🎉 Victory!" : "Match Lost!"}
+              </h2>
+              <p className="text-gray-500 text-sm sm:text-base mb-6 font-medium">
+                Final Score: <span className="font-bold text-gray-900">{score.player} - {score.ai}</span>
+              </p>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={startGame}
+                  className="bg-gray-900 text-white px-8 py-3 rounded-full font-bold shadow-lg hover:-translate-y-0.5 transition-all text-sm sm:text-base"
+                >
+                  Play Again
+                </button>
+                {gameOver.finalScore > 0 && (
+                  <button
+                    onClick={() => setShowSubmitModal(true)}
+                    className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-full font-bold shadow-lg hover:-translate-y-0.5 transition-all text-sm sm:text-base"
+                  >
+                    <Trophy className="w-4 h-4 text-amber-300" /> Save Score
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
+
+      <SubmitScoreModal
+        isOpen={showSubmitModal}
+        score={gameOver?.finalScore || 0}
+        gameId="pong"
+        onClose={() => setShowSubmitModal(false)}
+      />
     </div>
   );
 }

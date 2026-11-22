@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
+import SubmitScoreModal from "@/components/SubmitScoreModal";
 import { 
   Trophy, 
   RotateCcw, 
@@ -92,6 +93,7 @@ export default function CarRacingGame() {
   const [nearMissCount, setNearMissCount] = useState<number>(0);
   const [hasShield, setHasShield] = useState<boolean>(true);
   const [nitroAmount, setNitroAmount] = useState<number>(100);
+  const [showSubmitModal, setShowSubmitModal] = useState<boolean>(false);
   // Audio removed — sound disabled per user preference
 
   // Mutable Game Engine state
@@ -673,6 +675,7 @@ export default function CarRacingGame() {
                 localStorage.setItem("highway_racer_highscore", finalScore.toString());
               }
 
+              setShowSubmitModal(true);
               setGameState("gameover");
               return;
             }
@@ -1329,12 +1332,22 @@ export default function CarRacingGame() {
               </div>
             )}
 
-            <button
-              onClick={startGame}
-              className="px-6 py-2.5 sm:px-8 sm:py-3 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white font-black text-sm sm:text-base shadow-lg shadow-rose-500/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
-            >
-              <RotateCcw className="w-4 h-4" /> RACE AGAIN
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={startGame}
+                className="px-5 py-2.5 sm:px-7 sm:py-3 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white font-black text-sm sm:text-base shadow-lg shadow-rose-500/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
+              >
+                <RotateCcw className="w-4 h-4" /> RACE AGAIN
+              </button>
+              {score > 0 && (
+                <button
+                  onClick={() => setShowSubmitModal(true)}
+                  className="px-5 py-2.5 sm:px-7 sm:py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 font-bold text-sm sm:text-base shadow-md hover:scale-105 active:scale-95 transition-all flex items-center gap-2 cursor-pointer"
+                >
+                  <Trophy className="w-4 h-4 text-amber-400" /> Save Score
+                </button>
+              )}
+            </div>
           </div>
         )}
       </div>
@@ -1389,6 +1402,13 @@ export default function CarRacingGame() {
           </button>
         </div>
       </div>
+
+      <SubmitScoreModal
+        isOpen={showSubmitModal}
+        score={score}
+        gameId="racing"
+        onClose={() => setShowSubmitModal(false)}
+      />
     </div>
   );
 }

@@ -3,6 +3,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { RotateCcw, Lightbulb, Play, Undo2, Trophy, Star } from "lucide-react";
+import SubmitScoreModal from "@/components/SubmitScoreModal";
 
 interface LevelConfig {
   n: number;
@@ -68,6 +69,7 @@ export default function ZipGame() {
   const [message, setMessage] = useState("");
   const [isWon, setIsWon] = useState(false);
   const [bestStars, setBestStars] = useState(0);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
 
   // Mutable refs for pointer dragging and loop state
   const roundRef = useRef(1);
@@ -323,6 +325,7 @@ export default function ZipGame() {
 
         const isLastRound = roundRef.current >= 15;
         if (isLastRound) {
+          setShowSubmitModal(true);
           setMessage(
             `🎉 All 15 rounds complete! ${newStars} / 45 stars in ${formatTime(runDoneRef.current)}!`
           );
@@ -701,7 +704,23 @@ export default function ZipGame() {
             </>
           )}
         </button>
+
+        {isWon && (
+          <button
+            onClick={() => setShowSubmitModal(true)}
+            className="flex items-center gap-1.5 px-4 py-2 text-xs sm:text-sm font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-full hover:bg-amber-100 active:scale-95 transition-all shadow-sm"
+          >
+            <Trophy className="w-3.5 h-3.5 text-amber-500" /> Save Score
+          </button>
+        )}
       </div>
+
+      <SubmitScoreModal
+        isOpen={showSubmitModal}
+        score={stars * 100 + round * 50}
+        gameId="zip"
+        onClose={() => setShowSubmitModal(false)}
+      />
     </div>
   );
 }

@@ -3,6 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX, RotateCcw, Trophy } from "lucide-react";
+import SubmitScoreModal from "@/components/SubmitScoreModal";
 
 interface Block {
   x: number;
@@ -27,6 +28,7 @@ export default function ToppleGame() {
   const [bestScore, setBestScore] = useState(0);
   const [gameState, setGameState] = useState<"ready" | "play" | "dead">("ready");
   const [muted, setMuted] = useState(false);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -133,6 +135,9 @@ export default function ToppleGame() {
       try {
         localStorage.setItem("topple_best", String(scoreRef.current));
       } catch {}
+    }
+    if (scoreRef.current > 0) {
+      setShowSubmitModal(true);
     }
     setGameState("dead");
   };
@@ -430,11 +435,31 @@ export default function ToppleGame() {
           <div className="text-slate-300 text-sm font-medium mb-6">
             Best Record: <span className="text-amber-400 font-bold">{bestScore}</span>
           </div>
-          <div className="px-6 py-2.5 bg-rose-500 text-white font-bold rounded-full text-sm sm:text-base shadow-lg animate-pulse">
-            Tap to Play Again
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={(e) => { e.stopPropagation(); resetGame(); }}
+              className="px-6 py-2.5 bg-rose-500 text-white font-bold rounded-full text-sm sm:text-base shadow-lg hover:scale-105 active:scale-95 transition-all"
+            >
+              Play Again
+            </button>
+            {score > 0 && (
+              <button
+                onClick={(e) => { e.stopPropagation(); setShowSubmitModal(true); }}
+                className="px-6 py-2.5 bg-indigo-600 text-white font-bold rounded-full text-sm sm:text-base shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5"
+              >
+                <Trophy className="w-4 h-4 text-amber-300" /> Save Score
+              </button>
+            )}
           </div>
         </div>
       )}
+
+      <SubmitScoreModal
+        isOpen={showSubmitModal}
+        score={score}
+        gameId="topple"
+        onClose={() => setShowSubmitModal(false)}
+      />
     </div>
   );
 }

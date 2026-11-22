@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Play, RotateCcw, HelpCircle, Trophy } from "lucide-react";
+import SubmitScoreModal from "@/components/SubmitScoreModal";
 
 const WORDS = [
   "APPLE", "TRAIN", "HOUSE", "MOUSE", "BRICK", "CRANE", "SLATE", "PLANT", "LEMON", "WATER",
@@ -29,6 +30,7 @@ export default function GuessWordGame() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [isWon, setIsWon] = useState(false);
   const [invalidShake, setInvalidShake] = useState(false);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
 
   const startGame = useCallback(() => {
     setTargetWord(WORDS[Math.floor(Math.random() * WORDS.length)]);
@@ -61,6 +63,7 @@ export default function GuessWordGame() {
 
       if (currentGuess === targetWord) {
         setIsWon(true);
+        setShowSubmitModal(true);
       } else if (currentGuessIdx === 5) {
         setIsGameOver(true);
       } else {
@@ -187,12 +190,22 @@ export default function GuessWordGame() {
               <p className="text-gray-500 text-lg mb-8 font-medium">
                 The word was <span className="font-black text-gray-900 text-xl tracking-widest">{targetWord}</span>
               </p>
-              <button
-                onClick={startGame}
-                className="flex items-center justify-center bg-gray-900 text-white px-10 py-4 rounded-full font-bold hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-xl shadow-gray-900/20 text-lg w-full max-w-[250px]"
-              >
-                <RotateCcw className="w-5 h-5 mr-2" /> Play Again
-              </button>
+              <div className="flex items-center gap-3 w-full max-w-[280px]">
+                <button
+                  onClick={startGame}
+                  className="flex-1 flex items-center justify-center bg-gray-900 text-white px-5 py-3.5 rounded-full font-bold hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-xl shadow-gray-900/20 text-base"
+                >
+                  <RotateCcw className="w-4 h-4 mr-1.5" /> Play Again
+                </button>
+                {isWon && (
+                  <button
+                    onClick={() => setShowSubmitModal(true)}
+                    className="flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3.5 rounded-full font-bold hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-xl text-base"
+                  >
+                    <Trophy className="w-4 h-4 mr-1 text-amber-300" /> Save
+                  </button>
+                )}
+              </div>
             </div>
           )}
 
@@ -275,6 +288,13 @@ export default function GuessWordGame() {
           75% { transform: translateX(5px); }
         }
       `}} />
+
+      <SubmitScoreModal
+        isOpen={showSubmitModal}
+        score={Math.max(100, (6 - currentGuessIdx) * 100)}
+        gameId="guessword"
+        onClose={() => setShowSubmitModal(false)}
+      />
     </div>
   );
 }

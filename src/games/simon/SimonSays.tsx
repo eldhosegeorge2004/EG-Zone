@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import SubmitScoreModal from "@/components/SubmitScoreModal";
 import "./SimonSays.css";
 
 export type SimonColor = "green" | "red" | "yellow" | "blue";
@@ -23,6 +24,7 @@ export default function SimonSays() {
   const [highScore, setHighScore] = useState<number>(0);
   const [status, setStatus] = useState<"ready" | "showing" | "playing" | "over">("ready");
   const [message, setMessage] = useState<string>("Press Start to Play");
+  const [showSubmitModal, setShowSubmitModal] = useState<boolean>(false);
 
   const sequenceRef = useRef<SimonColor[]>([]);
   const lockedRef = useRef<boolean>(true);
@@ -164,6 +166,10 @@ export default function SimonSays() {
       setHighScore(level);
       localStorage.setItem("simonHighScore", level.toString());
     }
+
+    if (level > 0) {
+      setShowSubmitModal(true);
+    }
   }
 
   function handleClick(color: SimonColor) {
@@ -243,15 +249,33 @@ export default function SimonSays() {
         <div className="simon-gameover">
           <h2>Game Over!</h2>
           <p>You reached level {level}</p>
-          <button className="simon-start" onClick={startGame}>
-            PLAY AGAIN
-          </button>
+          <div style={{ display: "flex", gap: "10px", justifyContent: "center", flexWrap: "wrap" }}>
+            <button className="simon-start" onClick={startGame}>
+              PLAY AGAIN
+            </button>
+            {level > 0 && (
+              <button 
+                className="simon-start" 
+                style={{ background: "#4f46e5" }} 
+                onClick={() => setShowSubmitModal(true)}
+              >
+                SUBMIT SCORE
+              </button>
+            )}
+          </div>
         </div>
       )}
 
       <p className="simon-tip">
         Watch carefully and repeat the colours in the correct order.
       </p>
+
+      <SubmitScoreModal
+        isOpen={showSubmitModal}
+        score={level}
+        gameId="simon"
+        onClose={() => setShowSubmitModal(false)}
+      />
     </div>
   );
 }

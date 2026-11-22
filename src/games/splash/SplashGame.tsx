@@ -3,6 +3,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { Volume2, VolumeX, RotateCcw, Trophy, Award } from "lucide-react";
+import SubmitScoreModal from "@/components/SubmitScoreModal";
 
 const COLORS = ["#ff5a5f", "#ffc233", "#22c493", "#3b82f6", "#a855f7"];
 const SYMBOLS = ["●", "■", "▲", "◆", "★"];
@@ -17,6 +18,7 @@ export default function SplashGame() {
   const [gameState, setGameState] = useState<"start" | "play" | "won" | "lost">("start");
   const [bestLevel, setBestLevel] = useState(1);
   const [muted, setMuted] = useState(false);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
 
   const audioCtxRef = useRef<AudioContext | null>(null);
   const mutedRef = useRef(false);
@@ -134,6 +136,7 @@ export default function SplashGame() {
       }
       setTimeout(() => {
         setGameState("won");
+        setShowSubmitModal(true);
       }, 300);
     } else if (nextMoves <= 0) {
       setTimeout(() => {
@@ -218,12 +221,20 @@ export default function SplashGame() {
             <p className="text-slate-200 text-sm mb-6">
               You flooded the board with {movesLeft} {movesLeft === 1 ? "move" : "moves"} to spare.
             </p>
-            <button
-              onClick={handleNextLevel}
-              className="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white font-bold rounded-full shadow-lg transition-all"
-            >
-              Continue to Level {level + 1}
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleNextLevel}
+                className="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white font-bold rounded-full shadow-lg transition-all"
+              >
+                Level {level + 1} →
+              </button>
+              <button
+                onClick={() => setShowSubmitModal(true)}
+                className="flex items-center gap-1.5 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold rounded-full shadow-lg transition-all"
+              >
+                <Trophy className="w-4 h-4 text-amber-300" /> Save Score
+              </button>
+            </div>
           </div>
         )}
 
@@ -271,6 +282,13 @@ export default function SplashGame() {
       <p className="text-[11px] text-slate-500 mt-2 font-medium text-center">
         Tap a color below to flood outward from the top-left corner.
       </p>
+
+      <SubmitScoreModal
+        isOpen={showSubmitModal}
+        score={level * 100 + movesLeft * 10}
+        gameId="splash"
+        onClose={() => setShowSubmitModal(false)}
+      />
     </div>
   );
 }

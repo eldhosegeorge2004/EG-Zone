@@ -3,6 +3,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Flag, RotateCcw, Clock, Bomb, Trophy, XCircle, Check } from "lucide-react";
+import SubmitScoreModal from "@/components/SubmitScoreModal";
 
 type Difficulty = "easy" | "medium" | "hard";
 
@@ -48,6 +49,7 @@ export default function MinesweeperGame() {
   const [flagMode, setFlagMode] = useState<boolean>(false);
   const [flagCount, setFlagCount] = useState<number>(0);
   const [timer, setTimer] = useState<number>(0);
+  const [showSubmitModal, setShowSubmitModal] = useState<boolean>(false);
   const [isPressing, setIsPressing] = useState<boolean>(false);
   const [bestTimes, setBestTimes] = useState<Record<Difficulty, number | null>>({
     easy: null,
@@ -325,6 +327,7 @@ export default function MinesweeperGame() {
       setBestTimes(updated);
       localStorage.setItem("minesweeper_best_times", JSON.stringify(updated));
     }
+    setShowSubmitModal(true);
   };
 
   // Toggle flag on right click or flagMode
@@ -469,13 +472,22 @@ export default function MinesweeperGame() {
         {gameStatus === "won" && (
           <div className="w-full py-2.5 px-4 mb-3 rounded-xl bg-emerald-500 text-white font-black flex items-center justify-between text-xs sm:text-sm shadow-md animate-bounce">
             <span>🎉 All mines cleared in {timer}s!</span>
-            <button
-              type="button"
-              onClick={() => initBlankGrid(difficulty)}
-              className="flex items-center gap-1 px-3 py-1 bg-white text-emerald-800 rounded-lg text-xs font-black shadow hover:bg-emerald-50 active:scale-95 transition-all"
-            >
-              <RotateCcw className="w-3.5 h-3.5" /> Replay
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setShowSubmitModal(true)}
+                className="flex items-center gap-1 px-3 py-1 bg-indigo-600 text-white rounded-lg text-xs font-black shadow hover:bg-indigo-700 active:scale-95 transition-all"
+              >
+                <Trophy className="w-3.5 h-3.5 text-amber-300" /> Save Score
+              </button>
+              <button
+                type="button"
+                onClick={() => initBlankGrid(difficulty)}
+                className="flex items-center gap-1 px-3 py-1 bg-white text-emerald-800 rounded-lg text-xs font-black shadow hover:bg-emerald-50 active:scale-95 transition-all"
+              >
+                <RotateCcw className="w-3.5 h-3.5" /> Replay
+              </button>
+            </div>
           </div>
         )}
         {gameStatus === "lost" && (
@@ -576,6 +588,13 @@ export default function MinesweeperGame() {
       <p className="mt-4 text-xs text-gray-400 font-medium text-center leading-relaxed">
         <strong>Click</strong> to reveal • <strong>Right-click</strong> or <strong>Hold</strong> to flag • <strong>Click numbers</strong> to chord-reveal neighbors.
       </p>
+
+      <SubmitScoreModal
+        isOpen={showSubmitModal}
+        score={Math.max(50, (difficulty === "hard" ? 2500 : difficulty === "medium" ? 1800 : 1200) - timer * 4)}
+        gameId="minesweeper"
+        onClose={() => setShowSubmitModal(false)}
+      />
     </div>
   );
 }
