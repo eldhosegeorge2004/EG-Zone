@@ -33,6 +33,7 @@ export default function SwingGame() {
   const [gameState, setGameState] = useState<"ready" | "play" | "dead">("ready");
   const [muted, setMuted] = useState(false);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
+  const showModalRef = useRef(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -214,11 +215,13 @@ export default function SwingGame() {
     }
     if (scoreRef.current > 0) {
       setShowSubmitModal(true);
+      showModalRef.current = true;
     }
     setGameState("dead");
   };
 
   const handleAction = () => {
+    if (showSubmitModal || showModalRef.current) return;
     const cv = canvasRef.current;
     const w = cv ? cv.width / (window.devicePixelRatio || 1) : 400;
     const h = cv ? cv.height / (window.devicePixelRatio || 1) : 400;
@@ -601,7 +604,7 @@ export default function SwingGame() {
             </button>
             {score > 0 && (
               <button
-                onClick={(e) => { e.stopPropagation(); setShowSubmitModal(true); }}
+                onClick={(e) => { e.stopPropagation(); setShowSubmitModal(true); showModalRef.current = true; }}
                 className="px-6 py-2.5 bg-emerald-600 text-white font-bold rounded-full text-sm sm:text-base shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5"
               >
                 <Trophy className="w-4 h-4 text-amber-300" /> Save Score
@@ -615,7 +618,7 @@ export default function SwingGame() {
         isOpen={showSubmitModal}
         score={score}
         gameId="swing"
-        onClose={() => setShowSubmitModal(false)}
+        onClose={() => { setShowSubmitModal(false); showModalRef.current = false; }}
       />
     </div>
   );

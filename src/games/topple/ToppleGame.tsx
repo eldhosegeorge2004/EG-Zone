@@ -29,6 +29,7 @@ export default function ToppleGame() {
   const [gameState, setGameState] = useState<"ready" | "play" | "dead">("ready");
   const [muted, setMuted] = useState(false);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
+  const showModalRef = useRef(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -138,6 +139,7 @@ export default function ToppleGame() {
     }
     if (scoreRef.current > 0) {
       setShowSubmitModal(true);
+      showModalRef.current = true;
     }
     setGameState("dead");
   };
@@ -202,6 +204,8 @@ export default function ToppleGame() {
   };
 
   const handleAction = () => {
+    // Don't restart game if score modal is open
+    if (showSubmitModal || showModalRef.current) return;
     if (modeRef.current === "ready") {
       startGame();
     } else if (modeRef.current === "dead") {
@@ -437,14 +441,14 @@ export default function ToppleGame() {
           </div>
           <div className="flex items-center gap-3">
             <button 
-              onClick={(e) => { e.stopPropagation(); resetGame(); }}
+              onClick={(e) => { e.stopPropagation(); startGame(); }}
               className="px-6 py-2.5 bg-rose-500 text-white font-bold rounded-full text-sm sm:text-base shadow-lg hover:scale-105 active:scale-95 transition-all"
             >
               Play Again
             </button>
             {score > 0 && (
               <button
-                onClick={(e) => { e.stopPropagation(); setShowSubmitModal(true); }}
+                onClick={(e) => { e.stopPropagation(); setShowSubmitModal(true); showModalRef.current = true; }}
                 className="px-6 py-2.5 bg-indigo-600 text-white font-bold rounded-full text-sm sm:text-base shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5"
               >
                 <Trophy className="w-4 h-4 text-amber-300" /> Save Score
@@ -458,7 +462,7 @@ export default function ToppleGame() {
         isOpen={showSubmitModal}
         score={score}
         gameId="topple"
-        onClose={() => setShowSubmitModal(false)}
+        onClose={() => { setShowSubmitModal(false); showModalRef.current = false; }}
       />
     </div>
   );

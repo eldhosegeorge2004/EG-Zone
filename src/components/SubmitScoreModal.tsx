@@ -60,7 +60,7 @@ export default function SubmitScoreModal({ isOpen, score, gameId, onClose, onSub
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" onClick={onClose} />
       
-      <div className="relative w-full max-w-sm bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden transform animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-sm bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden transform animate-in fade-in zoom-in-95 duration-200" onClick={(e) => e.stopPropagation()}>
         
         {/* Header Background */}
         <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-br from-indigo-500 to-purple-600 opacity-10" />
