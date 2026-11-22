@@ -598,7 +598,7 @@ export default function SwingGame() {
           </div>
           <div className="flex items-center gap-3">
             <button 
-              onClick={(e) => { e.stopPropagation(); resetGame(); }}
+              onClick={(e) => { e.stopPropagation(); const cv = canvasRef.current; const w = cv ? cv.width / (window.devicePixelRatio || 1) : 400; const h = cv ? cv.height / (window.devicePixelRatio || 1) : 400; resetGame(w, h); }}
               className="px-6 py-2.5 bg-rose-500 text-white font-bold rounded-full text-sm sm:text-base shadow-lg hover:scale-105 active:scale-95 transition-all"
             >
               Try Again
