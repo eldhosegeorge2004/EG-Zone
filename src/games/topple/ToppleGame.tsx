@@ -388,6 +388,7 @@ export default function ToppleGame() {
   };
 
   return (
+    <>
     <div
       ref={containerRef}
       onClick={handleAction}
@@ -457,6 +458,7 @@ export default function ToppleGame() {
           </div>
         </div>
       )}
+      </div>
 
       <SubmitScoreModal
         isOpen={showSubmitModal}
@@ -464,6 +466,6 @@ export default function ToppleGame() {
         gameId="topple"
         onClose={() => { setShowSubmitModal(false); showModalRef.current = false; }}
       />
-    </div>
+    </>
   );
 }

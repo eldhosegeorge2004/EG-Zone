@@ -544,6 +544,7 @@ export default function SwingGame() {
   };
 
   return (
+    <>
     <div
       ref={containerRef}
       onClick={handleAction}
@@ -613,6 +614,7 @@ export default function SwingGame() {
           </div>
         </div>
       )}
+      </div>
 
       <SubmitScoreModal
         isOpen={showSubmitModal}
@@ -620,6 +622,6 @@ export default function SwingGame() {
         gameId="swing"
         onClose={() => { setShowSubmitModal(false); showModalRef.current = false; }}
       />
-    </div>
+    </>
   );
 }
