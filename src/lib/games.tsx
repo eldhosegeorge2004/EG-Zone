@@ -23,7 +23,7 @@ export const GAMES = [
     slug: "arrowescape",
     description: "Tap unblocked arrows to slide them off the tangled board! Plan your moves, avoid collisions, and clear all 10 puzzle levels.",
     category: "Puzzle",
-    image: "/images/arrowescape.svg",
+    image: "/images/arrowescape.jpg",
     color: "from-indigo-600 to-sky-500",
   },
   {
