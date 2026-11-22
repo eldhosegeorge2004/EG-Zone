@@ -42,3 +42,6 @@ When creating a new game, ALWAYS integrate the `<SubmitScoreModal>` component fo
    - If the game container has a global `onClick` handler (like tap-to-play games), guard it: `if (showSubmitModal) return;` at the top, and use a `useRef` if the handler is captured in a `useEffect` closure.
    - For 2-player/AI games (Chess, Tic-Tac-Toe, Connect4), only trigger the modal when playing vs AI and the human wins.
    - Add a "Save Score" button on the game-over overlay as an alternative trigger: `onClick={(e) => { e.stopPropagation(); setShowSubmitModal(true); }}`
+
+# Sitemap Rule
+When creating a new game, ALWAYS add its slug to the `gameRoutes` array in `src/app/sitemap.ts`. Keep the array alphabetically sorted.
