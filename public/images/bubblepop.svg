@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bpBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#bfe9ff" />
+      <stop offset="68%" stop-color="#d4f0ff" />
+      <stop offset="68%" stop-color="#ffe29a" />
+      <stop offset="100%" stop-color="#ffd56b" />
+    </linearGradient>
+
+    <!-- Cannon Gradient -->
+    <linearGradient id="cannonMetal" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#5f6f80" />
+      <stop offset="50%" stop-color="#8fa3b8" />
+      <stop offset="100%" stop-color="#475569" />
+    </linearGradient>
+
+    <radialGradient id="bubbleShine" cx="35%" cy="32%" r="65%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8" />
+      <stop offset="35%" stop-color="#ffffff" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.25" />
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bpBg)" />
+
+  <!-- Dotted Divider Line -->
+  <line x1="0" y1="410" x2="800" y2="410" stroke="#14213d" stroke-width="3" stroke-dasharray="10 10" opacity="0.3" />
+
+  <!-- Hexagonal Packed Bubbles Cluster -->
+  <!-- Row 1 -->
+  <g stroke="#14213d" stroke-width="4">
+    <circle cx="160" cy="90" r="38" fill="#ff4d6d" />
+    <circle cx="240" cy="90" r="38" fill="#ff4d6d" />
+    <circle cx="320" cy="90" r="38" fill="#2ec27e" />
+    <circle cx="400" cy="90" r="38" fill="#ffc300" />
+    <circle cx="480" cy="90" r="38" fill="#2da8ff" />
+    <circle cx="560" cy="90" r="38" fill="#a259ff" />
+    <circle cx="640" cy="90" r="38" fill="#ff8c42" />
+
+    <!-- Row 2 (shifted) -->
+    <circle cx="200" cy="158" r="38" fill="#ff4d6d" />
+    <circle cx="280" cy="158" r="38" fill="#2ec27e" />
+    <circle cx="360" cy="158" r="38" fill="#2ec27e" />
+    <circle cx="440" cy="158" r="38" fill="#2da8ff" />
+    <circle cx="520" cy="158" r="38" fill="#2da8ff" />
+    <circle cx="600" cy="158" r="38" fill="#ff8c42" />
+
+    <!-- Row 3 -->
+    <circle cx="240" cy="226" r="38" fill="#ffc300" />
+    <circle cx="320" cy="226" r="38" fill="#ffc300" />
+    <circle cx="400" cy="226" r="38" fill="#2da8ff" />
+    <circle cx="480" cy="226" r="38" fill="#a259ff" />
+    <circle cx="560" cy="226" r="38" fill="#a259ff" />
+
+    <!-- Row 4 -->
+    <circle cx="360" cy="294" r="38" fill="#ff4d6d" />
+    <circle cx="440" cy="294" r="38" fill="#ff4d6d" />
+  </g>
+
+  <!-- Bubble Gloss / Highlights -->
+  <g fill="white" opacity="0.75" pointer-events="none">
+    <ellipse cx="150" cy="78" rx="12" ry="7" transform="rotate(-30 150 78)" />
+    <ellipse cx="230" cy="78" rx="12" ry="7" transform="rotate(-30 230 78)" />
+    <ellipse cx="310" cy="78" rx="12" ry="7" transform="rotate(-30 310 78)" />
+    <ellipse cx="390" cy="78" rx="12" ry="7" transform="rotate(-30 390 78)" />
+    <ellipse cx="470" cy="78" rx="12" ry="7" transform="rotate(-30 470 78)" />
+    <ellipse cx="550" cy="78" rx="12" ry="7" transform="rotate(-30 550 78)" />
+    <ellipse cx="630" cy="78" rx="12" ry="7" transform="rotate(-30 630 78)" />
+
+    <ellipse cx="190" cy="146" rx="12" ry="7" transform="rotate(-30 190 146)" />
+    <ellipse cx="270" cy="146" rx="12" ry="7" transform="rotate(-30 270 146)" />
+    <ellipse cx="350" cy="146" rx="12" ry="7" transform="rotate(-30 350 146)" />
+    <ellipse cx="430" cy="146" rx="12" ry="7" transform="rotate(-30 430 146)" />
+    <ellipse cx="510" cy="146" rx="12" ry="7" transform="rotate(-30 510 146)" />
+    <ellipse cx="590" cy="146" rx="12" ry="7" transform="rotate(-30 590 146)" />
+
+    <ellipse cx="230" cy="214" rx="12" ry="7" transform="rotate(-30 230 214)" />
+    <ellipse cx="310" cy="214" rx="12" ry="7" transform="rotate(-30 310 214)" />
+    <ellipse cx="390" cy="214" rx="12" ry="7" transform="rotate(-30 390 214)" />
+    <ellipse cx="470" cy="214" rx="12" ry="7" transform="rotate(-30 470 214)" />
+    <ellipse cx="550" cy="214" rx="12" ry="7" transform="rotate(-30 550 214)" />
+
+    <ellipse cx="350" cy="282" rx="12" ry="7" transform="rotate(-30 350 282)" />
+    <ellipse cx="430" cy="282" rx="12" ry="7" transform="rotate(-30 430 282)" />
+  </g>
+
+  <!-- Aim Trajectory Dotted Line -->
+  <g stroke="#14213d" stroke-width="4" stroke-dasharray="6 8" opacity="0.4">
+    <line x1="400" y1="500" x2="400" y2="340" />
+  </g>
+
+  <!-- Cannon Shooter Assembly at Bottom -->
+  <!-- Base wheels/pedestal -->
+  <circle cx="345" cy="530" r="30" fill="#14213d" />
+  <circle cx="345" cy="530" r="20" fill="#ff8c42" />
+  <circle cx="345" cy="530" r="8" fill="#ffc300" />
+
+  <circle cx="455" cy="530" r="30" fill="#14213d" />
+  <circle cx="455" cy="530" r="20" fill="#ff8c42" />
+  <circle cx="455" cy="530" r="8" fill="#ffc300" />
+
+  <!-- Cannon Barrel (Pointing Up) -->
+  <rect x="360" y="440" width="80" height="70" rx="10" fill="url(#cannonMetal)" stroke="#14213d" stroke-width="5" />
+  <rect x="350" y="430" width="100" height="18" rx="6" fill="#5f6f80" stroke="#14213d" stroke-width="4" />
+
+  <!-- Cannon Turret Ring -->
+  <circle cx="400" cy="510" r="42" fill="#ffc300" stroke="#14213d" stroke-width="5" />
+  <circle cx="400" cy="510" r="14" fill="#14213d" />
+
+  <!-- Loaded Active Bubble in Cannon -->
+  <circle cx="400" cy="425" r="34" fill="#ff4d6d" stroke="#14213d" stroke-width="4" />
+  <ellipse cx="392" cy="415" rx="10" ry="6" fill="white" opacity="0.8" transform="rotate(-30 392 415)" />
+
+  <!-- Swap Bubble on side -->
+  <circle cx="280" cy="520" r="30" fill="#ffc300" stroke="#14213d" stroke-width="3" stroke-dasharray="4 4" />
+  <circle cx="280" cy="520" r="24" fill="#2da8ff" stroke="#14213d" stroke-width="3" />
+  <ellipse cx="274" cy="512" rx="7" ry="4" fill="white" opacity="0.8" transform="rotate(-30 274 512)" />
+
+  <!-- Game Title Badge Overlay -->
+  <g transform="translate(400, 345)">
+    <rect x="-160" y="-32" width="320" height="64" rx="20" fill="#ffc300" stroke="#14213d" stroke-width="5" />
+    <text x="0" y="10" font-family="'Arial Rounded MT Bold', 'Trebuchet MS', system-ui, sans-serif" font-weight="900" font-size="30" fill="#14213d" text-anchor="middle" letter-spacing="2">BUBBLE POP</text>
+  </g>
+</svg>

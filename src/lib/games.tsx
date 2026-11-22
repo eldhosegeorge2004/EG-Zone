@@ -19,6 +19,22 @@ import {
 
 export const GAMES = [
   {
+    title: "Arrow Escape",
+    slug: "arrowescape",
+    description: "Tap unblocked arrows to slide them off the tangled board! Plan your moves, avoid collisions, and clear all 10 puzzle levels.",
+    category: "Puzzle",
+    image: "/images/arrowescape.svg",
+    color: "from-indigo-600 to-sky-500",
+  },
+  {
+    title: "Bubble Pop",
+    slug: "bubblepop",
+    description: "Classic bubble shooter! Drag to aim, match 3 or more colors, trigger cascading avalanches, and blast bomb bubbles.",
+    category: "Arcade",
+    image: "/images/bubblepop.svg",
+    color: "from-amber-400 to-rose-500",
+  },
+  {
     title: "Highway Car Racer",
     slug: "racing",
     description: "High-speed 3D traffic racer! Weave through dense highway lanes, hit nitro boost, and execute near misses.",
