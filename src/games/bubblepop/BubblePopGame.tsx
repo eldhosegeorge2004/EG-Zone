@@ -101,6 +101,21 @@ export default function BubblePopGame() {
       setBestScore(b);
       bestRef.current = b;
     } catch {}
+
+    // Initial preview grid setup
+    const rows = 5;
+    const g: number[][] = [];
+    for (let r = 0; r < 14 + 3; r++) {
+      g.push(Array(NC).fill(-1));
+    }
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < NC; c++) {
+        g[r][c] = Math.floor(Math.random() * 4);
+      }
+    }
+    gridRef.current = g;
+    curRef.current = Math.floor(Math.random() * 4);
+    nxtRef.current = Math.floor(Math.random() * 4);
   }, []);
 
   const saveBest = (sc: number) => {
@@ -610,9 +625,10 @@ export default function BubblePopGame() {
           }
         }
         g.globalAlpha = 1;
+      }
 
-        // Shooter Cannon Base
-        g.fillStyle = "#14213d";
+      // Shooter Cannon Base
+      g.fillStyle = "#14213d";
         for (const s of [-1, 1]) {
           g.beginPath();
           g.arc(W / 2 + s * R * 1.6, shootY + R * 0.7, R * 0.8, 0, Math.PI * 2);
@@ -689,7 +705,6 @@ export default function BubblePopGame() {
         g.textAlign = "center";
         g.fillText("tap to swap", W / 2 - R * 3.4, shootY - R * 0.8);
         g.globalAlpha = 1;
-      }
 
       // Flying projectile
       if (projRef.current) {

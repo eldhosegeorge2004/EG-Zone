@@ -123,6 +123,9 @@ export default function ArrowEscapeGame() {
         starsRef.current = p.s;
       }
     } catch {}
+
+    // Generate initial board preview
+    gen();
   }, []);
 
   const saveHS = (sc: number) => {
