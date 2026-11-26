@@ -176,8 +176,7 @@ export default function CanvasGameShell({ config }: { config: CanvasGameConfig }
     sizeRef.current = { W, H };
     cv.width = W * dpr;
     cv.height = H * dpr;
-    cv.style.width = `${W}px`;
-    cv.style.height = `${H}px`;
+    cv.style.aspectRatio = `${W} / ${H}`;
   }, [aspect, maxWidth]);
 
   const loadMode = useCallback(
@@ -372,14 +371,14 @@ export default function CanvasGameShell({ config }: { config: CanvasGameConfig }
 
         {/* Stage */}
         <div ref={stageRef} className={phase === "pre" ? "w-full opacity-0 pointer-events-none h-0 overflow-hidden" : "w-full"}>
-          <div className="relative mx-auto w-max max-w-full mb-3">
+          <div className="relative w-full mb-3">
             <canvas
               ref={canvasRef}
               onPointerDown={(e) => configRef.current.onPointerDown?.(e, apiRef.current)}
               onPointerMove={(e) => configRef.current.onPointerMove?.(e, apiRef.current)}
               onPointerUp={(e) => configRef.current.onPointerUp?.(e, apiRef.current)}
               onPointerCancel={(e) => configRef.current.onPointerCancel?.(e, apiRef.current)}
-              className="block rounded-xl border-2 touch-none"
+              className="block w-full rounded-xl border-2 touch-none"
               style={{
                 background: theme.canvasBg,
                 borderColor: theme.border,
