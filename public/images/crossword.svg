@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#f1f5f9"/>
+  <g transform="translate(95, 45)">
+    <rect x="0" y="0" width="210" height="210" rx="14" fill="#ffffff" stroke="#0f172a" stroke-width="6"/>
+    <rect x="70" y="0" width="70" height="70" fill="#0f172a"/>
+    <rect x="0" y="140" width="70" height="70" fill="#0f172a"/>
+    <rect x="140" y="70" width="70" height="70" fill="#eef2ff"/>
+    <line x1="70" y1="0" x2="70" y2="210" stroke="#0f172a" stroke-width="4"/>
+    <line x1="140" y1="0" x2="140" y2="210" stroke="#0f172a" stroke-width="4"/>
+    <line x1="0" y1="70" x2="210" y2="70" stroke="#0f172a" stroke-width="4"/>
+    <line x1="0" y1="140" x2="210" y2="140" stroke="#0f172a" stroke-width="4"/>
+    <text x="35" y="48" font-family="system-ui" font-weight="900" font-size="34" text-anchor="middle" fill="#4f46e5">W</text>
+    <text x="35" y="118" font-family="system-ui" font-weight="900" font-size="34" text-anchor="middle" fill="#0f172a">O</text>
+    <text x="105" y="118" font-family="system-ui" font-weight="900" font-size="34" text-anchor="middle" fill="#0f172a">R</text>
+    <text x="175" y="118" font-family="system-ui" font-weight="900" font-size="34" text-anchor="middle" fill="#4f46e5">D</text>
+  </g>
+</svg>
