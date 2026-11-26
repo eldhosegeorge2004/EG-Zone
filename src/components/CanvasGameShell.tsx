@@ -78,7 +78,7 @@ export default function CanvasGameShell({ config }: { config: CanvasGameConfig }
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
 
-  const containerRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const phaseRef = useRef<"pre" | "play" | "done">("pre");
   const modeRef = useRef<"daily" | "random">("daily");
@@ -167,10 +167,11 @@ export default function CanvasGameShell({ config }: { config: CanvasGameConfig }
 
   const syncCanvasSize = useCallback(() => {
     const cv = canvasRef.current;
-    const container = containerRef.current;
-    if (!cv || !container) return;
+    const stage = stageRef.current;
+    if (!cv || !stage) return;
     const dpr = Math.min(2, window.devicePixelRatio || 1);
-    const W = Math.max(240, Math.min(maxWidth, container.clientWidth - 8));
+    const available = stage.clientWidth > 0 ? stage.clientWidth : maxWidth;
+    const W = Math.max(240, Math.min(maxWidth, available - 4));
     const H = Math.round(W * aspect);
     sizeRef.current = { W, H };
     cv.width = W * dpr;
@@ -276,7 +277,6 @@ export default function CanvasGameShell({ config }: { config: CanvasGameConfig }
   return (
     <>
       <div
-        ref={containerRef}
         className="w-full max-w-[440px] mx-auto rounded-2xl p-4 sm:p-5 select-none"
         style={{
           background: theme.wrapperBg,
@@ -371,7 +371,7 @@ export default function CanvasGameShell({ config }: { config: CanvasGameConfig }
         )}
 
         {/* Stage */}
-        <div className={phase === "pre" ? "hidden" : "block"}>
+        <div ref={stageRef} className={phase === "pre" ? "w-full opacity-0 pointer-events-none h-0 overflow-hidden" : "w-full"}>
           <div className="relative mx-auto w-max max-w-full mb-3">
             <canvas
               ref={canvasRef}
