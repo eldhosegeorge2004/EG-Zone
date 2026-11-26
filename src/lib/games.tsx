@@ -19,6 +19,14 @@ import {
 
 export const GAMES = [
   {
+    title: "Ludo",
+    slug: "ludo",
+    description: "Classic 4-player strategy board game! Roll the dice, capture opponents, and race all 4 tokens home vs AI or friends.",
+    category: "Strategy",
+    image: "/images/ludo.svg",
+    color: "from-red-500 to-blue-600",
+  },
+  {
     title: "Fruit Slice",
     slug: "fruitslice",
     description: "Swipe to slice flying fruit, chain 3+ combos, grab golden stars and slow-motion snowflakes, and dodge bombs!",

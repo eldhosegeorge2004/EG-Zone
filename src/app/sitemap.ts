@@ -24,7 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const gameRoutes = [
     '2048', 'aim', 'anglematch', 'arrowescape', 'biggerarea', 'breaker', 'bubblepop', 'chess', 'colormatch', 'connect4', 'crossword', 'fitthehole', 'flappy', 'fruitslice',
-    'guessword', 'math', 'memory', 'minesweeper', 'mirrorlaser', 'molemash', 'pong', 'puzzle', 
+    'guessword', 'ludo', 'math', 'memory', 'minesweeper', 'mirrorlaser', 'molemash', 'pong', 'puzzle', 
     'quiz', 'racing', 'reaction', 'scramble', 'simon', 'snake', 'splash', 'stickman', 
     'subway', 'sudoku', 'swing', 'tangramfit', 'tictactoe', 'topple', 'typing', 'zip'
   ].map((game) => ({

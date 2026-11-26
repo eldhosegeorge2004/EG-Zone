@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#eef0f6"/>
+  <g transform="translate(80, 30)" stroke="#262a44" stroke-width="4">
+    <rect x="0" y="0" width="240" height="240" rx="14" fill="#fdfcf7"/>
+    <!-- Red yard -->
+    <rect x="0" y="0" width="96" height="96" rx="8" fill="#d93636"/>
+    <rect x="14" y="14" width="68" height="68" rx="8" fill="#fdfcf7"/>
+    <circle cx="34" cy="34" r="9" fill="#d93636"/>
+    <circle cx="62" cy="34" r="9" fill="#d93636"/>
+    <circle cx="34" cy="62" r="9" fill="#d93636"/>
+    <circle cx="62" cy="62" r="9" fill="#d93636"/>
+    <!-- Green yard -->
+    <rect x="144" y="0" width="96" height="96" rx="8" fill="#1f9d55"/>
+    <rect x="158" y="14" width="68" height="68" rx="8" fill="#fdfcf7"/>
+    <circle cx="178" cy="34" r="9" fill="#1f9d55"/>
+    <circle cx="206" cy="34" r="9" fill="#1f9d55"/>
+    <circle cx="178" cy="62" r="9" fill="#1f9d55"/>
+    <circle cx="206" cy="62" r="9" fill="#1f9d55"/>
+    <!-- Blue yard -->
+    <rect x="0" y="144" width="96" height="96" rx="8" fill="#2368d8"/>
+    <rect x="14" y="158" width="68" height="68" rx="8" fill="#fdfcf7"/>
+    <circle cx="34" cy="178" r="9" fill="#2368d8"/>
+    <circle cx="62" cy="178" r="9" fill="#2368d8"/>
+    <circle cx="34" cy="206" r="9" fill="#2368d8"/>
+    <circle cx="62" cy="206" r="9" fill="#2368d8"/>
+    <!-- Yellow yard -->
+    <rect x="144" y="144" width="96" height="96" rx="8" fill="#e8a800"/>
+    <rect x="158" y="158" width="68" height="68" rx="8" fill="#fdfcf7"/>
+    <circle cx="178" cy="178" r="9" fill="#e8a800"/>
+    <circle cx="206" cy="178" r="9" fill="#e8a800"/>
+    <circle cx="178" cy="206" r="9" fill="#e8a800"/>
+    <circle cx="206" cy="206" r="9" fill="#e8a800"/>
+    <!-- Center home triangles -->
+    <polygon points="96,96 120,120 96,144" fill="#d93636"/>
+    <polygon points="96,96 144,96 120,120" fill="#1f9d55"/>
+    <polygon points="144,96 144,144 120,120" fill="#e8a800"/>
+    <polygon points="96,144 120,120 144,144" fill="#2368d8"/>
+  </g>
+</svg>
